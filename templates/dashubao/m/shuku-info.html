@@ -1,0 +1,242 @@
+{% extends 'dashubao/m/shuku-base.html' %}
+{% block title %}侠行水浒全文阅读_侠行水浒最新章节_{{ WAP1_NAME }}_{{ WAP1_URL }}{% endblock %}
+{% load staticfiles %}
+{% block custom_css %}
+    <style>
+        .ope2 {
+            height: 24px;
+            line-height: 24px;
+            padding: 16px 0 10px;
+            margin: 0 auto;
+            background: #fff;
+            text-align: center;
+            overflow: hidden;
+            color: #2962B9;
+        }
+        .ope2 .specleft {
+            border-radius: 4px 0 0 4px;
+        }
+
+        .ope2 a {
+            padding: 2px 12px 2px 12px;
+            border: 1px solid #C3CEE9;
+            background: -webkit-gradient(linear,left top,left bottom,from(#F7FBFE),to(#DEE9F4));
+            background: -moz-gradient(linear,left top,left bottom,from(#F7FBFE),to(#DEE9F4));
+            border-right: none;
+            display: inline-block;
+        }
+
+        .ope2 .specright {
+            border-right: 1px solid #dadafa;
+            border-radius: 0 4px 4px 0;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <body data-spm="fic-book">
+        <header class="header pageHead">
+            <div class="wrap headerWrap">
+                <div class="wrap">
+                    <h1>书籍详情</h1>
+                    <div class="opts optsLeft">
+                        <a href="javascript:history.go(-1);" class="opt goBack"><i class="i iG iG_A4"></i><b></b></a>
+                    </div>
+                    <div class="opts optsRight">
+                        <a href="#" class="opt toBookShelf"><i class="i iG iG_A2"></i><b></b></a>
+                        <a href="#" class="opt toSearch"><i class="i iG iG_G5"></i><b></b></a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        {% include 'dashubao/p/navigation.html' %}
+
+        <div class="book-detail">
+
+            <div class="default-box">
+
+                <div class="summary">
+                    <div class="cover">
+                        <img onerror="this.src='{% static 'images/noimg.jpg' %}'" src="{{ noveldetail.image|default_if_none:DEF_FENMIAN }}" alt="{{ noveldetail.novel_name }}">
+                    </div>
+                    <div class="info">
+                        <h3>
+                            <a href="javascript:">{{ noveldetail.novel_name }}</a>
+                        </h3>
+                        <p>
+                            <a href="javascript:">{{ noveldetail.novel_author }} 著</a>
+                        </p>
+                        <p>
+                            <a href="javascript:">{{ noveldetail.novelclassify.caption }}</a>
+
+                            <span>{{ noveldetail.get_book_status }} </span>
+
+                        </p>
+                        <p>总赞数: {{ noveldetail.novel_zan_nums }}</p>
+                        <p>总收藏数: {{ noveldetail.novel_fav_nums }}</p>
+                    </div>
+
+
+                </div>
+
+                <div class="intro">
+                    <a href="javascript:" class=""><!-- 展开使用样式expand -->
+                        <span>
+                            {% autoescape off %}
+                                {{ noveldetail.novel_info|default:'还没有介绍欢迎同学添加' }}
+                            {% endautoescape %}
+                        </span>
+                        <span class="opt"><em>全部<i>↓</i></em><em>收起<i>↑</i></em></span>
+                    </a>
+                </div>
+
+                <div class="book-tag-wrapper">
+                标签:
+                    <a class="tag" href="javascript:">等待</a>
+
+                </div>
+                <p>更新时间：{{ noveldetail.update_time }}</p>
+
+                <div class="ope2">
+	                <a href="javascript:alert('开放中')" class="specleft" id="jsshang">打赏</a><a href="javascript:alert('开放中')" id="jszhuan">钻石</a><a href="javascript:alert('开放中')" id="jshua">献花</a><a href="/DirIP/?i=9" class="specright">查看书架</a>
+                </div>
+
+            </div>
+
+            <a href="{{ first_chapter_addr }}" class="btn btnA btnBlock"><i class="i iG iG_F7"></i>从头阅读</a>
+
+            <ul class="list-box catalog">
+                <li class="addon">目录
+
+                    <a href="javascript:" class="aR {{ isdaoxu }}" id="isdaoxu">
+                        <i class="i iG iG_C6"></i>
+                    </a>
+                </li>
+                {% for row in chapters.object_list %}
+                <li class="addon {% ifequal row.id chapterid  %} curr {% endifequal %}">
+
+                   <a href="{{ row.get_content_path }}">{{ row.chapter_name }}<span class="aR"><i class="i iG iG_B1"></i></span></a>
+
+                </li>
+                {% endfor %}
+
+                <li class="pager">
+                    {% if chapters.has_previous %}
+                    <a href="javascript:" class="btn btnB btnBlock" id="previous" url="{{ request.path }}?{{ chapters.previous_page_number.querystring }}">上一页</a>
+                    {% else %}
+                    <a href="javascript:" class="btn btnB btnBlock forbid">到头了</a>
+                    {% endif %}
+                    <div class="select-wrap btn btnB">
+                        <select class="btnB">
+
+                            {% for i in pagecount %}
+
+                            <option value="{{ request.path }}?page={{ i }}"   {% ifequal i chapters.number %} selected="selected" {% endifequal %}>{{ i }}/{{ chapters.paginator.num_pages }}</option>
+
+                            {% endfor %}
+
+                        </select>
+                    </div>
+                    {% if chapters.has_next %}
+                    <a href="javascript:" class="btn btnB btnBlock" id="next" url="{{ request.path }}?{{ chapters.next_page_number.querystring }}">下一页</a>
+                    {% else %}
+                    <a href="javascript:" class="btn btnB btnBlock forbid">到尾了</a>
+                    {% endif %}
+                </li>
+            </ul>
+
+        </div>
+    </body>
+
+{% endblock %}
+
+{% block custom_js %}
+
+<script>
+    var book = $.fn.cookie("book");
+    $.fn.cookie("book", '', { expires: -1, path: "/" });
+    var this_bookid = {{ noveldetail.id }};
+    var this_page = {{ chapters.number }};
+    var isdaoxu = "{{ isdaoxu }}"
+
+    if(book){
+        book = JSON.parse(book)
+        var url = "{{ request.path }}?page="+ book.page + '&isdaoxu=isdaoxu&chapterid='+book.chapterid;
+        if(book.bookid == this_bookid && !isdaoxu){
+            gethtml(url);
+        }else if(book.bookid == this_bookid && isdaoxu && this_page != book.page){
+            gethtml(url);
+        }
+
+    }
+
+    //介绍展现
+   $('.intro').on('click', function(){
+       $(this).children('a').toggleClass("expand");
+    });
+
+   $('select').change(function () {
+
+        var url = $(this).val() + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
+        gethtml(url);
+   });
+
+   $('#isdaoxu').on('click', function(){
+        $(this).toggleClass("isdaoxu");
+        var url = "{{ request.path }}?page=1" + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
+        gethtml(url);
+   });
+   function gethtml(url){
+       $.ajax({
+            cache: false,
+            type: 'get',
+            dataType:'html',
+            url:url,
+            data:'',
+            async: true,
+            beforeSend:function(XMLHttpRequest){
+                layer.open({type: 2,shadeClose: true});
+                //_self.val("加载中");
+                //_self.attr('disabled',true);
+            },
+            success: function(html) {
+                layer.closeAll();
+                //正则表达式获取body块
+                var reg = /<body data-spm=\"fic-book\">([\s\S]*)<\/html>/g;
+
+                var html = reg.exec(html)[1];
+
+                $("body").html(html);
+
+            },
+            complete: function(XMLHttpRequest){
+                layer.closeAll();
+                //_self.val(t);
+               // _self.removeAttr("disabled");
+            },
+            error: function(){
+                layer.closeAll();
+                alert('请刷新页面重试');
+
+            }
+        });
+
+
+
+   }
+
+   $('#previous,#next ').on('click', function(){
+
+        var _self = $(this);
+
+        var url = _self.attr("url")  + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
+
+        //var  t =_self.val()
+
+        gethtml(url);
+
+    });
+
+</script>
+{% endblock %}

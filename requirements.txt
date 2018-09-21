@@ -1,0 +1,12 @@
+future
+Django
+django-crispy-forms
+django-formtools
+django-import-export
+django-hosts
+django-pure-pagination
+httplib2
+mysqlclient
+Pillow
+six
+

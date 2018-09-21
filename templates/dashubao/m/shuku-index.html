@@ -1,0 +1,115 @@
+{% extends 'dashubao/m/shuku-base.html' %}
+{% block title %}{{ WAP1_NAME }}-{{ WAP1_URL }}{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<body data-spm="fic-main">
+    <header class="sogou_coop h_min h_fixed">
+        <div class="h_min_w ">
+            <h1 class="logo_min">
+                <a href="#">
+                    <i class="image sprite-icons-home"></i>
+                </a>
+            </h1>
+            <div class="showNav">
+                <h2>大书包小说</h2>
+            </div>
+
+            <div class="sogou">
+                <a href="#" class="toSOGOU">
+                    <i class="img sprite-icons-search"></i></a>
+            </div>
+
+        </div>
+    </header>
+
+    {% include 'dashubao/p/navigation.html' %}
+    <div class="stream bookList">
+        <div class="wrap streamWrap" id="newbooklist">
+            <div class="recommendList" id="recommendList">
+                <div class="wrap">
+                    <div class="feed feedBook_recommend recommendRecentRead">
+                        <div class="main">
+                            <div class="topic">
+                                <h3>最近阅读</h3>
+                                <a href="{% url 'novels:novels_historybookshelf' %}" class="more-link">
+                                    <span>其余<em id="lishicount">0</em>本</span>
+                                    <i class="sprite-icons-arrow-more"></i>
+                                </a>
+                            </div>
+                            <div class="feed feedBook" id="lishibook">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% for row in noveldetail.object_list %}
+            <div class="feed feedBook newbooklist">
+                <a href="{{ row.get_info_path }}" class="main">
+                    <h4>{{ row.novel_name }}</h4>
+                    <div class="cover">
+                        <div class="img"><img onerror="this.src='{% static 'images/noimg.jpg' %}'" src="{{ row.image|default_if_none:DEF_FENMIAN }}" style="opacity: 1;"></div>
+                    </div>
+                    <div class="info">
+                        {{ row.novel_author }} | {{ row.novelclassify.caption }} |{{ row.get_book_status }}
+                    </div>
+
+                    <div class="desc">
+                        {% autoescape off %}
+                            {{ row.novel_info|default:'还没有介绍欢迎同学添加' }}
+                        {% endautoescape %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+
+        </div>
+        <div class="pagelink" style="display: none;">
+          {% if noveldetail.has_next %}
+              <a href="{{ request.path }}?{{ noveldetail.next_page_number.querystring }}">下一页</a>
+          {% endif %}
+        </div>
+
+
+    </div>
+
+</body>
+{% endblock %}
+{% block custom_js %}
+    <script src="{% static 'm/js/jquery.ias.min.js' %}"></script>
+    <script>
+        var ias = $.ias({
+            container: "#newbooklist", //包含所有文章的元素
+            item: ".newbooklist", //文章元素
+            pagination: ".pagelink", //分页元素
+            next: ".pagelink a",
+        });
+        ias.extension(new IASTriggerExtension({
+            text: '<div class="loadMore"><i class="i iG iG_D7 iLoadingAnim"></i><a href="javascript:" class="more">点击加载更多</a><span>加载中...</span></div>', //此选项为需要点击时的文字
+          //  offset: 2, //设置此项后，到 offset-1 页之后需要手动点击才能加载，取消此项则一直为无限加载
+        }));
+        ias.extension(new IASSpinnerExtension());
+        ias.extension(new IASNoneLeftExtension({
+            text: '<div class="loadMore"><i class="i iG iG_D7 iLoadingAnim"></i><a href="javascript:" class="more">加载完成</a><span>加载中...</span></div>', // 加载完成时的提示
+        }));
+
+        var bookshelfs = $.fn.cookie("bookshelfs");
+        if(bookshelfs){
+            bookshelfs = JSON.parse(bookshelfs);
+            var html = "<a href=\""+ bookshelfs[0].url +"\" class=\"main\">"
+                html += "<h4>"+ bookshelfs[0].bookname +"</h4>"
+                html += "<div class=\"cover\">"
+                html += "<div class=\"img\">"
+                html += "<img src=\""+bookshelfs[0].image + "\" onerror=\"this.src='{% static 'images/noimg.jpg' %}'\" style=\"opacity: 1;\">"
+                html += "</div></div>"
+                html += "<div class=\"info\">作者："+bookshelfs[0].bookauthor+"</div>"
+                html += "<div class=\"desc\">历史书签</div>"
+                html += "</a>"
+            $("#lishibook").html(html)
+            $("#lishicount").html(bookshelfs.length)
+        }else {
+
+            $("#recommendList").hide()
+        }
+
+    </script>
+{% endblock %}

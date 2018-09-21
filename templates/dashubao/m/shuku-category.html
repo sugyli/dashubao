@@ -1,0 +1,49 @@
+{% extends 'dashubao/m/shuku-base.html' %}
+{% block title %}小说分类-{{ WAP1_NAME }}-{{ WAP1_URL }}{% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <body>
+
+        <header class="sogou_coop h_min h_fixed">
+            <div class="h_min_w ">
+                <h1 class="logo_min">
+                    <a href="javascript:history.go(-1);">
+                        <i class="image sprite-icons-home"></i>
+                    </a>
+                </h1>
+                <div class="showNav">
+                    <h2>分类列表</h2>
+                </div>
+
+                <div class="sogou">
+                    <a href="#" class="toSOGOU">
+                        <i class="img sprite-icons-search"></i></a>
+                </div>
+
+            </div>
+        </header>
+        {% include 'dashubao/p/navigation.html' %}
+        <div class="categoryList">
+
+            <h4>所有分类</h4>
+
+            <div class="wrap categoryWrap">
+                {% for row in all_novelclassify %}
+                <div class="category">
+                    <a href="{{ row.get_sortlist_path }}" class="main">
+                        <div class="name">{{ row.caption }}</div>
+                        <div class="toDetail"><i class="i iG iG_B1"></i></div>
+                    </a>
+                </div>
+                {% endfor %}
+
+
+            </div>
+        </div>
+
+
+
+
+
+    </body>
+{% endblock %}

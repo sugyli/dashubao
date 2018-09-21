@@ -1,0 +1,220 @@
+<!doctype html>
+{% load staticfiles %}
+<html lang="zh-cn">
+<head>
+<title>{{ chapter.chapter_name }} {{ chapter.noveldetail.novel_name }}_{{ WAP1_NAME }}_{{ WAP1_URL }}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css" href="{% static 'm/css/yuedu.css' %}">
+</head>
+<style>
+    .article-bd p {
+        text-indent:1em;
+    }
+    .reward-link a .quxiaozan-icon {
+        width: 12px;
+        height: 12px;
+        background-position: -13px -53px;
+        background-size: 140px 140px;
+    }
+    .reward-link a .dianzan-icon {
+        width: 12px;
+        height: 12px;
+        background-position: -13px -42px;
+        background-size: 140px 140px;
+    }
+    li, ol, ul {
+        list-style: none;
+    }
+    .pager {
+        display: flex;
+        padding-top: 10px;
+        height: auto;
+        overflow: visible;
+    }
+    .pager .select-wrap{
+        box-sizing: border-box;
+        margin: 0 15px 10px;
+        display: block;
+        -webkit-box-flex: 1;
+        flex: 1 1 0;
+        width: auto;
+        height: 40px;
+        line-height: 38px;
+    }
+    .pager-btnB {
+        -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.2);
+        -moz-box-shadow: 0 1px 1px rgba(0,0,0,.2);
+        box-shadow: 0 1px 1px rgba(0,0,0,.2);
+        border: 1px solid #d7d4d4;
+        background-image: -moz-linear-gradient(top,#f7f7f7,#ececec);
+        background-image: -webkit-linear-gradient(top,#f7f7f7,#ececec);
+        background-image: -o-linear-gradient(top,#f7f7f7,#ececec);
+        background-image: linear-gradient(top,#f7f7f7,#ececec);
+        background-color: #ececec;
+        color: #545454;
+    }
+
+    .pager-btn {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        border-radius: 3px;
+        text-align: center;
+    }
+
+    .pager select {
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: 5px 10px;
+        border: 0;
+        border-radius: 3px;
+        font-size: 16px;
+        box-shadow: none;
+    }
+    #content{
+
+        min-height: 350px;
+    }
+
+</style>
+<body>
+<article class="article-con">
+	<h1 class="article-title">{{ chapter.chapter_name }}</h1>
+    <div class="two-col article-info">
+        <div class="release-info">{{ chapter.update_time }}&nbsp;发布&nbsp;|&nbsp;{{ content.num_words }}字</div>
+        <div class="article-set">
+            <a href="javascript:void(0);" class="pattern"><i class="icon moon-icon"></i></a>
+            <a href="javascript:void(0);" class="a-minus">A-</a>
+            <a href="javascript:void(0);" class="a-plus">A+</a>
+            <a href="javascript:void(0);" class="correct" id="shuqian">书签</a>
+        </div>
+    </div>
+    <div class="betweenline"></div>
+    <div class="chapter-page">
+    	<a {% if previous_chapter %}href="{{ previous_chapter.get_content_path }}" class="btn"{% else %}href="javascript:void(0);" class="btn disable"{% endif %}>上一章</a>
+        <a {% if next_chapter %}href="{{ next_chapter.get_content_path }}" class="btn"{% else %}href="javascript:void(0);" class="btn disable"{% endif %}>下一章</a>
+    </div>
+    {% if spare_content %}
+    <li class="pager">
+        <div class="select-wrap pager-btnB pager-btn">
+            <select class="pager-btnB" id="changedata" onchange="changedata()" onfocus="this.style.width=document.body.clientWidth*0.78 + 'px'" onblur="this.style.width=document.body.clientWidth*0.78+ 'px'">
+                {% for row in spare_content %}
+                    {% ifequal content.id row.id %}
+                        <option selected="selected" value="{{ row.id }}">来源：{{ row.comefrom__comefrom }}</option>
+                    {% else %}
+                        <option value="{{ row.id }}">来源：{{ row.comefrom__comefrom }}</option>
+                    {% endifequal %}
+
+                {% endfor %}
+            </select>
+        </div>
+
+    </li>
+    {% endif %}
+    <div class="article-bd" id="content">
+
+     {% autoescape off %}
+        {{ content.content|default:'本章节还没有智能匹配到欢迎同学提供来源' }}
+     {% endautoescape %}
+    </div>
+    <div class="reward-link"><a href="javascript:void(0);" id="zan"><span class="circle"><i class="icon dianzan-icon"></i></span>给作者点赞</a></div>
+    <div class="author-tips"><a href="{% url 'operation:operation_adduserask' comefrom %}">[提示] 我有错误举报！</a></div>
+    <div class="chapter-page">
+    	<a {% if previous_chapter %}href="{{ previous_chapter.get_content_path }}" class="btn"{% else %}href="javascript:void(0);" class="btn disable"{% endif %}>上一章</a>
+        <a {% if next_chapter %}href="{{ next_chapter.get_content_path }}" class="btn"{% else %}href="javascript:void(0);" class="btn disable"{% endif %}>下一章</a>
+    </div>
+    <div class="breadcrumb no-pd">
+        <div class="bd">
+            <a href="/"><i class="icon home-icon"></i>首页</a>
+            <span class="gt">&gt;</span>
+            <a href="{{ chapter.noveldetail.get_info_path }}">{{ chapter.noveldetail.novel_name }}</a>
+            <span class="gt">&gt;</span>
+            <span class="last">{{ chapter.chapter_name }}</span>
+        </div>
+    </div>
+</article>
+
+<script type="text/javascript" src="{% static 'm/js/jquery-content.js' %}"></script>
+<script type="text/javascript" src="{% static 'layer_mobile/layer.js' %}"></script>
+<script type="text/javascript" src="{% static 'm/js/p.js' %}"></script>
+<script type="text/javascript" src="{% static 'm/js/mobile.js' %}"></script>
+
+
+<div class="sidespen">
+	<a href="/" class="home"><i class="icon home-icon"></i></a>
+    <a href="{{ chapter.noveldetail.get_info_path }}" class="catalog"><i class="icon catalog-icon"></i></a>
+    <a href="{% url 'users:users_home' %}" class="ucenter"><i class="icon ucenter-icon"></i></a>
+    <i class="icon close-icon"></i>
+</div>
+
+<script>
+var book = JSON.stringify({ 'bookid':{{ chapter.noveldetail.id }},'page':{{ page }},'chapterid':{{ chapter.id }} });
+$.fn.cookie('book', book, { expires: 3600, path: "/" });
+// 重写js array.push 避免添加重复元素
+Array.prototype.oldUnshift=Array.prototype.unshift;
+Array.prototype.pushSetObj=function(obj){
+								var whetherRepeat=false;
+									//alert(obj.name);
+								for(var i=0;i<this.length;i++){
+									if(this[i].bookid==obj.bookid){
+									    this.splice(i,1);
+                                        this.unshift(obj);
+										whetherRepeat=true;
+										break;
+									}
+								}
+								if(!whetherRepeat){
+									this.oldUnshift(obj);
+								}
+								return whetherRepeat;
+							}
+    var bookshelf =  { 'bookid':{{ chapter.noveldetail.id }},'bookname':"{{ chapter.noveldetail.novel_name }}",'bookauthor':"{{ chapter.noveldetail.novel_author }}",'url':"{{ request.path }}",'image':"{{ chapter.noveldetail.get_image_path }}" }
+    var bookshelfs = $.fn.cookie("bookshelfs");
+    if(bookshelfs){
+        bookshelfs = JSON.parse(bookshelfs)
+        bookshelfs.pushSetObj(bookshelf);
+
+    }else {
+        var bookshelfs = [];
+
+        bookshelfs.pushSetObj(bookshelf);
+
+    }
+    bookshelfs = JSON.stringify(bookshelfs);
+    $.fn.cookie('bookshelfs', bookshelfs, { expires: 3600, path: "/" });
+
+
+    var config ={
+        'bookid': "{{ chapter.noveldetail.url_md5 }}",
+        'chapterid': "{{ chapter.chapter_url_md5 }}",
+        'csrf_token': '{{ csrf_token }}',
+        'adduserzan': "{% url 'operation:operation_adduserzan' %}",
+        'adduserfav': "{% url 'operation:operation_adduserfav' %}"
+    }
+
+    function changedata() {
+        var changedata = document.getElementById("changedata");
+        var cid = changedata.options[changedata.selectedIndex].value;
+        $.ajax({
+			url: "{{ request.path }}",
+			type: "post",
+			data: {'cid':cid},
+			async: true,
+			beforeSend:function(xhr, settings){
+				xhr.setRequestHeader("X-CSRFToken", config.csrf_token);
+			},
+			success: function (data) {
+                $('#content').html(data)
+			},
+
+		});
+    }
+
+</script>
+</body>
+</html>

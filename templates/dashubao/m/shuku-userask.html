@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>意见反馈</title>
+<link rel="stylesheet" type="text/css" href="{% static 'm/h5/css/read/v4/tags/0.0.30/c/g.css' %}" media="all"/>
+<meta name="data-spm" content="smwp">
+    <style>
+        .pager {
+            display: flex;
+            padding-top: 10px;
+            height: auto;
+            overflow: visible;
+        }
+        .pager .select-wrap{
+            box-sizing: border-box;
+            margin: 0 15px 10px;
+            display: block;
+            -webkit-box-flex: 1;
+            flex: 1 1 0;
+            width: auto;
+            height: 40px;
+            line-height: 38px;
+        }
+        .pager-btnB {
+            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.2);
+            -moz-box-shadow: 0 1px 1px rgba(0,0,0,.2);
+            box-shadow: 0 1px 1px rgba(0,0,0,.2);
+            border: 1px solid #d7d4d4;
+            background-image: -moz-linear-gradient(top,#f7f7f7,#ececec);
+            background-image: -webkit-linear-gradient(top,#f7f7f7,#ececec);
+            background-image: -o-linear-gradient(top,#f7f7f7,#ececec);
+            background-image: linear-gradient(top,#f7f7f7,#ececec);
+            background-color: #ececec;
+            color: #545454;
+        }
+
+        .pager-btn {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            border-radius: 3px;
+            text-align: center;
+        }
+
+        .pager select {
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 5px 10px;
+            border: 0;
+            border-radius: 3px;
+            font-size: 16px;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+<header class="header pageHead">
+    <div class="wrap headerWrap">
+        <div class="wrap">
+            <h1>意见反馈</h1>
+            <div class="opts optsLeft">
+                <a href="{{ comefrom }}" class="opt reBack"><i class="i iG iG_A4"></i><b>返回</b></a>
+            </div>
+            <div class="opts optsRight">
+                <a href="/" class="opt toBookStore"><i class="i iG iG_A5"></i><b>书城</b></a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="bug-report">
+    <textarea name="content" class="content grey" rows="5" placeholder="不能超过200个字" id="message"></textarea>
+    <li class="pager">
+        <div class="select-wrap pager-btnB pager-btn" id="changedata">
+            <select class="pager-btnB" onfocus="this.style.width=document.body.clientWidth*0.78 + 'px'" onblur="this.style.width=document.body.clientWidth*0.78+ 'px'">
+                <option selected="selected" value="章节内容错误">章节内容错误</option>
+                <option value="错别字较多">错别字较多</option>
+                <option value="低俗情色">低俗情色</option>
+                <option value="其他问题">其他问题</option>
+            </select>
+        </div>
+
+    </li>
+
+    <button type="button" class="btn btnA btnBlock">提交</button>
+    <div class="msg">详细的描述有助于我们尽快处理您遇到的问题，或采纳您的建议。</div>
+</div>
+</body>
+<script type="text/javascript" src="{% static 'm/js/jquery-content.js' %}"></script>
+<script type="text/javascript" src="{% static 'layer_mobile/layer.js' %}"></script>
+<script>
+    $("body").on("click", "button", function () {
+        var selecttext = $('#changedata option:selected').text();//选中的文本
+        var mes = $.trim($("#message").val());
+        if(mes==null||mes==undefined||mes==""){
+
+            showmsg('必须填写内容')
+            return
+        }
+        var data = "message=" + encodeURI(selecttext + ' ' + mes)
+        layer.open({type: 2,shadeClose: true});
+	    $.ajax({
+	        url: "{{ request.path }}",
+	        type: "post",
+	        data: data,
+			async: true,
+			beforeSend:function(xhr, settings){
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+	        success: function (data) {
+	        	layer.closeAll();
+	        	if(data.message){
+	        		showmsg(data.message)
+
+                }else if(data.status == "success"){
+                    $("#message").val("")
+                    showmsg('提交成功')
+                }else if(data.msg){
+
+	        		showmsg(data.msg)
+				}
+
+	        },
+			error: function(){
+	        	layer.closeAll();
+	        	showmsg('请求失败')
+            }
+	    });
+    });
+    function showmsg(msg){
+        layer.open({
+            content: msg
+            ,btn: '我知道了'
+            ,shadeClose: true
+        });
+    }
+
+</script>
+</html>

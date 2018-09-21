@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="keywords" content="{% block keywords %}{% endblock %}"/>
+    <meta name="description" content="{% block description %}{% endblock %}"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta name="MobileOptimized" content="240"/>
+    <meta name="applicable-device" content="mobile"/>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'm/h5/css/read/v4/tags/0.0.30/c/g.css' %}" media="all"/>
+    <script src="{% static 'm/js/jquery.min.js' %}"></script>
+    <script src="{% static 'layer_mobile/layer.js' %}"></script>
+    <script src="{% static 'm/js/p.js' %}"></script>
+    {% block custom_css %}
+    {% endblock %}
+</head>
+{% block content %}
+{% endblock %}
+{% block custom_js %}
+{% endblock %}
+</html>

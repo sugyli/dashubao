@@ -1,0 +1,125 @@
+{% extends 'dashubao/m/shuku-base.html' %}
+{% block title %}临时书架_{{ WAP1_NAME }}_{{ WAP1_URL }}{% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <body data-spm="fic-bookShelf">
+        <header class="sogou_coop h_min h_fixed">
+            <div class="h_min_w ">
+                <h1 class="logo_min">
+                    <a href="javascript:history.go(-1);">
+                        <i class="i iG iG_A4"></i>
+                    </a>
+                </h1>
+                <div class="showNav">
+                    <h2>临时书架</h2>
+                </div>
+
+                <div class="sogou">
+                    <a href="/search?_once_=000218_ss_rk" class="toSOGOU">
+                        <i class="img sprite-icons-search"></i></a>
+                </div>
+
+            </div>
+        </header>
+        {% include 'dashubao/p/navigation.html' %}
+        <div class="my-books">
+            <section class="unlogin-wrapper">
+                <div class="unlogin">
+                    <div class="status item">注册会员使用永久书架</div>
+
+                </div>
+            </section>
+
+            <section class="recent">
+                <h3><i class="i iG iG_B5"></i>最近阅读</h3>
+            </section>
+
+        </div>
+    </body>
+
+{% endblock %}
+{% block custom_js %}
+    <script>
+        function c(a) {
+            a.preventDefault()
+        }
+        v = $(".my-books"),w = v.children(".recent");
+        w.find("h3").append('<a href="javascript:;" class="edit"><i class="i iG iG_B7"></i></a><span class="confirm"><a href="javascript:;" class="no">\u53D6\u6D88</a><a href="javascript:;" class="yes">\u5B8C\u6210</a></span>'),
+        w.find("h3").on("click", "a",
+            function(a) {
+                a.preventDefault();
+                var b = $(a.currentTarget);
+                b.hasClass("edit") ? (w.addClass("edit expand"),w.on("click", ".summary", c)) : b.hasClass("yes") ? (w.removeClass("edit") , w.off("click", ".summary", c)) : b.hasClass("no") && (w.removeClass("edit"), w.off("click", ".summary", c))
+            });
+
+        w.on("click", ".remove",
+        function(a) {
+            a.preventDefault();
+            var b = $(a.currentTarget),
+            c = b.closest("li");
+            dal_bookshelf(Number(b.attr("data-id"))),
+            c.animate({
+                opacity: 0
+            },
+            {
+                duration: "fast",
+                complete: function() {
+                    c.remove()
+                }
+            })
+        })
+
+
+        var bookshelfs = $.fn.cookie("bookshelfs");
+        if(bookshelfs){
+            bookshelfs = JSON.parse(bookshelfs)
+            var html = "<ul>";
+            for(j = 0,len=bookshelfs.length; j < len; j++) {
+
+                html += "<li>";
+                html += "<a href=\""+ bookshelfs[j].url +"\" class=\"summary\">";
+                html += "<div class=\"cover\">"
+                html += "<img src=\""+ bookshelfs[j].image +"\" onerror=\"this.src='{% static 'images/noimg.jpg' %}'\" style=\"opacity: 1;\">"
+                html += "</div>"
+                html += "<span class=\"title\">"+ bookshelfs[j].bookname +"</span>"
+                html += "</a>"
+                html += "<a href=\"javascript:\" class=\"remove\" data-id=\""+ bookshelfs[j].bookid  +"\"><i class=\"i iG iG_C1\"></i></a>"
+                html += "</li>"
+
+            }
+            html += "</ul>"
+            $(w).append(html);
+        }
+
+        function dal_bookshelf(bookid){
+            var itme = bookshelfs;
+            for(var i=0;i<itme.length;i++){
+				if(itme[i].bookid==bookid){
+					itme.splice(i,1);
+					bookshelfs = itme;
+                    itme = JSON.stringify(itme);
+                    $.fn.cookie('bookshelfs', itme, { expires: 3600, path: "/" });
+					break;
+                }
+            }
+
+
+        }
+
+        Array.prototype.pushDelObj=function(bookid){
+								var whetherRepeat=false;
+
+								for(var i=0;i<this.length;i++){
+									if(this[i].bookid==bookid){
+									    this.splice(i,1);
+                                        bookshelfs = JSON.stringify(this);
+                                        $.fn.cookie('bookshelfs', bookshelfs, { expires: 3600, path: "/" });
+									    whetherRepeat=true;
+										break;
+									}
+								}
+								return whetherRepeat;
+							}
+    </script>
+
+{% endblock %}
