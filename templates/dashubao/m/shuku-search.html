@@ -12,7 +12,7 @@
                     <a href="/" class="opt reBack"><i class="i iG iG_A4"></i><b></b></a>
                 </div>
                 <div class="opts optsRight">
-                    <a href="/bookShelf/?_once_=000218_sy_sj" class="opt toBookShelf"><i class="i iG iG_A2"></i><b></b></a>
+                    <a href="{% url 'users:users_favbook' %}" class="opt toBookShelf"><i class="i iG iG_A2"></i><b></b></a>
                 </div>
             </div>
         </div>
@@ -29,9 +29,9 @@
 
 
     <div class="search">
-        <form action="{{ request.path }}">
+        <form action="{{ request.path }}" onsubmit="return toVaild()">
             <input type="hidden" name="s_type" value="{{ s_type }}">
-            <input type="text" class="key" name="q" value="{{ q }}" placeholder="选择书名 or 作者 开始搜索">
+            <input type="text" id="q" class="key" name="q" value="{{ q }}" placeholder="选择书名 or 作者 开始搜索">
             <button type="submit" class="submit" value="Search"><i class="i iG iG_B2"></i></button>
         </form>
 
@@ -43,7 +43,6 @@
             <div class="wrap hotwordWrap">
                 {% for r in ls %}
                     <div class="book"><a href="{{ r.get_info_path }}" class="main"><div class="name">{{ r.novel_name }}</div></a></div>
-
                 {% endfor %}
             </div>
         </div>
@@ -81,8 +80,16 @@
     </div>
     {% endifnotequal %}
     </body>
-
 {% endblock %}
 {% block custom_js %}
+<script>
+    function toVaild(){
+        var val = $.trim(document.getElementById("q").value);
+        if (!val){
+            return false;
 
+        }
+
+    }
+</script>
 {% endblock %}

@@ -43,8 +43,8 @@
                         <a href="javascript:history.go(-1);" class="opt goBack"><i class="i iG iG_A4"></i><b></b></a>
                     </div>
                     <div class="opts optsRight">
-                        <a href="#" class="opt toBookShelf"><i class="i iG iG_A2"></i><b></b></a>
-                        <a href="#" class="opt toSearch"><i class="i iG iG_G5"></i><b></b></a>
+                        <a href="{% url 'users:users_favbook' %}" class="opt toBookShelf"><i class="i iG iG_A2"></i><b></b></a>
+                        <a href="{% url 'search:search_bd_search' %}?s_type=name" class="opt toSearch"><i class="i iG iG_G5"></i><b></b></a>
                     </div>
                 </div>
             </div>
