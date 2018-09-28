@@ -1,0 +1,77 @@
+{% extends 'dashubao/m/usercenter-base.html' %}
+{% block title %}我的消息{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<body class="huibg">
+<nav class="navbar text-center">
+   <button class="topleft" onclick ="window.location.href='{% url 'users:users_home' %}'"><span class="iconfont icon-fanhui"> < </span></button>
+	<a class="navbar-tit center-block">我的消息</a>
+	<button class="topnav" id="open-button"><span class="iconfont icon-1"></span></button>
+</nav>
+<br/>
+<ul id="myTab" class="nav nav-tabs">
+   <li class="active"><a href="javascript:">个人消息</a>
+   </li>
+   <li><a href="{% url 'users:users_ask' %}">我的问题</a></li>
+</ul>
+
+<div id="myTabContent" class="tab-content">
+   <div class="tab-pane fade in active" id="sp1">
+      <ul class="ddlist messages">
+          {% for message in messages.object_list %}
+         <li>
+           <p>时间：{{ message.create_time }}</p>
+           <p><span>{{ message.message }}</span></p>
+         </li>
+          {% endfor %}
+      </ul>
+     <div class="pagelink" style="display: none;">
+          {% if messages.has_next %}
+              <a href="{{ request.path }}?{{ messages.next_page_number.querystring }}">下一页</a>
+          {% endif %}
+      </div>
+
+   </div>
+
+</div>
+</body>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'm/js/jquery.ias.min.js' %}"></script>
+    <script>
+        var ias = $.ias({
+            container: "#sp1", //包含所有文章的元素
+            item: ".messages", //文章元素
+            pagination: ".pagelink", //分页元素
+            next: ".pagelink a",
+        });
+        ias.extension(new IASTriggerExtension({
+            text: '<div style="padding: 10px;">点击加载更多</div>', //此选项为需要点击时的文字
+          //  offset: 2, //设置此项后，到 offset-1 页之后需要手动点击才能加载，取消此项则一直为无限加载
+        }));
+        ias.extension(new IASSpinnerExtension());
+        ias.extension(new IASNoneLeftExtension({
+            text: '<div style="padding: 10px;">加载完成！</div>', // 加载完成时的提示
+        }));
+
+        /*
+        ias.on('rendered', function(items) {
+            $(".content img").lazyload({
+                effect: "fadeIn",
+                failure_limit : 10
+            }); //这里是你调用Lazyload的代码
+        })
+        */
+
+    </script>
+
+
+{% endblock %}
+
+
+
+
+
+
+

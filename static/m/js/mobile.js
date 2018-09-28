@@ -20,8 +20,7 @@ $(function () {
 	//点 赞
 	$("#zan").on("click", function() {
 		var _self = $(this);
-		var data = "bookid=" + config.bookid +'&chapterid=' + config.chapterid
-
+		var data = "bookid=" + config.bookid
 		$.ajax({
 			url: config.adduserzan,
 			type: "post",
@@ -46,18 +45,23 @@ $(function () {
 		});
 
 	});
+		//Side Spen
+	$(".sidespen .close-icon").on("click", function() {
+		$(this).parents(".sidespen").remove();
+	});
 
 	//收藏
 	$("#shuqian").on("click", function() {
 		var _self = $(this);
 		var data = "bookid=" + config.bookid +"&chapterid=" + config.chapterid
-		layer.open({type: 2,shadeClose: true});
+
 		$.ajax({
 			url: config.adduserfav,
 			type: "post",
 			data: data,
 			async: true,
 			beforeSend:function(xhr, settings){
+				layer.open({type: 2,shadeClose: true});
 				xhr.setRequestHeader("X-CSRFToken", config.csrf_token);
 			},
 			success: function (data) {

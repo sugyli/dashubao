@@ -1,5 +1,5 @@
 {% extends 'dashubao/m/shuku-base.html' %}
-{% block title %}侠行水浒全文阅读_侠行水浒最新章节_{{ WAP1_NAME }}_{{ WAP1_URL }}{% endblock %}
+{% block title %}{{ noveldetail.novel_name }}最新更新_{{ noveldetail.novel_name }}最新章节_{{ WAP1_NAME }}_{{ WAP1_URL }}{% endblock %}
 {% load staticfiles %}
 {% block custom_css %}
     <style>
@@ -33,7 +33,6 @@
 
     </style>
 {% endblock %}
-
 {% block content %}
     <body data-spm="fic-book">
         <header class="header pageHead">
@@ -51,14 +50,11 @@
             </div>
         </header>
         {% include 'dashubao/p/navigation.html' %}
-
         <div class="book-detail">
-
             <div class="default-box">
-
                 <div class="summary">
                     <div class="cover">
-                        <img onerror="this.src='{% static 'images/noimg.jpg' %}'" src="{{ noveldetail.image|default_if_none:DEF_FENMIAN }}" alt="{{ noveldetail.novel_name }}">
+                        <img onerror="this.src='{% static 'images/noimg.jpg' %}'" src="{{ noveldetail.get_image_path|default:DEF_FENMIAN }}" alt="{{ noveldetail.novel_name }}">
                     </div>
                     <div class="info">
                         <h3>
@@ -69,22 +65,17 @@
                         </p>
                         <p>
                             <a href="javascript:">{{ noveldetail.novelclassify.caption }}</a>
-
                             <span>{{ noveldetail.get_book_status }} </span>
-
                         </p>
-                        <p>总赞数: {{ noveldetail.novel_zan_nums }}</p>
-                        <p>总收藏数: {{ noveldetail.novel_fav_nums }}</p>
+                        <p>点赞数: {{ noveldetail.novel_zan_nums }}</p>
+                        <p>收藏数: {{ noveldetail.novel_fav_nums }}</p>
                     </div>
-
-
                 </div>
-
                 <div class="intro">
                     <a href="javascript:" class=""><!-- 展开使用样式expand -->
                         <span>
                             {% autoescape off %}
-                                {{ noveldetail.novel_info|default:'还没有介绍欢迎同学添加' }}
+                                {{ noveldetail.novel_info|default:'还没有介绍欢迎同学举报' }}
                             {% endautoescape %}
                         </span>
                         <span class="opt"><em>全部<i>↓</i></em><em>收起<i>↑</i></em></span>
@@ -93,13 +84,11 @@
 
                 <div class="book-tag-wrapper">
                 标签:
-                    <a class="tag" href="javascript:">等待</a>
-
+                    <a class="tag" href="javascript:">升级中</a>
                 </div>
                 <p>更新时间：{{ noveldetail.update_time }}</p>
-
                 <div class="ope2">
-	                <a href="javascript:alert('开放中')" class="specleft" id="jsshang">打赏</a><a href="javascript:alert('开放中')" id="jszhuan">钻石</a><a href="javascript:alert('开放中')" id="jshua">献花</a><a href="/DirIP/?i=9" class="specright">查看书架</a>
+	                <a href="javascript:alert('设计中')" class="specleft" id="jsshang">打赏</a><a href="javascript:alert('设计中')" id="jszhuan">钻石</a><a href="javascript:alert('设计中')" id="jshua">献花</a><a href="/DirIP/?i=9" class="specright">查看书架</a>
                 </div>
 
             </div>
@@ -108,16 +97,13 @@
 
             <ul class="list-box catalog">
                 <li class="addon">目录
-
                     <a href="javascript:" class="aR {{ isdaoxu }}" id="isdaoxu">
                         <i class="i iG iG_C6"></i>
                     </a>
                 </li>
                 {% for row in chapters.object_list %}
                 <li class="addon {% ifequal row.id chapterid  %} curr {% endifequal %}">
-
                    <a href="{{ row.get_content_path }}">{{ row.chapter_name }}<span class="aR"><i class="i iG iG_B1"></i></span></a>
-
                 </li>
                 {% endfor %}
 
@@ -129,13 +115,9 @@
                     {% endif %}
                     <div class="select-wrap btn btnB">
                         <select class="btnB">
-
                             {% for i in pagecount %}
-
                             <option value="{{ request.path }}?page={{ i }}"   {% ifequal i chapters.number %} selected="selected" {% endifequal %}>{{ i }}/{{ chapters.paginator.num_pages }}</option>
-
                             {% endfor %}
-
                         </select>
                     </div>
                     {% if chapters.has_next %}
@@ -145,98 +127,88 @@
                     {% endif %}
                 </li>
             </ul>
-
         </div>
-    </body>
-
-{% endblock %}
-
-{% block custom_js %}
-
-<script>
-    var book = $.fn.cookie("book");
-    $.fn.cookie("book", '', { expires: -1, path: "/" });
-    var this_bookid = {{ noveldetail.id }};
-    var this_page = {{ chapters.number }};
-    var isdaoxu = "{{ isdaoxu }}"
-
-    if(book){
-        book = JSON.parse(book)
-        var url = "{{ request.path }}?page="+ book.page + '&isdaoxu=isdaoxu&chapterid='+book.chapterid;
-        if(book.bookid == this_bookid && !isdaoxu){
-            gethtml(url);
-        }else if(book.bookid == this_bookid && isdaoxu && this_page != book.page){
-            gethtml(url);
-        }
-
-    }
-
-    //介绍展现
-   $('.intro').on('click', function(){
-       $(this).children('a').toggleClass("expand");
-    });
-
-   $('select').change(function () {
-
-        var url = $(this).val() + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
-        gethtml(url);
-   });
-
-   $('#isdaoxu').on('click', function(){
-        $(this).toggleClass("isdaoxu");
-        var url = "{{ request.path }}?page=1" + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
-        gethtml(url);
-   });
-   function gethtml(url){
-       $.ajax({
-            cache: false,
-            type: 'get',
-            dataType:'html',
-            url:url,
-            data:'',
-            async: true,
-            beforeSend:function(XMLHttpRequest){
-                layer.open({type: 2,shadeClose: true});
-                //_self.val("加载中");
-                //_self.attr('disabled',true);
-            },
-            success: function(html) {
-                layer.closeAll();
-                //正则表达式获取body块
-                var reg = /<body data-spm=\"fic-book\">([\s\S]*)<\/html>/g;
-
-                var html = reg.exec(html)[1];
-
-                $("body").html(html);
-
-            },
-            complete: function(XMLHttpRequest){
-                layer.closeAll();
-                //_self.val(t);
-               // _self.removeAttr("disabled");
-            },
-            error: function(){
-                layer.closeAll();
-                alert('请刷新页面重试');
+        <script>
+            var book = $.fn.cookie("book");
+            $.fn.cookie("book", '', { expires: -1, path: "/" });
+            var this_bookid = {{ noveldetail.id }};
+            var this_page = {{ chapters.number }};
+            var isdaoxu = "{{ isdaoxu }}"
+            if(book){
+                book = JSON.parse(book)
+                var url = "{{ request.path }}?page="+ book.page + '&isdaoxu=isdaoxu&chapterid='+book.chapterid;
+                if(book.bookid == this_bookid && !isdaoxu){
+                    gethtml(url);
+                }else if(book.bookid == this_bookid && isdaoxu && this_page != book.page){
+                    gethtml(url);
+                }
 
             }
-        });
 
+            //介绍展现
+           $('.intro').on('click', function(){
+               $(this).children('a').toggleClass("expand");
+            });
 
+           $('select').change(function () {
 
-   }
+                var url = $(this).val() + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
+                gethtml(url);
+           });
 
-   $('#previous,#next ').on('click', function(){
+           $('#isdaoxu').on('click', function(){
+                $(this).toggleClass("isdaoxu");
+                var url = "{{ request.path }}?page=1" + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
+                gethtml(url);
+           });
+           function gethtml(url){
 
-        var _self = $(this);
+               $.ajax({
+                    cache: false,
+                    type: 'get',
+                    dataType:'html',
+                    url:url,
+                    data:'',
+                    async: true,
+                    beforeSend:function(XMLHttpRequest){
+                        layer.open({type: 2,shadeClose: true});
+                        //_self.val("加载中");
+                        //_self.attr('disabled',true);
+                    },
+                    success: function(html) {
+                        layer.closeAll();
+                        //正则表达式获取body块
+                        var reg = /<body data-spm=\"fic-book\">([\s\S]*)<\/body>/g;
+                        var html = reg.exec(html)[1];
+                        $("body").html(html);
 
-        var url = _self.attr("url")  + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
+                    },
+                    complete: function(XMLHttpRequest){
+                        layer.closeAll();
+                        //_self.val(t);
+                       // _self.removeAttr("disabled");
+                    },
+                    error: function(){
+                        layer.closeAll();
+                        alert('请刷新页面重试');
 
-        //var  t =_self.val()
+                    }
+                });
 
-        gethtml(url);
+           }
 
-    });
+           $('#previous,#next ').on('click', function(){
 
-</script>
+                var _self = $(this);
+
+                var url = _self.attr("url")  + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
+
+                //var  t =_self.val()
+
+                gethtml(url);
+
+            });
+
+        </script>
+    </body>
 {% endblock %}

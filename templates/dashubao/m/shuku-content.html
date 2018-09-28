@@ -109,21 +109,18 @@
                     {% else %}
                         <option value="{{ row.id }}">来源：{{ row.comefrom__comefrom }}</option>
                     {% endifequal %}
-
                 {% endfor %}
             </select>
         </div>
-
     </li>
     {% endif %}
     <div class="article-bd" id="content">
-
      {% autoescape off %}
-        {{ content.content|default:'本章节还没有智能匹配到欢迎同学提供来源' }}
+        {{ content.content|default:'本章节还没有智能匹配到欢迎同学举报' }}
      {% endautoescape %}
     </div>
     <div class="reward-link"><a href="javascript:void(0);" id="zan"><span class="circle"><i class="icon dianzan-icon"></i></span>给作者点赞</a></div>
-    <div class="author-tips"><a href="{% url 'operation:operation_adduserask' comefrom %}">[提示] 我有错误举报！</a></div>
+    <div class="author-tips"><a href="{% url 'users:users_adduserask' comefrom %}">[提示] 我有错误举报！</a></div>
     <div class="chapter-page">
     	<a {% if previous_chapter %}href="{{ previous_chapter.get_content_path }}" class="btn"{% else %}href="javascript:void(0);" class="btn disable"{% endif %}>上一章</a>
         <a {% if next_chapter %}href="{{ next_chapter.get_content_path }}" class="btn"{% else %}href="javascript:void(0);" class="btn disable"{% endif %}>下一章</a>
@@ -143,7 +140,6 @@
 <script type="text/javascript" src="{% static 'layer_mobile/layer.js' %}"></script>
 <script type="text/javascript" src="{% static 'm/js/p.js' %}"></script>
 <script type="text/javascript" src="{% static 'm/js/mobile.js' %}"></script>
-
 
 <div class="sidespen">
 	<a href="/" class="home"><i class="icon home-icon"></i></a>
@@ -206,11 +202,18 @@ Array.prototype.pushSetObj=function(obj){
 			data: {'cid':cid},
 			async: true,
 			beforeSend:function(xhr, settings){
+			    layer.open({type: 2,shadeClose: true});
 				xhr.setRequestHeader("X-CSRFToken", config.csrf_token);
 			},
 			success: function (data) {
+			    layer.closeAll();
                 $('#content').html(data)
 			},
+            error: function(){
+                layer.closeAll();
+                alert('出现故障');
+
+            }
 
 		});
     }

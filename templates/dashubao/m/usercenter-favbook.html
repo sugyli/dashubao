@@ -1,0 +1,61 @@
+{% extends 'dashubao/m/usercenter-base.html' %}
+{% block title %}小说收藏{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<body class="huibg">
+<nav class="navbar text-center">
+   <button class="topleft" onclick ="window.location.href='{% url 'users:users_home' %}'"><span class="iconfont icon-fanhui"> < </span></button>
+  <a class="navbar-tit center-block">小说书签</a>
+  <button class="topnav" id="open-button"><span class="iconfont icon-1"></span></button>
+</nav>
+<div class="usercenter" id="sp1">
+    <div class="favbook">
+    {% for favbook in favbooks.object_list %}
+      <div class="cdv dzi">
+          <a href="{{ favbook.get_new_chapter.get_content_path }}">
+          <p>书名：{{ favbook.novel.novel_name }}
+          <p>作者：{{ favbook.novel.novel_author }}</p>
+          <p>书签：{{ favbook.get_favchaptername }}</p>
+          <p>最新章节：{{ favbook.get_new_chapter.chapter_name }}</p>
+          <p>更新时间：{{ favbook.novel.update_time }}</p>
+          </a>
+      </div>
+    {% endfor %}
+    </div>
+     <div class="pagelink" style="display: none;">
+          {% if favbooks.has_next %}
+              <a href="{{ request.path }}?{{ favbooks.next_page_number.querystring }}">下一页</a>
+          {% endif %}
+     </div>
+</div>
+</body>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'm/js/jquery.ias.min.js' %}"></script>
+    <script>
+       var ias = $.ias({
+            container: "#sp1", //包含所有文章的元素
+            item: ".favbook", //文章元素
+            pagination: ".pagelink", //分页元素
+            next: ".pagelink a",
+        });
+        ias.extension(new IASTriggerExtension({
+            text: '<div style="padding: 10px;">点击加载更多</div>', //此选项为需要点击时的文字
+          //  offset: 2, //设置此项后，到 offset-1 页之后需要手动点击才能加载，取消此项则一直为无限加载
+        }));
+        ias.extension(new IASSpinnerExtension());
+        ias.extension(new IASNoneLeftExtension({
+            text: '<div style="padding: 10px;">加载完成！</div>', // 加载完成时的提示
+        }));
+
+    </script>
+
+{% endblock %}
+
+
+
+
+
+
+

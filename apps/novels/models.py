@@ -137,6 +137,9 @@ class NovelDetail(models.Model):
         else:
             return reverse('novels:novels_content',args=[first_chapter.noveldetail.url_md5,first_chapter.chapter_url_md5])
 
+
+
+
     def __str__(self):
         return self.novel_name
 

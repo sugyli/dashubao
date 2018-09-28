@@ -1,0 +1,83 @@
+<html>
+{% load staticfiles %}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="{% static 'm/h5/css/read/v4/tags/0.0.30/c/g.css' %}" media="all"/>
+    <meta name="data-spm" content="smwp">
+    <script src="{% static 'm/js/jquery.min.js' %}"></script>
+    <script src="{% static 'layer_mobile/layer.js' %}"></script>
+    <script src="{% static 'm/js/p.js' %}"></script>
+</head>
+<title>{{ WAP1_NAME }}</title>
+<body class="bac-yellow">
+
+<header class="header pageHead">
+    <div class="wrap headerWrap">
+        <div class="wrap">
+            <h1>签到</h1>
+            <div class="opts optsLeft">
+                <a href="/" class="opt reBack"><i class="i iG iG_A4"></i></a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="sign-box">
+    <div class="sign-state">
+       <h1 class="sign-title">{{ todayjifen }}</h1>
+            <p class="sign-description">{{ nextjifen }}</p>
+            <div class="sign-params clearfix">
+                <div class="sign-days">
+                    <h1>{{ frequency }}天</h1>
+                    <p>连续签到</p>
+                </div>
+
+                <div class="sign-foxticket">
+                    <a href="javascript:">
+                    <h1>{{ request.user.score }}</h1>
+                    <p>现有积分</p>
+                    </a>
+                </div>
+                <div class="sign-center-line"></div>
+            </div>
+        </div>
+    <div class="sign-date">
+        {% for item in qiandaodate %}
+            <ul class="sign-datelist sign-row-0">
+            {% for row in item  %}
+                {% if row.t == frequency %}
+                    <li class="sign-day sign-today sign-col-0">
+                    <h4>今天</h4>
+                    <p>{{ row.f }}<span class="sign-small">积分</span></p>
+                    </li>
+                {% elif row.t < frequency %}
+                    <li class="sign-day sign-col-0">
+                    <h4>第{{ row.t }}天</h4>
+                    <p>{{ row.f }}<span class="sign-small">积分</span></p>
+                    </li>
+                {% else %}
+                    <li class="sign-day sign-nosign sign-col-0">
+                    <h4>第{{ row.t }}天</h4>
+                    <p>{{ row.f }}<span class="sign-small">积分</span></p>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% endfor %}
+    </div>
+    <div class="sign-rule">
+        <h1>签到规则：</h1>
+        <p>1. 周期。</p>
+        <p>从首签起，30天为一周期。一周期的累计奖励990积分。</p>
+        <p>2、规则。</p>
+        <p>前三天签到，提供初始奖励20积分；</p>
+        <p>连续签到超过三天，提供基础奖励30积分；</p>
+        <p>每连续签到的第七天，提供全勤奖励50积分。</p>
+        <p>3、中断。</p>
+        <p>签到中断，将开始新一周期，重新计算签到天数。</p>
+    </div>
+</div>
+
+</body>
+</html>

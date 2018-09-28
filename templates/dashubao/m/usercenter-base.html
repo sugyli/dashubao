@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<head>
+	<meta charset="utf-8">
+	<meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>{% block title %}用户中心{% endblock %}</title>
+	<link href="{% static 'm/user/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'm/user/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/my_style.css' %}" rel="stylesheet">
+    <script src="{% static 'm/js/jquery.min.js' %}"></script>
+    <script src="{% static 'm/user/js/bootstrap.min.js' %}"></script>
+<!--必要样式-->
+<link rel="stylesheet" type="text/css" href="{% static 'm/user/css/menu_elastic.css' %}" />
+<script src="{% static 'm/user/js/snap.svg-min.js' %}"></script>
+<!--[if IE]>
+<script src="{% static 'm/user/js/html5.js' %}"></script>
+<![endif]-->
+{% block custom_css %}
+{% endblock %}
+</head>
+{% block content %}
+
+{% endblock %}
+
+<script src="{% static 'm/user/js/classie.js' %}"></script>
+<script src="{% static 'layer_mobile/layer.js' %}"></script>
+<script src="{% static 'm/js/p.js' %}"></script>
+
+{% block custom_js %}
+{% endblock %}
+</html>

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'novels',
     'users',
     'operation',
+    'search',
     'crispy_forms',
     'django_hosts',
     'pure_pagination'
@@ -78,8 +79,7 @@ ROOT_URLCONF = 'dashubao.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -200,14 +200,16 @@ if DEBUG:
             # 在终端打印
             'console': {
                 'level': 'DEBUG',
-                'filters': ['require_debug_true'],  # 只有在Django debug为True时才在屏幕打印日志
+                # 只有在Django debug为True时才在屏幕打印日志
+                'filters': ['require_debug_true'],
                 'class': 'logging.StreamHandler',  #
                 'formatter': 'simple'
             },
             'default': {
                 'level': 'INFO',
                 'class': 'logging.handlers.RotatingFileHandler',  # 保存到文件，自动切
-                'filename': os.path.join(BASE_DIR, "logs", 'default.log'),  # 日志文件
+                # 日志文件
+                'filename': os.path.join(BASE_DIR, "logs", 'default.log'),
                 'maxBytes': 1024 * 1024 * 50,  # 日志大小 50M
                 'backupCount': 3,  # 最多备份几个
                 'formatter': 'standard',
@@ -216,7 +218,8 @@ if DEBUG:
             'error': {
                 'level': 'ERROR',
                 'class': 'logging.handlers.RotatingFileHandler',  # 保存到文件，自动切
-                'filename': os.path.join(BASE_DIR, "logs", 'error.log'),  # 日志文件
+                # 日志文件
+                'filename': os.path.join(BASE_DIR, "logs", 'error.log'),
                 'maxBytes': 1024 * 1024 * 50,  # 日志大小 50M
                 'backupCount': 5,
                 'formatter': 'standard',
@@ -237,7 +240,8 @@ if DEBUG:
         'loggers': {
             # 默认的logger应用如下配置
             '': {
-                'handlers': ['default', 'console', 'error'],  # 上线之后可以把'console'移除
+                # 上线之后可以把'console'移除
+                'handlers': ['default', 'console', 'error'],
                 'level': 'DEBUG',
                 'propagate': True,  # 向不向更高级别的logger传递
             },
@@ -279,14 +283,16 @@ else:
             # 在终端打印
             'console': {
                 'level': 'DEBUG',
-                'filters': ['require_debug_true'],  # 只有在Django debug为True时才在屏幕打印日志
+                # 只有在Django debug为True时才在屏幕打印日志
+                'filters': ['require_debug_true'],
                 'class': 'logging.StreamHandler',  #
                 'formatter': 'simple'
             },
             'default': {
                 'level': 'INFO',
                 'class': 'logging.handlers.RotatingFileHandler',  # 保存到文件，自动切
-                'filename': os.path.join(BASE_DIR, "logs", 'default.log'),  # 日志文件
+                # 日志文件
+                'filename': os.path.join(BASE_DIR, "logs", 'default.log'),
                 'maxBytes': 1024 * 1024 * 50,  # 日志大小 50M
                 'backupCount': 3,  # 最多备份几个
                 'formatter': 'standard',
@@ -295,7 +301,8 @@ else:
             'error': {
                 'level': 'ERROR',
                 'class': 'logging.handlers.RotatingFileHandler',  # 保存到文件，自动切
-                'filename': os.path.join(BASE_DIR, "logs", 'error.log'),  # 日志文件
+                # 日志文件
+                'filename': os.path.join(BASE_DIR, "logs", 'error.log'),
                 'maxBytes': 1024 * 1024 * 50,  # 日志大小 50M
                 'backupCount': 5,
                 'formatter': 'standard',
@@ -337,45 +344,59 @@ GLOBALSETTINGS = {
 
 
 USER_LEVEL = [
-    {'level': '1级', 'min': -9999999, 'max': 50 ,'collect': 200},
-    {'level': '2级', 'min': 50, 'max': 200,'collect': 250},
-    {'level': '3级', 'min': 200, 'max': 500,'collect': 300},
-    {'level': '4级', 'min': 500, 'max': 800,'collect': 350},
-    {'level': '5级', 'min': 800, 'max': 1200,'collect': 400},
-    {'level': '6级', 'min': 1200, 'max': 2000,'collect': 450},
-    {'level': '7级', 'min': 2000, 'max': 5000,'collect': 500},
-    {'level': '8级', 'min': 5000, 'max': 10000,'collect': 550},
-    {'level': '9级', 'min': 10000, 'max': 20000,'collect': 600},
-    {'level': '10级', 'min': 20000, 'max': 32000,'collect': 650},
-    {'level': '11级', 'min': 32000, 'max': 50000,'collect': 700},
-    {'level': '12级', 'min': 50000, 'max': 70000,'collect': 750},
-    {'level': '13级', 'min': 70000, 'max': 100000,'collect': 800},
-    {'level': '14级', 'min': 100000, 'max': 140000,'collect': 850},
-    {'level': '15级', 'min': 140000, 'max': 190000,'collect': 900},
-    {'level': '16级', 'min': 190000, 'max': 250000,'collect': 950},
-    {'level': '17级', 'min': 250000, 'max': 320000,'collect': 1000},
-    {'level': '18级', 'min': 320000, 'max': 400000,'collect': 1100},
-    {'level': '19级', 'min': 400000, 'max': 490000,'collect': 1200},
-    {'level': '20级', 'min': 490000, 'max': 590000,'collect': 1300},
-    {'level': '21级', 'min': 590000, 'max': 700000,'collect': 1400},
-    {'level': '22级', 'min': 700000, 'max': 820000,'collect': 1500},
-    {'level': '23级', 'min': 820000, 'max': 950000,'collect': 1600},
-    {'level': '24级', 'min': 950000, 'max': 9999999,'collect': 2000}
+    {'level': '1级', 'min': -9999999, 'max': 50, 'collect': 200},
+    {'level': '2级', 'min': 50, 'max': 200, 'collect': 250},
+    {'level': '3级', 'min': 200, 'max': 500, 'collect': 300},
+    {'level': '4级', 'min': 500, 'max': 800, 'collect': 350},
+    {'level': '5级', 'min': 800, 'max': 1200, 'collect': 400},
+    {'level': '6级', 'min': 1200, 'max': 2000, 'collect': 450},
+    {'level': '7级', 'min': 2000, 'max': 5000, 'collect': 500},
+    {'level': '8级', 'min': 5000, 'max': 10000, 'collect': 550},
+    {'level': '9级', 'min': 10000, 'max': 20000, 'collect': 600},
+    {'level': '10级', 'min': 20000, 'max': 32000, 'collect': 650},
+    {'level': '11级', 'min': 32000, 'max': 50000, 'collect': 700},
+    {'level': '12级', 'min': 50000, 'max': 70000, 'collect': 750},
+    {'level': '13级', 'min': 70000, 'max': 100000, 'collect': 800},
+    {'level': '14级', 'min': 100000, 'max': 140000, 'collect': 850},
+    {'level': '15级', 'min': 140000, 'max': 190000, 'collect': 900},
+    {'level': '16级', 'min': 190000, 'max': 250000, 'collect': 950},
+    {'level': '17级', 'min': 250000, 'max': 320000, 'collect': 1000},
+    {'level': '18级', 'min': 320000, 'max': 400000, 'collect': 1100},
+    {'level': '19级', 'min': 400000, 'max': 490000, 'collect': 1200},
+    {'level': '20级', 'min': 490000, 'max': 590000, 'collect': 1300},
+    {'level': '21级', 'min': 590000, 'max': 700000, 'collect': 1400},
+    {'level': '22级', 'min': 700000, 'max': 820000, 'collect': 1500},
+    {'level': '23级', 'min': 820000, 'max': 950000, 'collect': 1600},
+    {'level': '24级', 'min': 950000, 'max': 9999999, 'collect': 2000}
+]
+
+USER_QIANDAO = [
+    [{'t': 1, 'f': 20}, {'t': 2, 'f': 20}, {'t': 3, 'f': 20}, {'t': 4, 'f': 30}, {'t': 5, 'f': 30}],
+    [{'t': 6, 'f': 30}, {'t': 7, 'f': 50}, {'t': 8, 'f': 30}, {'t': 9, 'f': 30}, {'t': 10, 'f': 30}],
+    [{'t': 11, 'f': 30}, {'t': 12, 'f': 30}, {'t': 13, 'f': 30}, {'t': 14, 'f': 50}, {'t': 15, 'f': 30}],
+    [{'t': 16, 'f': 30}, {'t': 17, 'f': 30}, {'t': 18, 'f': 30}, {'t': 19, 'f': 30}, {'t': 20, 'f': 30}],
+    [{'t': 21, 'f': 50}, {'t': 22, 'f': 30}, {'t': 23, 'f': 30}, {'t': 24, 'f': 30}, {'t': 25, 'f': 30}],
+    [{'t': 26, 'f': 30}, {'t': 27, 'f': 30}, {'t': 28, 'f': 50}, {'t': 29, 'f': 50}, {'t': 30, 'f': 50}]
 ]
 
 WEB1_NAME = '大书包小说'
-WEB1_URL = 'http://www.dashubao.net'
+WEB1_URL = 'https://www.51xunyue.com'
 WAP1_NAME = '大书包小说手机网'
-WAP1_URL = 'http://m.dashubao.net'
+WAP1_URL = 'https://m.51xunyue.com'
 DEF_FENMIAN = 'http://fenmian.dashubao.net/noimg.jpg'
 WAP_CHAPTER_LIST = 15
+SCT = 1200
+EMAIL_V_URL = "51xunyue.com"
+
+
+
+
 
 EMAIL_HOST = "smtp.163.com"
 EMAIL_PORT = 25
 EMAIL_HOST_USER = "m17355553110_1@163.com"
 EMAIL_HOST_PASSWORD = config.email_host_password
-#另外EMAIL_USE_TLS是true的话，EMAIL_PORT不是25吧。
+# 另外EMAIL_USE_TLS是true的话，EMAIL_PORT不是25吧。
 EMAIL_USE_TLS = False
 EMAIL_FROM = EMAIL_HOST_USER
-EMAIL_WEB_URL = WEB1_URL
 

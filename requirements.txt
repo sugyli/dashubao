@@ -9,4 +9,3 @@ httplib2
 mysqlclient
 Pillow
 six
-

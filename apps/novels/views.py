@@ -69,7 +69,18 @@ class M_InfoView(View):
                     'first_chapter_addr': first_chapter_addr
                 })
 
-        return HttpResponseRedirect('/')
+
+
+            return render(request, get_temp("error.html",temp_dir_p), {
+                'message': '正在生成章节'
+            })
+
+        else:
+            return render(request, get_temp("error.html",temp_dir_p), {
+                'message': '本书暂时不能访问'
+            })
+
+        #return HttpResponseRedirect('/')
 
 
 
@@ -82,13 +93,13 @@ class M_ContentView(View):
         else:
             chapter = modelhelp.get_one_chapter(kwargs={'chapter_url_md5': chapterid})
 
-
         if chapter:
             page = math.ceil(chapter.chapter_order/settings.WAP_CHAPTER_LIST)
             if page <= 0:
                 page = 1
             all_content = chapter.get_book_content()
             comefrom = help.encryption_urllib_base64(request.path)
+
             previous_chapter = modelhelp.get_previous_chapter(
                 kwargs={'noveldetail': chapter.noveldetail, 'chapter_order__lt': chapter.chapter_order})
 
@@ -114,7 +125,9 @@ class M_ContentView(View):
 
         else:
 
-            return HttpResponseRedirect('/')
+            return render(request, get_temp("error.html",temp_dir_p), {
+                'message': '正在生成章节'
+            })
 
     def post(self, request, bookid, chapterid):
 

@@ -51,7 +51,7 @@ try:
     # 使用execute方法执行SQL语句
     cursor.execute('set global max_allowed_packet = 67108864')
     cursor.execute(
-        "select * from jieqi_article_article where lastchapterid > 0  order by articleid asc LIMIT 100")
+        "select * from jieqi_article_article where lastchapterid > 0  order by articleid asc LIMIT 200")
     # 使用 fetchone() 方法获取一条数据
     # data = cursor.fetchone()
 

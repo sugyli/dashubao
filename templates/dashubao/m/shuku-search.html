@@ -1,0 +1,88 @@
+{% extends 'dashubao/m/shuku-base.html' %}
+{% block title %}小说搜索-{{ WAP1_NAME }}-{{ WAP1_URL }}{% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <body>
+
+    <header class="header pageHead">
+        <div class="wrap headerWrap">
+            <div class="wrap">
+                <h1>搜索</h1>
+                <div class="opts optsLeft">
+                    <a href="/" class="opt reBack"><i class="i iG iG_A4"></i><b></b></a>
+                </div>
+                <div class="opts optsRight">
+                    <a href="/bookShelf/?_once_=000218_sy_sj" class="opt toBookShelf"><i class="i iG iG_A2"></i><b></b></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="tabs navTabs searchResultNav">
+        <div class="fixedWrap">
+            <ul class="wrap tabWrap">
+                <li class="tab {% ifnotequal s_type 'author' %} on {% endifnotequal %}"><a href="{{ request.path }}?s_type=name{% ifnotequal q '' %}&q={{ q }}{% endifnotequal %}"><b>按书名</b></a></li>
+                <li class="tab {% ifequal s_type 'author' %} on {% endifequal %}"><a href="{{ request.path }}?s_type=author{% ifnotequal q '' %}&q={{ q }}{% endifnotequal %}"><b>按作者</b></a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="search">
+        <form action="{{ request.path }}">
+            <input type="hidden" name="s_type" value="{{ s_type }}">
+            <input type="text" class="key" name="q" value="{{ q }}" placeholder="选择书名 or 作者 开始搜索">
+            <button type="submit" class="submit" value="Search"><i class="i iG iG_B2"></i></button>
+        </form>
+
+    </div>
+
+    {% ifnotequal ls '' %}
+    <div class="searchRecommend">
+        <div class="books">
+            <div class="wrap hotwordWrap">
+                {% for r in ls %}
+                    <div class="book"><a href="{{ r.get_info_path }}" class="main"><div class="name">{{ r.novel_name }}</div></a></div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endifnotequal %}
+
+
+    {% ifnotequal result '' %}
+
+    <div class="intro searchResult">
+        <div class="books">
+           <div class="bookWrap">
+               {% for r in  result %}
+               <div class="feed feedBook">
+                  <a href="{{ r.get_info_path }}" class="main">
+                     <h4>{{ r.novel_name }}</h4>
+                     <div class="cover">
+                        <div class="img">
+                            <img onerror="this.src='{% static 'images/noimg.jpg' %}'" src="{{ r.image|default:DEF_FENMIAN }}" style="opacity: 1;">
+                        </div>
+                     </div>
+                     <div class="info">{{ r.novel_author }} | {{ r.novelclassify.caption }} |{{ r.get_book_status }}</div>
+                      <div class="desc">
+                        {% autoescape off %}
+                            {{ r.novel_info|default:'还没有介绍欢迎同学添加' }}
+                        {% endautoescape %}
+
+                      </div>
+
+                  </a>
+               </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endifnotequal %}
+    </body>
+
+{% endblock %}
+{% block custom_js %}
+
+{% endblock %}

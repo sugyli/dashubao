@@ -1,0 +1,96 @@
+{% extends 'dashubao/m/usercenter-base.html' %}
+{% block title %}个人资料{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<body class="huibg">
+    <nav class="navbar text-center">
+       <button class="topleft" onclick ="javascript:history.go(-1);"><span class="iconfont icon-fanhui"> < </span></button>
+      <a class="navbar-tit center-block">个人信息</a>
+      <button class="topnav" id="open-button"><span class="iconfont icon-1"></span></button>
+    </nav>
+    <form autocomplete="off" id="resbntForm" method="post">
+    <div class="usercenter  accdv">
+      <div class="row">
+          <div class="col-md-2">登录账户：</div>
+          <div class="col-md-10"><input type="text" name="username" id="username" class="form-control" value="{{ request.user.username }}" readonly="readonly"></div>
+      </div>
+      <div class="row">
+          <div class="col-md-2">性别：</div>
+          <div class="col-md-10">
+               <label class="checkbox-inline">
+                   <input type="radio" name="gender" value="male" {% if request.user.gender == 'male' %}checked="checked"{% endif %}> 男
+               </label>
+               <label class="checkbox-inline">
+                   <input type="radio" name="gender" value="female" {% if request.user.gender == 'female' %}checked="checked"{% endif %}> 女
+               </label>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-2">手机号：</div>
+          <div class="col-md-10"><input type="text" name="mobile" id="mobile" placeholder="请输入你的手机号码" value="{{ request.user.mobile }}" maxlength="11" class="form-control"></div>
+      </div>
+      <div class="row">
+          <div class="col-md-2">邮箱：</div>
+          <div class="col-md-10">
+              <input type="text" name="email" id="email" class="form-control" value="{{ request.user.email }}" placeholder="请输入你的邮箱">
+          </div>
+      </div>
+
+      <div class="row" style="margin-top: 20px">
+          <div class="col-md-2"></div>
+          <div class="col-md-10"><button type="button" class="btn btn-danger btn-block btn-lg" id="resbnt">确 定</button></div>
+      </div>
+    {% csrf_token %}
+    </div>
+    </form>
+</body>
+{% endblock %}
+
+{% block custom_js %}
+    <script>
+    $('#resbnt').click(function(){
+        var _self = $(this);
+        $.ajax({
+            cache: false,
+            type: "POST",
+            dataType:'json',
+            url:"{% url 'users:users_info' %}",
+            data:$('#resbntForm').serialize(),
+            async: true,
+            beforeSend:function(XMLHttpRequest){
+                layer.open({type: 2,shadeClose: true});
+                _self.val("保存中...");
+                _self.attr('disabled',true);
+            },
+            success: function(data) {
+                layer.closeAll();
+                if(data.mobile){
+                    showmsg(data.mobile);
+                }else if(data.gender){
+                   showmsg(data.gender);
+                }else if(data.email){
+                   showmsg(data.email);
+                }else if(data.status == "success"){
+                    showmsg('保存成功');
+                    setTimeout(function(){window.location.href = window.location.href;},2000);
+                }else if(data.msg){
+                    showmsg(data.msg);
+                }else{
+                    showmsg('可能登录失效请刷新');
+                }
+            },
+            complete: function(XMLHttpRequest){
+                _self.val("确定");
+                _self.removeAttr("disabled");
+            },
+            error: function(){
+                layer.closeAll();
+                showmsg('请刷新页面重试');
+
+            }
+        });
+
+
+    });
+    </script>
+{% endblock %}

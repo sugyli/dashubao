@@ -1,0 +1,111 @@
+{% extends 'dashubao/m/usercenter-base.html' %}
+{% block title %}修改密码{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<body class="huibg">
+<nav class="navbar text-center">
+   <button class="topleft" onclick ="window.location.href='{% url 'users:users_home' %}'"><span class="iconfont icon-fanhui"> < </span></button>
+  <a class="navbar-tit center-block">修改密码</a>
+  <button class="topnav" id="open-button"><span class="iconfont icon-1"></span></button>
+</nav>
+<form autocomplete="off" id="resbntForm" method="post">
+<div class="usercenter  accdv">
+
+  <div class="row">
+      <div class="col-md-2">新密码：</div>
+      <div class="col-md-10"><input type="password" id="password1" name="password1" class="form-control"></div>
+  </div>
+
+  <div class="row">
+      <div class="col-md-2">重复密码：</div>
+      <div class="col-md-10"><input type="password" id="password2" name="password2" class="form-control"></div>
+  </div>
+
+  <div class="row" style="margin-top: 20px">
+      <div class="col-md-2"></div>
+      <div class="col-md-10"><button type="button" class="btn btn-danger btn-block btn-lg" id="resbnt">确 定</button></div>
+  </div>
+    <!--
+  <div class="row" style="margin-top: 20px">
+      <div class="col-md-2"></div>
+      <div class="col-md-10"><a href="{% url 'users:users_home' %}" class="btn btn-danger btn-block btn-lg">返回用户中心</a></div>
+  </div>
+  -->
+{% csrf_token %}
+</div>
+</form>
+
+</body>
+{% endblock %}
+
+{% block custom_js %}
+    <script>
+    $('#resbnt').click(function(){
+        var _self = $(this);
+        $.ajax({
+            cache: false,
+            type: "POST",
+            dataType:'json',
+            url:"{% url 'operation:operation_user_updatepwd' %}",
+            data:$('#resbntForm').serialize(),
+            async: true,
+            beforeSend:function(XMLHttpRequest){
+                layer.open({type: 2,shadeClose: true});
+                _self.val("保存中...");
+                _self.attr('disabled',true);
+            },
+            success: function(data) {
+                layer.closeAll();
+
+                if(data.password1){
+                    document.getElementById('password1').select();
+                    layer.open({
+                        content: data.password1
+                        ,btn: '我知道了'
+                        ,shadeClose: true,
+                        end:function () {
+                            $("input[name=password1]").focus();
+                        }
+                    });
+                }else if(data.password2){
+
+                    layer.open({
+                        content: data.password2
+                        ,btn: '我知道了'
+                        ,shadeClose: true,
+                        end:function () {
+                            $("input[name=password2]").focus();
+
+                        }
+                    });
+
+                }else if(data.status == "success"){
+                    showmsg('修改密码成功，请重新登录');
+                    setTimeout(function(){window.location.href = window.location.href;},2000);
+                }else if(data.msg){
+                     layer.open({
+                        content: data.msg
+                        ,btn: '我知道了'
+                        ,shadeClose: true,
+                        end:function () {
+                            $("input[name=password1]").focus();
+
+                        }
+                    });
+                }
+
+            },
+            complete: function(XMLHttpRequest){
+                _self.val("确定");
+                _self.removeAttr("disabled");
+            },
+            error: function(){
+                layer.closeAll();
+                showmsg('请刷新页面重试');
+            }
+        });
+
+    });
+
+    </script>
+{% endblock %}

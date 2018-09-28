@@ -1,0 +1,92 @@
+{% extends 'dashubao/m/usercenter-base.html' %}
+{% block title %}会员中心{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<body class="huibg">
+<div class="vipcenter">
+  <div class="vipheader">
+      <div onclick ="javascript:history.go(-1);" style="color: #fff">返回</div>
+      <a href="javascript:alert('上传头像还没开放') ">
+        <div class="touxiang"><img src="{{ MEDIA_URL }}{{ request.user.image }}" onerror="this.src='{% static 'm/user/images/tx.jpg' %}'"></div>
+        <div class="name oneline">{{ request.user.username }}</div>
+      </a>
+  </div>
+  <div class="vipsan">
+    <div class="col-xs-4 text-center"><h4>等级</h4><p>{{ request.user.get_grade }}</p></div>
+    <div class="col-xs-4 text-center"><h4>积分</h4><p>{{ request.user.score }}</p></div>
+    <div class="col-xs-4 text-center"><h4>藏书</h4><p>{{ request.user.get_fav_count }}</p></div>
+  </div>
+  <ul class="vipul">
+    <li>
+      <a href="{% url 'users:users_gonggao' %}">
+       <div class="icc"><i class="iconfont icon-huodongfj"></i></div>
+       <div class="lzz">网站公告</div>
+       {% if request.user.get_gonggao_count > 0 %}
+       <div class="rizi lvzi">{{ request.user.get_gonggao_count }}</div>
+       {% else %}
+       <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+       {% endif %}
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'users:users_info' %}">
+       <div class="icc"><i class="iconfont icon-huodongfj"></i></div>
+       <div class="lzz">个人资料</div>
+       <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'users:users_updatepwd' %}">
+       <div class="icc"><i class="iconfont icon-chakangonglve"></i></div>
+       <div class="lzz">修改密码</div>
+       <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'users:users_message' %}">
+       <div class="icc"><i class="iconfont icon-chakangonglve"></i></div>
+       <div class="lzz">我的消息</div>
+       {% if request.user.get_unread_message_count > 0 %}
+       <div class="rizi lvzi">{{ request.user.get_unread_message_count }}</div>
+       {% else %}
+       <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+       {% endif %}
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'users:users_favbook' %}">
+       <div class="icc"><i class="iconfont icon-chakangonglve"></i></div>
+       <div class="lzz">我的书架</div>
+       <div class="rizi lvzi">无限制</div>
+      </a>
+    </li>
+
+     <li>
+      <a href="{% url 'users:users_touxian' %}">
+       <div class="icc"><i class="iconfont icon-chakangonglve"></i></div>
+       <div class="lzz">头衔等级</div>
+       <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'users:users_adduserask' comefrom %}">
+       <div class="icc"><i class="iconfont icon-chakangonglve"></i></div>
+       <div class="lzz">我有问题</div>
+       <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="footnav">
+    <div class="col-xs-3 text-center"><a href="/"><i class="iconfont icon-shop"></i><p>首页</p></a></div>
+    <div class="col-xs-3 text-center"><a href="{% url 'novels:novels_historybookshelf' %}"><i class="iconfont icon-huodongfj"></i><p>足迹</p></a></div>
+    <div class="col-xs-3 text-center"><a href="{% url 'users:users_qiandao' %}"><i class="iconfont icon-liebiao"></i><p>签到</p></a></div>
+    <div class="col-xs-3 text-center"><a href="{% url 'users:users_logout' %}"><i class="iconfont icon-dizhi"></i><p>退出</p></a></div>
+</div>
+</body>
+{% endblock %}

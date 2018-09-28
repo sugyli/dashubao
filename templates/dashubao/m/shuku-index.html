@@ -6,22 +6,18 @@
     <header class="sogou_coop h_min h_fixed">
         <div class="h_min_w ">
             <h1 class="logo_min">
-                <a href="#">
+                <a href="javascript:">
                     <i class="image sprite-icons-home"></i>
                 </a>
             </h1>
             <div class="showNav">
                 <h2>大书包小说</h2>
             </div>
-
             <div class="sogou">
-                <a href="#" class="toSOGOU">
-                    <i class="img sprite-icons-search"></i></a>
+                <a href="{% url 'search:search_bd_search' %}?s_type=name" class="toSOGOU"><i class="img sprite-icons-search"></i></a>
             </div>
-
         </div>
     </header>
-
     {% include 'dashubao/p/navigation.html' %}
     <div class="stream bookList">
         <div class="wrap streamWrap" id="newbooklist">
@@ -47,15 +43,14 @@
                 <a href="{{ row.get_info_path }}" class="main">
                     <h4>{{ row.novel_name }}</h4>
                     <div class="cover">
-                        <div class="img"><img onerror="this.src='{% static 'images/noimg.jpg' %}'" src="{{ row.image|default_if_none:DEF_FENMIAN }}" style="opacity: 1;"></div>
+                        <div class="img"><img onerror="this.src='{% static 'images/noimg.jpg' %}'" src="{{ row.get_image_path|default:DEF_FENMIAN }}" style="opacity: 1;"></div>
                     </div>
                     <div class="info">
                         {{ row.novel_author }} | {{ row.novelclassify.caption }} |{{ row.get_book_status }}
                     </div>
-
                     <div class="desc">
                         {% autoescape off %}
-                            {{ row.novel_info|default:'还没有介绍欢迎同学添加' }}
+                            {{ row.novel_info|default:'还没有介绍欢迎同学举报' }}
                         {% endautoescape %}
                     </div>
                 </a>
@@ -68,10 +63,7 @@
               <a href="{{ request.path }}?{{ noveldetail.next_page_number.querystring }}">下一页</a>
           {% endif %}
         </div>
-
-
     </div>
-
 </body>
 {% endblock %}
 {% block custom_js %}
@@ -102,7 +94,7 @@
                 html += "<img src=\""+bookshelfs[0].image + "\" onerror=\"this.src='{% static 'images/noimg.jpg' %}'\" style=\"opacity: 1;\">"
                 html += "</div></div>"
                 html += "<div class=\"info\">作者："+bookshelfs[0].bookauthor+"</div>"
-                html += "<div class=\"desc\">历史书签</div>"
+                html += "<div class=\"desc\">浏览记录</div>"
                 html += "</a>"
             $("#lishibook").html(html)
             $("#lishicount").html(bookshelfs.length)

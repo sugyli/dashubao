@@ -1,0 +1,78 @@
+
+<!DOCTYPE HTML>
+<html>
+{% load staticfiles %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>找回密码</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<link rel="stylesheet" href="{% static 'm/login/css/jquery.mobile-1.4.5.min.css' %}">
+<script type="text/javascript"  src="{% static 'm/login/js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'm/login/js/jquery.mobile-1.4.5.min.js' %}"></script>
+<!--
+    <link rel="stylesheet" href="{% static 'm/login/css/iconfont/iconfont.css' %}">
+-->
+</head>
+<style>
+    .ui-bar-f {
+        color: #FFF;
+        background-color: #f36142;
+        border: none;
+    }
+    .padding5 {
+        background-color: #FFF;
+        padding: 0em 0em;
+    }
+    a.tu1 {
+        border: none;
+    }
+    a.tu1:after {
+        margin-top: -8px;
+    }
+    .button1 {
+        background-color: #f36142;
+        color: #fff;
+    }
+    a{
+      text-decoration: none;
+    }
+    .text-algin1 a {
+        color: #f36142;
+    }
+    .text-algin2 {
+        text-align: right;
+    }
+    .errorput{
+        border-color: #f00;
+        box-shadow: 0 0 5px #aa0b0b;
+    }
+    li {list-style-type:none;}
+</style>
+<body>
+<div data-role="page" data-theme="f" class="padding5" >
+   <div data-role="header"  data-theme="f" >
+     <div class="ui-btn-left"> <a href="javascript:history.go(-1);" target="_top" class="ui-btn ui-corner-all ui-icon-carat-l ui-btn-icon-notext tu1">返回</a></div>
+     <h1>找回密码</h1>
+   </div>
+
+ <div data-role="main"  class="ui-content">
+    <form method="post" action="{% url 'users:users_forget' %}" data-ajax="false" autocomplete="off">
+      <div class="ui-field-contain" >
+          <div class="{% if forget_form.errors.email %}errorput{% endif %}">
+              <input type="text" data-theme="a" data-iconpos="left" data-icon="user" placeholder="邮箱地址" data-clear-btn="true" name="email" value="{{ forget_form.email.value|default_if_none:'' }}">
+          </div>
+      </div>
+    <button class="button1">提交</button>
+     {% csrf_token %}
+    </form>
+   <div class="ui-grid-a">
+      <div class="ui-block-a text-algin1"><a href="{% url 'users:users_login' %}" target="_top">登录</a></div>
+       <div class="ui-block-b text-algin2"><span><a href="{% url 'users:users_register' %}" target="_top" style="color: #999;">从新注册</a></span></div>
+    </div>
+  </div>
+  <div data-role="footer" class="ui-content" style="color: red;">
+    <h3>{% for key,error in forget_form.errors.items %}{{ error }}{% endfor %}{{ msg }}</h3>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends 'dashubao/m/usercenter-base.html' %}
+{% block title %}头衔{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<body class="huibg">
+<nav class="navbar text-center">
+   <button class="topleft" onclick ="window.location.href='{% url 'users:users_home' %}'"><span class="iconfont icon-fanhui"> < </span></button>
+  <a class="navbar-tit center-block">等级说明</a>
+  <button class="topnav" id="open-button"><span class="iconfont icon-1"></span></button>
+</nav>
+<div class="usercenter">
+  <div class="cdv">
+    <a href="javascript:"><span>积分使用后期说明</span></a>
+  </div>
+  {% for r in z %}
+  <div class="cdv dzi">
+      <a href="javascript:">
+      <p>最小积分：{{ r.min }}<button class="label label-danger pull-right">{{ r.level }}</button></p>
+      <p>最大积分：{{ r.max }}</p>
+      </a>
+  </div>
+  {% endfor %}
+</div>
+</body>
+{% endblock %}
+
+
+
+
+
+
