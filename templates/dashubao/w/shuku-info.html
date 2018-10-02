@@ -1,0 +1,183 @@
+{% extends 'dashubao/w/shuku-base.html' %}
+{% block title %}{{ noveldetail.novel_name }}最新更新_{{ noveldetail.novel_name }}最新章节_{{ WEB1_NAME }}_{{ WEB1_URL }}{% endblock %}
+{% block keywords %}{{ noveldetail.novel_name }},小说{{ noveldetail.novel_name }},{{ noveldetail.novel_name }}最新章节,{{ noveldetail.novel_name }}全文阅读{% endblock %}
+{% block description %}{{ noveldetail.novel_name }}是由{{ noveldetail.novel_author }}所写的{{ noveldetail.novelclassify.caption }}类小说，本站提供{{ noveldetail.novel_name }}最新章节观看,{{ noveldetail.novel_name }}全文阅读等服务，如果您发现{{ noveldetail.novel_name }}更新慢了,请第一时间联系{{ WEB1_NAME }}。{% endblock %}
+{% load staticfiles %}
+{% block custom_css %}
+<style>
+.zjbnt {
+    width: 50px;
+    height: 23px;
+    line-height: 23px;
+    border: 1px solid #dee1e6;
+    background-color: #fff;
+    cursor: pointer;
+    vertical-align: middle;
+    float: right
+}
+.zjbnt:hover {
+    background-color:yellow;
+}
+.mulu .pereview {
+    margin: 5px auto;
+    clear: both;
+    overflow: hidden;
+    width: 366px;
+}
+.mulu .pereview a {
+    float: left;
+    text-align: center;
+    display: block;
+    width: 110px;
+    height: 28px;
+    line-height: 28px;
+    margin: 5px;
+    background-color: #f8f8f8;
+    border: 1px solid #d9d9d9;
+    color: #666;
+    font-size: 14px;
+}
+.mulu .pereview a:first-child {
+    margin-right: 50px
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<body>
+{% include 'dashubao/p/navigation-w.html' %}
+<div class="place oneline">
+  当前位置：<a href="/">{{ WEB1_NAME }}</a> &gt; <a href="{{ noveldetail.novelclassify.get_sortlist_path }}">{{ noveldetail.novelclassify.caption }}</a> &gt; {{ noveldetail.novel_name }}
+</div>
+<div class="jieshao">
+  <div class="lf">
+    <img src="{{ noveldetail.get_image_path|default:DEF_FENMIAN }}" alt="{{ noveldetail.novel_name }}" onerror="this.src='{% static 'images/noimg.jpg' %}'">
+  </div>
+  <div class="rt">
+    <h1 class="oneline">{{ noveldetail.novel_name }}</h1>
+    <div class="msg oneline">
+      <em>作者：{{ noveldetail.novel_author }} </em>
+      <em>状态：{{ noveldetail.get_book_status }} </em>
+      <em>收藏：{{ noveldetail.novel_fav_nums }} </em>
+      <em>推荐：{{ noveldetail.novel_zan_nums }} </em>
+      <em>更新时间：{{ noveldetail.update_time }}</em>
+      <em>最新章节：<a href="{{ noveldetail.get_last_chapter.get_content_path }}">{{ noveldetail.get_last_chapter.chapter_name }}</a></em>
+    </div>
+    <div class="info">
+      <a href="#footer" rel="nofollow">直达底部</a>
+      <a href="javascript:" rel="nofollow" class="addshuqian">加入书架</a>
+      <a href="{% url 'users:users_adduserask' comefrom %}" target="_blank" rel="nofollow">错误举报</a>
+    </div>
+
+    <div class="vote">
+        <a href="javascript:" rel="nofollow" class="zan">推荐</a>
+    </div>
+    <div class="intro bestline" style="-webkit-line-clamp: 4;">
+        {% autoescape off %}
+        {{ noveldetail.novel_info|default:'还没有介绍欢迎同学举报' }}
+        {% endautoescape %}
+    </div>
+  </div>
+</div>
+
+<div class="mulu">
+    <div style="padding:0 6px;border-bottom: 1px dotted #dee1e6;height: 35px;line-height: 35px;font-weight: 700;">
+        章节目录
+        <input type="button" class="zjbnt {{ isdaoxu }}" value="{% if isdaoxu %} 正序 {% else %} 倒序 {% endif %}" id="isdaoxu">
+    </div>
+    <ul>
+        {% for row in chapters.object_list %}
+        <li><a href="{{ row.get_content_path }}">{{ row.chapter_name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% if  chapters.has_next or chapters.has_previous %}
+    <div class="pereview">
+        {% if chapters.has_previous %}
+            <a href="javascript:" target="_top" id="previous" url="{{ request.path }}?{{ chapters.previous_page_number.querystring }}">← 上一页</a>
+        {% else %}
+            <a href="javascript:" target="_top">← 到头了</a>
+        {% endif %}
+
+        {% if chapters.has_next %}
+            <a href="javascript:" target="_top" id="next" url="{{ request.path }}?{{ chapters.next_page_number.querystring }}">下一页 →</a>
+        {% else %}
+            <a href="javascript:" target="_top">到尾了 →</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% include 'dashubao/p/footer-w.html' %}
+<script>
+    var bookid = "{{ noveldetail.url_md5 }}"
+    var chapterid = "{{ noveldetail.get_first_chapter.chapter_url_md5 }}"
+
+    var book = $.fn.cookie("book");
+    $.fn.cookie("book", '', { expires: -1, path: "/" });
+    var this_bookid = {{ noveldetail.id }};
+    var this_page = {{ chapters.number }};
+    var isdaoxu = "{{ isdaoxu }}"
+
+    if(book){
+        book = JSON.parse(book)
+        var url = "{{ request.path }}?page="+ book.page + '&isdaoxu=isdaoxu&chapterid='+book.chapterid;
+        if(book.bookid == this_bookid && !isdaoxu){
+            gethtml(url);
+        }else if(book.bookid == this_bookid && isdaoxu && this_page != book.page){
+            gethtml(url);
+        }
+    }
+   $('#isdaoxu').on('click', function(){
+        $(this).toggleClass("isdaoxu");
+        var url = "{{ request.path }}?page=1" + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
+        gethtml(url);
+   });
+
+    function gethtml(url){
+       $.ajax({
+            cache: false,
+            type: 'get',
+            dataType:'html',
+            url:url,
+            data:'',
+            async: true,
+            beforeSend:function(XMLHttpRequest){
+                layer.open({type: 2,shadeClose: true});
+                //_self.val("加载中");
+                //_self.attr('disabled',true);
+            },
+            success: function(html) {
+                layer.closeAll();
+                //正则表达式获取body块
+                var reg = /<body>([\s\S]*)<\/body>/g;
+                var html = reg.exec(html)[1];
+                $("body").html(html);
+
+            },
+            complete: function(XMLHttpRequest){
+                layer.closeAll();
+                //_self.val(t);
+               // _self.removeAttr("disabled");
+            },
+            error: function(){
+                layer.closeAll();
+                alert('请刷新页面重试');
+
+            }
+        });
+
+   }
+
+   $('#previous,#next ').on('click', function(){
+
+        var _self = $(this);
+
+        var url = _self.attr("url")  + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
+
+        //var  t =_self.val()
+        gethtml(url);
+
+    });
+</script>
+</body>
+{% endblock %}
+

@@ -58,17 +58,17 @@ class UserProfile(AbstractUser):
 
         return r
 
-    def get_collect(self):
-        r = 20
+    def get_piao_count(self):
+        r = 2
         for item in settings.USER_LEVEL:
-            if item['min'] <= self.score <= item['max']:
-                r= item['collect']
+            if item['min'] <= self.score < item['max']:
+                r= item['piao']
                 break
 
         return r
 
     get_grade.short_description = "等级"
-    get_collect.short_description = "收藏量"
+    get_piao_count.short_description = "投票数"
 
     def __str__(self):
         return self.username
@@ -118,3 +118,17 @@ class EmailVerifyRecord(models.Model):
 
     def __str__(self):
         return '{0}({1})'.format(self.code, self.email)
+
+
+class Links(models.Model):
+    name = models.CharField(max_length=60, verbose_name=u"名称")
+    url = models.CharField(max_length=60, verbose_name=u"网站地址")
+    linkid = models.PositiveSmallIntegerField(default=0, verbose_name=u"排序", unique=True)
+    ishide = models.BooleanField(default=False,verbose_name=u"是否隐藏")
+
+    class Meta:
+        verbose_name = u"友情链接"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return '{0}'.format(self.name)

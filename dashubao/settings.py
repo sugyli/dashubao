@@ -344,30 +344,30 @@ GLOBALSETTINGS = {
 
 
 USER_LEVEL = [
-    {'level': '1级', 'min': -9999999, 'max': 50, 'collect': 200},
-    {'level': '2级', 'min': 50, 'max': 200, 'collect': 250},
-    {'level': '3级', 'min': 200, 'max': 500, 'collect': 300},
-    {'level': '4级', 'min': 500, 'max': 800, 'collect': 350},
-    {'level': '5级', 'min': 800, 'max': 1200, 'collect': 400},
-    {'level': '6级', 'min': 1200, 'max': 2000, 'collect': 450},
-    {'level': '7级', 'min': 2000, 'max': 5000, 'collect': 500},
-    {'level': '8级', 'min': 5000, 'max': 10000, 'collect': 550},
-    {'level': '9级', 'min': 10000, 'max': 20000, 'collect': 600},
-    {'level': '10级', 'min': 20000, 'max': 32000, 'collect': 650},
-    {'level': '11级', 'min': 32000, 'max': 50000, 'collect': 700},
-    {'level': '12级', 'min': 50000, 'max': 70000, 'collect': 750},
-    {'level': '13级', 'min': 70000, 'max': 100000, 'collect': 800},
-    {'level': '14级', 'min': 100000, 'max': 140000, 'collect': 850},
-    {'level': '15级', 'min': 140000, 'max': 190000, 'collect': 900},
-    {'level': '16级', 'min': 190000, 'max': 250000, 'collect': 950},
-    {'level': '17级', 'min': 250000, 'max': 320000, 'collect': 1000},
-    {'level': '18级', 'min': 320000, 'max': 400000, 'collect': 1100},
-    {'level': '19级', 'min': 400000, 'max': 490000, 'collect': 1200},
-    {'level': '20级', 'min': 490000, 'max': 590000, 'collect': 1300},
-    {'level': '21级', 'min': 590000, 'max': 700000, 'collect': 1400},
-    {'level': '22级', 'min': 700000, 'max': 820000, 'collect': 1500},
-    {'level': '23级', 'min': 820000, 'max': 950000, 'collect': 1600},
-    {'level': '24级', 'min': 950000, 'max': 9999999, 'collect': 2000}
+    {'level': '1级', 'min': -9999999, 'max': 50, 'piao': 2},
+    {'level': '2级', 'min': 50, 'max': 200, 'piao': 3},
+    {'level': '3级', 'min': 200, 'max': 500, 'piao': 4},
+    {'level': '4级', 'min': 500, 'max': 800, 'piao': 5},
+    {'level': '5级', 'min': 800, 'max': 1200, 'piao': 6},
+    {'level': '6级', 'min': 1200, 'max': 2000, 'piao': 7},
+    {'level': '7级', 'min': 2000, 'max': 5000, 'piao': 8},
+    {'level': '8级', 'min': 5000, 'max': 10000, 'piao': 9},
+    {'level': '9级', 'min': 10000, 'max': 20000, 'piao': 10},
+    {'level': '10级', 'min': 20000, 'max': 32000, 'piao': 11},
+    {'level': '11级', 'min': 32000, 'max': 50000, 'piao': 12},
+    {'level': '12级', 'min': 50000, 'max': 70000, 'piao': 13},
+    {'level': '13级', 'min': 70000, 'max': 100000, 'piao': 14},
+    {'level': '14级', 'min': 100000, 'max': 140000, 'piao': 15},
+    {'level': '15级', 'min': 140000, 'max': 190000, 'piao': 16},
+    {'level': '16级', 'min': 190000, 'max': 250000, 'piao': 17},
+    {'level': '17级', 'min': 250000, 'max': 320000, 'piao': 18},
+    {'level': '18级', 'min': 320000, 'max': 400000, 'piao': 19},
+    {'level': '19级', 'min': 400000, 'max': 490000, 'piao': 20},
+    {'level': '20级', 'min': 490000, 'max': 590000, 'piao': 21},
+    {'level': '21级', 'min': 590000, 'max': 700000, 'piao': 22},
+    {'level': '22级', 'min': 700000, 'max': 820000, 'piao': 23},
+    {'level': '23级', 'min': 820000, 'max': 950000, 'piao': 24},
+    {'level': '24级', 'min': 950000, 'max': 9999999, 'piao': 25}
 ]
 
 USER_QIANDAO = [
@@ -379,12 +379,13 @@ USER_QIANDAO = [
     [{'t': 26, 'f': 30}, {'t': 27, 'f': 30}, {'t': 28, 'f': 50}, {'t': 29, 'f': 50}, {'t': 30, 'f': 50}]
 ]
 
-WEB1_NAME = '大书包小说'
+WEB1_NAME = '大书包小说网'
 WEB1_URL = 'https://www.51xunyue.com'
 WAP1_NAME = '大书包小说手机网'
 WAP1_URL = 'https://m.51xunyue.com'
 DEF_FENMIAN = 'http://fenmian.dashubao.net/noimg.jpg'
 WAP_CHAPTER_LIST = 15
+WEB_CHAPTER_LIST = 3000
 SCT = 1200
 EMAIL_V_URL = "51xunyue.com"
 

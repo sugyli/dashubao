@@ -28,8 +28,11 @@
 
 <script src="{% static 'm/user/js/classie.js' %}"></script>
 <script src="{% static 'layer_mobile/layer.js' %}"></script>
-<script src="{% static 'm/js/p.js' %}"></script>
+<script src="{% static 'js/p.js' %}"></script>
 
 {% block custom_js %}
 {% endblock %}
+<script>
+$.fn.cookie('is_login', 1, { expires: 3600, path: "/" });
+</script>
 </html>

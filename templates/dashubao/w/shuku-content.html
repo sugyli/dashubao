@@ -1,0 +1,289 @@
+{% extends 'dashubao/w/shuku-base.html' %}
+{% block title %}{{ chapter.chapter_name }} {{ chapter.noveldetail.novel_name }}_{{ WEB1_NAME }}_{{ WEB1_URL }}{% endblock %}
+{% block keywords %}{{ chapter.chapter_name }},{{ chapter.noveldetail.novel_name }},{{ chapter.noveldetail.novel_author }}{% endblock %}
+{% block description %}{{ chapter.chapter_name }}是由{{ chapter.noveldetail.novel_author }}所写的{{ chapter.noveldetail.novelclassify.caption }}类小说， {{ chapter.chapter_name }}是小说{{ chapter.noveldetail.novel_name }}的最新章节。{% endblock %}
+{% load staticfiles %}
+{% block custom_css %}
+    <style type="text/css">
+        select {
+            margin-top: 10px;
+            width:250px;
+            height:35px;
+            /*Chrome和Firefox里面的边框是不一样的，所以复写了一下*/
+            border: solid 1px #000;
+            /*很关键：将默认的select选择框样式清除*/
+            appearance:none;
+            -moz-appearance:none;
+            -webkit-appearance:none;
+
+          /*在选择框的最右侧中间显示小箭头图片*/
+            background: url("{% static 'w/images/arrow-dashubao.png' %}") no-repeat scroll right center transparent;
+          /*为下拉小箭头留出一点位置，避免被文字覆盖*/
+            padding-right: 14px;
+            padding-left: 5px;
+            font-size:16px;
+            font-family:Microsoft YaHei;
+            color:red;
+
+        }
+        /*清除ie的默认选择框样式清除，隐藏下拉箭头*/
+        select::-ms-expand { display: none; }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+<body>
+{% include 'dashubao/p/navigation-w.html' %}
+<div class="read_t">
+    当前位置：<a href="/">{{ WEB1_NAME }}</a> &gt; <a href="{{ chapter.noveldetail.novelclassify.get_sortlist_path }}">{{ chapter.noveldetail.novelclassify.caption }}</a> &gt; <a href="{{ chapter.noveldetail.get_info_path }}">{{ chapter.noveldetail.novel_name }}</a> &gt;  {{ chapter.chapter_name }}
+</div>
+<div class="read_b">
+  <div class="shuqian">
+    <a href="javascript:" rel="nofollow" class="zan">推荐小说</a>
+	<a href="javascript:" rel="nofollow" class="addshuqian">添加书签</a>
+	<a href="{% url 'users:users_adduserask' comefrom %}" target="_blank"  rel="nofollow">举报错误</a>
+  </div>
+  <div class="bgs">
+    <ul>
+      <li>
+        <input type="text" class="textm" id="screen" value="滚屏">
+        <input type="hidden" class="textm" id="screen2" value="滚屏">
+        <span class="btn" id="screen1"></span>
+      </li>
+      <li class="select">
+        <p>0</p>
+        <p>1慢</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+      </li>
+    </ul>
+
+    <ul>
+      <li>
+        <input type="text" class="textm" id="background" value="背景">
+        <input type="hidden" id="background2" value="#000">
+        <span class="btn" id="background1"></span>
+      </li>
+
+      <li class="select">
+        <p class="bg_huang">明黄</p>
+        <p class="bg_lan">淡蓝</p>
+        <p class="bg_lv">淡绿</p>
+        <p class="bg_fen">红粉</p>
+        <p class="bg_bai">白色</p>
+        <p class="bg_hui">灰色</p>
+        <p class="bg_hei">漆黑</p>
+        <p class="bg_cao">草绿</p>
+        <p class="bg_cha">茶色</p>
+        <p class="bg_yin">银色</p>
+        <p class="bg_mi">米色</p>
+      </li>
+    </ul>
+
+    <ul>
+      <li>
+        <input type="text" class="textm" id="fontSize" value="字号">
+        <input type="hidden" id="fontSize2" value="16">
+        <span class="btn" id="fontSize1"></span>
+      </li>
+      <li class="select">
+        <p class="fon_12">12px</p>
+        <p class="fon_14">14px</p>
+        <p class="fon_16">16px</p>
+        <p class="fon_18">18px</p>
+        <p class="fon_20">20px</p>
+        <p class="fon_24">24px</p>
+        <p class="fon_30">30px</p>
+      </li>
+    </ul>
+
+    <ul>
+      <li>
+        <input type="text" class="textm" id="fontColor" value="字色">
+        <input type="hidden" id="fontColor2" value="z_mo">
+        <span class="btn" id="fontColor1"></span>
+      </li>
+      <li class="select">
+        <p class="z_hei">黑色</p>
+        <p class="z_red">红色</p>
+        <p class="z_lan">蓝色</p>
+        <p class="z_lv">绿色</p>
+        <p class="z_hui">灰色</p>
+        <p class="z_li">栗色</p>
+        <p class="z_wu">雾白</p>
+        <p class="z_zi">暗紫</p>
+        <p class="z_he">玫褐</p>
+      </li>
+    </ul>
+
+    <ul>
+      <li>
+        <input type="text" class="textm" id="fontFamily" value="字体">
+        <input type="hidden" id="fontFamily2" value="fam_song">
+        <span class="btn" id="fontFamily1"></span>
+      </li>
+      <li class="select">
+        <p class="fam_song">宋体</p>
+        <p class="fam_hei">黑体</p>
+        <p class="fam_kai">楷体</p>
+        <p class="fam_qi">启体</p>
+        <p class="fam_ya">雅黑</p>
+      </li>
+    </ul>
+    <input type="button" class="ud_but2" onmousemove="this.className='ud_but22'" onmouseout="this.className='ud_but2'" value="保存" id="saveButton">
+    <input type="button" class="ud_but1" onmousemove="this.className='ud_but11'" onmouseout="this.className='ud_but1'" value="恢复" id="recoveryButton">
+  </div>
+</div>
+<div class="novel">
+  <h1 class="oneline">{{ chapter.chapter_name }}</h1>
+  <div class="pereview">
+    {% if previous_chapter %}
+        <a href="{{ previous_chapter.get_content_path }}" target="_top">← 上一章</a>
+    {% else %}
+        <a href="{{ chapter.noveldetail.get_info_path }}" target="_top">← 上一章</a>
+    {% endif %}
+
+    <a class="back" href="{{ chapter.noveldetail.get_info_path }}" target="_top">返回目录</a>
+
+    {% if next_chapter %}
+        <a href="{{ next_chapter.get_content_path }}" target="_top">下一章 →</a>
+    {% else %}
+        <a href="{{ chapter.noveldetail.get_info_path }}" target="_top">下一章 →</a>
+    {% endif %}
+  </div>
+{% if spare_content %}
+<div class="pereview">
+    <select id="changedata" onchange="changedata()" >
+        {% for row in spare_content %}
+            {% ifequal content.id row.id %}
+                <option selected="selected" value="{{ row.id }}">来源：{{ row.comefrom__comefrom }}</option>
+            {% else %}
+                <option value="{{ row.id }}">来源：{{ row.comefrom__comefrom }}</option>
+            {% endifequal %}
+        {% endfor %}
+    </select>
+</div>
+{% endif %}
+  <div class="nr_ad2">
+  	<span></span>
+  	<span></span>
+  	<span></span>
+  </div>
+  <div class="yd_text2">
+     {% autoescape off %}
+        {{ content.content|default:'本章节还没有智能匹配到欢迎同学举报' }}
+     {% endautoescape %}
+  </div>
+  <div class="nr_ad3">
+  </div>
+  <div class="pereview">
+    {% if previous_chapter %}
+        <a href="{{ previous_chapter.get_content_path }}" target="_top" id="preview_page">← 上一章</a>
+    {% else %}
+        <a href="{{ chapter.noveldetail.get_info_path }}" target="_top" id="preview_page">← 上一章</a>
+    {% endif %}
+
+    <a class="back" href="{{ chapter.noveldetail.get_info_path }}" target="_top" id="index_page">返回目录</a>
+
+    {% if next_chapter %}
+        <a href="{{ next_chapter.get_content_path }}" target="_top" id="next_page">下一章 →</a>
+    {% else %}
+        <a href="{{ chapter.noveldetail.get_info_path }}" target="_top" id="next_page">下一章 →</a>
+    {% endif %}
+  </div>
+
+   <div class="readacbtn">
+    <a class="recommend zan" href="javascript:" rel="nofollow">推荐小说</a>
+	<a class="favorite addshuqian" href="javascript:" rel="nofollow">添加书签</a>
+	<a class="bookshelf" href="{% url 'users:users_favbook' %}" rel="nofollow" target="_blank">书架</a>
+   </div>
+</div>
+{% include 'dashubao/p/footer-w.html' %}
+</body>
+{% endblock %}
+{% block custom_js %}
+<script>
+    var bookid = "{{ chapter.noveldetail.url_md5 }}"
+    var chapterid = "{{ chapter.chapter_url_md5 }}"
+    content()
+    var book = JSON.stringify({ 'bookid':{{ chapter.noveldetail.id }},'page':{{ page }},'chapterid':{{ chapter.id }} });
+    $.fn.cookie('book', book, { expires: 3600, path: "/" });
+
+    var bookshelf =  { 'bookid':{{ chapter.noveldetail.id }},'bookname':"{{ chapter.noveldetail.novel_name }}",'bookauthor':"{{ chapter.noveldetail.novel_author }}",'url':"{{ request.path }}",'image':"{{ chapter.noveldetail.get_image_path }}" }
+    var bookshelfs = $.fn.cookie("bookshelfs");
+    if(bookshelfs){
+        bookshelfs = JSON.parse(bookshelfs)
+        bookshelfs.pushSetObj(bookshelf);
+
+    }else {
+        var bookshelfs = [];
+
+        bookshelfs.pushSetObj(bookshelf);
+
+    }
+
+    bookshelfs = JSON.stringify(bookshelfs);
+    $.fn.cookie('bookshelfs', bookshelfs, { expires: 3600, path: "/" });
+
+    function changedata() {
+        var changedata = document.getElementById("changedata");
+        var cid = changedata.options[changedata.selectedIndex].value;
+        $.ajax({
+			url: "{{ request.path }}",
+			type: "post",
+			data: {'cid':cid},
+            dataType:'html',
+			async: true,
+			beforeSend:function(xhr, settings){
+			    layer.open({type: 2,shadeClose: true});
+				xhr.setRequestHeader("X-CSRFToken", config.csrf_token);
+			},
+			success: function (data) {
+			    layer.closeAll();
+                $('#content').html(data)
+			},
+            error: function(){
+                layer.closeAll();
+                alert('出现故障');
+
+            }
+
+		});
+    }
+
+
+    var preview_page = $("#preview_page").attr("href");
+    var next_page = $("#next_page").attr("href");
+    var index_page = $("#index_page").attr("href");
+    function jumpPage(e) {
+      if(navigator.appName == "Microsoft Internet Explorer")
+      {
+        var keycode = event.keyCode;
+        var realkey = String.fromCharCode(event.keyCode);
+      }else
+      {
+        var keycode = e.which;
+        var realkey = String.fromCharCode(e.which);
+        //console.log(keycode + '___');
+        //console.log(realkey);
+      }
+      if(keycode==39){
+        window.location.href=next_page;
+      }
+      if(keycode==37){
+        window.location.href=preview_page;
+      }
+      if(keycode==13){
+        window.location.href=index_page;
+      }
+      //if (ev.keyCode==37) location=preview_page;
+      //if (ev.keyCode==39) location=next_page;
+      //if (ev.keyCode==13) location=index_page;
+    }
+    document.onkeydown=jumpPage;
+
+</script>
+{% endblock %}
+

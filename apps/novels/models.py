@@ -95,6 +95,8 @@ class NovelDetail(models.Model):
         default=0, null=True,
         blank=True)
 
+    all_chapter = None
+
     class Meta:
         index_together = [
             ["novel_old_id"],
@@ -110,10 +112,12 @@ class NovelDetail(models.Model):
 
     def get_info_path(self):
 
-        if self.novel_old_id > 0:
-            return reverse('novels_info', args=[self.novel_old_id])
-        else:
-            return reverse('novels:novels_info', args=[self.url_md5])
+        return reverse('novels:novels_info', args=[self.url_md5])
+
+        # if self.novel_old_id > 0:
+        #     return reverse('novels_info', args=[self.novel_old_id])
+        # else:
+        #     return reverse('novels:novels_info', args=[self.url_md5])
 
     def get_book_status(self):
         if self.novel_status > 0:
@@ -123,21 +127,26 @@ class NovelDetail(models.Model):
 
     def get_book_chapter(self, isdaoxu=None):
 
-        return modelhelp.get_all_chapter(isdaoxu=isdaoxu,kwargs={'noveldetail': self.url_md5})
+        if self.all_chapter is None:
+
+            self.all_chapter = modelhelp.get_all_chapter(isdaoxu=isdaoxu, kwargs={'noveldetail': self.url_md5})
+
+        return self.all_chapter
 
 
-    def get_first_chapter(self,all_chapter,isdaoxu=None):
+    def get_first_chapter(self):
+        return self.get_book_chapter().order_by('chapter_order').first()
 
-        if isdaoxu:
-            first_chapter = all_chapter.first()
-        else:
-            first_chapter = all_chapter.last()
-        if first_chapter.chapter_old_id > 0:
-            return reverse('novels_content', args=[first_chapter.noveldetail.novel_old_id,first_chapter.chapter_old_id])
-        else:
-            return reverse('novels:novels_content',args=[first_chapter.noveldetail.url_md5,first_chapter.chapter_url_md5])
+        #return reverse('novels:novels_content', args=[first_chapter.chapter_url_md5])
 
+        # if first_chapter.chapter_old_id > 0:
+        #     yield reverse('novels_content', args=[first_chapter.noveldetail.novel_old_id,first_chapter.chapter_old_id])
+        # else:
+        #     yield reverse('novels:novels_content',args=[first_chapter.noveldetail.url_md5,first_chapter.chapter_url_md5])
 
+    def get_last_chapter(self):
+
+        return self.get_book_chapter().order_by('chapter_order').last()
 
 
     def __str__(self):
@@ -180,19 +189,21 @@ class NovelChapter(models.Model):
 
     def get_content_path(self):
 
-        if self.chapter_old_id > 0:
-            return reverse(
-                'novels_content',
-                args=[
-                    self.noveldetail.novel_old_id,
-                    self.chapter_old_id])
-        else:
+        return reverse('novels:novels_content',args=[self.chapter_url_md5])
 
-            return reverse(
-                'novels:novels_content',
-                args=[
-                    self.noveldetail.url_md5,
-                    self.chapter_url_md5])
+        # if self.chapter_old_id > 0:
+        #     return reverse(
+        #         'novels_content',
+        #         args=[
+        #             self.noveldetail.novel_old_id,
+        #             self.chapter_old_id])
+        # else:
+        #
+        #     return reverse(
+        #         'novels:novels_content',
+        #         args=[
+        #             self.noveldetail.url_md5,
+        #             self.chapter_url_md5])
 
     def get_book_content(self):
         return self.novelcontent_set.filter(ishide=0).order_by("-comefrom")

@@ -29,5 +29,4 @@ urlpatterns = [
     path('touxian/', views.M_TouxianView.as_view(), name="users_touxian"),
 
 
-
 ]

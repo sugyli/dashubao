@@ -1,5 +1,7 @@
 {% extends 'dashubao/m/shuku-base.html' %}
 {% block title %}{{ noveldetail.novel_name }}最新更新_{{ noveldetail.novel_name }}最新章节_{{ WAP1_NAME }}_{{ WAP1_URL }}{% endblock %}
+{% block keywords %}{{ noveldetail.novel_name }},小说{{ noveldetail.novel_name }},{{ noveldetail.novel_name }}最新章节,{{ noveldetail.novel_name }}全文阅读{% endblock %}
+{% block description %}{{ noveldetail.novel_name }}是由{{ noveldetail.novel_author }}所写的{{ noveldetail.novelclassify.caption }}类小说，本站提供{{ noveldetail.novel_name }}最新章节观看,{{ noveldetail.novel_name }}全文阅读等服务，如果您发现{{ noveldetail.novel_name }}更新慢了,请第一时间联系{{ WAP1_NAME }}。{% endblock %}
 {% load staticfiles %}
 {% block custom_css %}
     <style>
@@ -65,9 +67,11 @@
                         </p>
                         <p>
                             <a href="javascript:">{{ noveldetail.novelclassify.caption }}</a>
+                            <!--
                             <span>{{ noveldetail.get_book_status }} </span>
+                            -->
                         </p>
-                        <p>点赞数: {{ noveldetail.novel_zan_nums }}</p>
+                        <p>推荐数: {{ noveldetail.novel_zan_nums }}</p>
                         <p>收藏数: {{ noveldetail.novel_fav_nums }}</p>
                     </div>
                 </div>
@@ -81,19 +85,19 @@
                         <span class="opt"><em>全部<i>↓</i></em><em>收起<i>↑</i></em></span>
                     </a>
                 </div>
-
                 <div class="book-tag-wrapper">
-                标签:
-                    <a class="tag" href="javascript:">升级中</a>
-                </div>
-                <p>更新时间：{{ noveldetail.update_time }}</p>
-                <div class="ope2">
-	                <a href="javascript:alert('设计中')" class="specleft" id="jsshang">打赏</a><a href="javascript:alert('设计中')" id="jszhuan">钻石</a><a href="javascript:alert('设计中')" id="jshua">献花</a><a href="{% url 'users:users_home' %}" class="specright">用户中心</a>
+                状态:
+                    <a class="tag" href="javascript:">{{ noveldetail.get_book_status }}</a>
                 </div>
 
+                <p>更新时间：{{ noveldetail.update_time }}</p>
+
+                <div class="ope2">
+	                <a href="javascript:" class="specleft zan">推荐本书</a><a href="javascript:" class="addshuqian">收藏本书</a><a href="{% url 'users:users_home' %}">用户中心</a><a href="{% url 'users:users_adduserask' comefrom %}" class="specright">举报错误</a>
+                </div>
             </div>
 
-            <a href="{{ first_chapter_addr }}" class="btn btnA btnBlock"><i class="i iG iG_F7"></i>从头阅读</a>
+            <a href="{{ noveldetail.get_first_chapter.get_content_path }}" class="btn btnA btnBlock"><i class="i iG iG_F7"></i>从头阅读</a>
 
             <ul class="list-box catalog">
                 <li class="addon">目录
@@ -129,6 +133,9 @@
             </ul>
         </div>
         <script>
+            var bookid = "{{ noveldetail.url_md5 }}"
+            var chapterid = "{{ noveldetail.get_first_chapter.chapter_url_md5 }}"
+
             var book = $.fn.cookie("book");
             $.fn.cookie("book", '', { expires: -1, path: "/" });
             var this_bookid = {{ noveldetail.id }};
@@ -142,7 +149,6 @@
                 }else if(book.bookid == this_bookid && isdaoxu && this_page != book.page){
                     gethtml(url);
                 }
-
             }
 
             //介绍展现
@@ -151,7 +157,6 @@
             });
 
            $('select').change(function () {
-
                 var url = $(this).val() + ($("#isdaoxu").hasClass('isdaoxu') ? '&isdaoxu=isdaoxu' : '');
                 gethtml(url);
            });

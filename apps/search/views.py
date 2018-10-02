@@ -21,7 +21,6 @@ def get_temp(s, temp_dir=temp_dir_m):
 
 class M_SearchView(View):
     def get(self, request):
-
         q = request.GET.get('q','')
         q = q.strip()
         s_type = request.GET.get("s_type", "name")

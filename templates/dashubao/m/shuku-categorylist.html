@@ -1,5 +1,7 @@
 {% extends 'dashubao/m/shuku-base.html' %}
 {% block title %}{{ novelclassify.caption|default:"分类"}}列表-{{ WAP1_NAME }}-{{ WAP1_URL }}{% endblock %}
+{% block keywords %}{{ novelclassify.caption|default:"分类"}}{% endblock %}
+{% block description %}{{ novelclassify.caption|default:"分类"}}{% endblock %}
 {% load staticfiles %}
 {% block content %}
     <body>
@@ -13,9 +15,9 @@
                         <a href="/" class="opt reBack"><i class="image sprite-icons-home"></i><b></b></a>
                     </div>
                     <div class="opts optsRight">
-                        <a href="/bookShelf/?_once_=000218_sy_sj" class="opt toBookShelf"><i
+                        <a href="{% url 'users:users_favbook' %}" class="opt toBookShelf"><i
                                 class="i iG iG_A2"></i><b></b></a>
-                        <a href="/search" class="opt toSearch"><i class="i iG iG_G5"></i><b></b></a>
+                        <a href="{% url 'search:search_bd_search' %}?s_type=name" class="opt toSearch"><i class="i iG iG_G5"></i><b></b></a>
                     </div>
                 </div>
             </div>
@@ -42,7 +44,7 @@
             <div class="tag-list">
                 <a href="{% ifequal novelclassify None %}{% url 'novels:novels_sortlist' 0 %}?status={{ status }}&other=all{% else %}{{ novelclassify.get_sortlist_path }}?status={{ status }}&other=all{% endifequal %}" class="type {% ifequal other 'all' %}active{% endifequal %}">全部</a>
                 <a href="{% ifequal novelclassify None %}{% url 'novels:novels_sortlist' 0 %}?status={{ status }}&other=fav{% else %}{{ novelclassify.get_sortlist_path }}?status={{ status }}&other=fav{% endifequal %}" class="type {% ifequal other 'fav' %}active{% endifequal %}">收藏榜</a>
-                <a href="{% ifequal novelclassify None %}{% url 'novels:novels_sortlist' 0 %}?status={{ status }}&other=zan{% else %}{{ novelclassify.get_sortlist_path }}?status={{ status }}&other=zan{% endifequal %}" class="type {% ifequal other 'zan' %}active{% endifequal %}">点赞榜</a>
+                <a href="{% ifequal novelclassify None %}{% url 'novels:novels_sortlist' 0 %}?status={{ status }}&other=zan{% else %}{{ novelclassify.get_sortlist_path }}?status={{ status }}&other=zan{% endifequal %}" class="type {% ifequal other 'zan' %}active{% endifequal %}">推荐榜</a>
             </div>
 
 

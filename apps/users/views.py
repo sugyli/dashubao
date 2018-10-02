@@ -43,8 +43,11 @@ class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        response = HttpResponseRedirect('/')
-        response.delete_cookie('zan')
+        next_to = request.GET.get('next', '')
+        url = '/'
+        if next_to:
+            url = next_to
+        response = HttpResponseRedirect(url)
         response.delete_cookie('is_login')
         return response
 
@@ -54,13 +57,11 @@ class LoginView(View):
     用户登录
     """
     def get(self, request):
-        logout(request)
+        #logout(request)
         next_to = request.GET.get('next', '')
         response = render(request, get_temp('login.html', temp_dir_p), {
             'next_to': next_to
         })
-        response.set_cookie('zan', '')
-        response.set_cookie('is_login', '')
         return response
 
     def post(self, request):
@@ -81,7 +82,6 @@ class LoginView(View):
                     else:
                         response = HttpResponseRedirect(
                             reverse("users:users_home"))
-
                     response.set_cookie('is_login', 1)
                     return response
                 else:
@@ -133,7 +133,7 @@ class RegisterView(View):
             # 写入欢迎注册消息
             user_message = users_models.UserMessage()
             user_message.user = user_profile.id
-            user_message.message = "欢迎您注册"
+            user_message.message = "欢迎%s注册本站,本站样式在后期会慢慢完善, 前期大量的工作在数据"%user_profile.username
             user_message.save()
 
             #send_register_email(user_name, "register")
@@ -153,7 +153,6 @@ class ForgetPwdView(View):
     '''
 
     def get(self, request):
-        # forget_form = ForgetForm()
         return render(request, get_temp('forgetpwd.html', temp_dir_p))
 
     def post(self, request):

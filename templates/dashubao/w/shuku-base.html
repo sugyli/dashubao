@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="keywords" content="{% block keywords %}{% endblock %}">
+    <meta name="description" content="{% block description %}{% endblock %}">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="mobile-agent" content="format=html5; url={{ WEB1_URL }}">
+    <meta http-equiv="mobile-agent" content="format=xhtml; url={{ WEB1_URL }}">
+    <link rel="stylesheet" href="{% static 'w/css/index.css' %}">
+    {% block custom_css %}
+    {% endblock %}
+    <script src="{% static 'w/js/jquery.min.js' %}"></script>
+    <script src="{% static 'layer_mobile/layer.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/p.js' %}"></script>
+  </head>
+{% block content %}
+{% endblock %}
+<script>
+    var config = {
+        "verifylogin_url": "{% url 'operation:operation_login' %}",
+        'csrf_token': '{{ csrf_token }}',
+        'userindex_url': "{% url 'users:users_home' %}",
+        'message_url': "{% url 'users:users_message' %}",
+        'logout_url': "{% url 'users:users_logout' %}",
+        'thiurl': "{{ request.path }}",
+        'adduserzan': "{% url 'operation:operation_adduserzan' %}",
+        'adduserfav': "{% url 'operation:operation_adduserfav' %}"
+    }
+</script>
+<script type="text/javascript" src="{% static 'w/js/index.js' %}"></script>
+{% block custom_js %}
+{% endblock %}
+</html>

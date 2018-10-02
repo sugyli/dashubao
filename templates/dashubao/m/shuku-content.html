@@ -91,7 +91,7 @@
             <a href="javascript:void(0);" class="pattern"><i class="icon moon-icon"></i></a>
             <a href="javascript:void(0);" class="a-minus">A-</a>
             <a href="javascript:void(0);" class="a-plus">A+</a>
-            <a href="javascript:void(0);" class="correct" id="shuqian">书签</a>
+            <a href="javascript:void(0);" class="correct addshuqian">书签</a>
         </div>
     </div>
     <div class="betweenline"></div>
@@ -119,7 +119,7 @@
         {{ content.content|default:'本章节还没有智能匹配到欢迎同学举报' }}
      {% endautoescape %}
     </div>
-    <div class="reward-link"><a href="javascript:void(0);" id="zan"><span class="circle"><i class="icon dianzan-icon"></i></span>给作者点赞</a></div>
+    <div class="reward-link"><a href="javascript:void(0);" class="zan"><span class="circle"><i class="icon dianzan-icon"></i></span>给作者点赞</a></div>
     <div class="author-tips"><a href="{% url 'users:users_adduserask' comefrom %}">[提示] 我有错误举报！</a></div>
     <div class="chapter-page">
     	<a {% if previous_chapter %}href="{{ previous_chapter.get_content_path }}" class="btn"{% else %}href="javascript:void(0);" class="btn disable"{% endif %}>上一章</a>
@@ -138,7 +138,7 @@
 
 <script type="text/javascript" src="{% static 'm/js/jquery-content.js' %}"></script>
 <script type="text/javascript" src="{% static 'layer_mobile/layer.js' %}"></script>
-<script type="text/javascript" src="{% static 'm/js/p.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/p.js' %}"></script>
 <script type="text/javascript" src="{% static 'm/js/mobile.js' %}"></script>
 
 <div class="sidespen">
@@ -149,26 +149,12 @@
 </div>
 
 <script>
-var book = JSON.stringify({ 'bookid':{{ chapter.noveldetail.id }},'page':{{ page }},'chapterid':{{ chapter.id }} });
-$.fn.cookie('book', book, { expires: 3600, path: "/" });
-// 重写js array.push 避免添加重复元素
-Array.prototype.oldUnshift=Array.prototype.unshift;
-Array.prototype.pushSetObj=function(obj){
-								var whetherRepeat=false;
-									//alert(obj.name);
-								for(var i=0;i<this.length;i++){
-									if(this[i].bookid==obj.bookid){
-									    this.splice(i,1);
-                                        this.unshift(obj);
-										whetherRepeat=true;
-										break;
-									}
-								}
-								if(!whetherRepeat){
-									this.oldUnshift(obj);
-								}
-								return whetherRepeat;
-							}
+    var bookid = "{{ chapter.noveldetail.url_md5 }}"
+    var chapterid = "{{ chapter.chapter_url_md5 }}"
+
+    var book = JSON.stringify({ 'bookid':{{ chapter.noveldetail.id }},'page':{{ page }},'chapterid':{{ chapter.id }} });
+    $.fn.cookie('book', book, { expires: 3600, path: "/" });
+
     var bookshelf =  { 'bookid':{{ chapter.noveldetail.id }},'bookname':"{{ chapter.noveldetail.novel_name }}",'bookauthor':"{{ chapter.noveldetail.novel_author }}",'url':"{{ request.path }}",'image':"{{ chapter.noveldetail.get_image_path }}" }
     var bookshelfs = $.fn.cookie("bookshelfs");
     if(bookshelfs){
@@ -186,8 +172,6 @@ Array.prototype.pushSetObj=function(obj){
 
 
     var config ={
-        'bookid': "{{ chapter.noveldetail.url_md5 }}",
-        'chapterid': "{{ chapter.chapter_url_md5 }}",
         'csrf_token': '{{ csrf_token }}',
         'adduserzan': "{% url 'operation:operation_adduserzan' %}",
         'adduserfav': "{% url 'operation:operation_adduserfav' %}"
@@ -200,6 +184,7 @@ Array.prototype.pushSetObj=function(obj){
 			url: "{{ request.path }}",
 			type: "post",
 			data: {'cid':cid},
+            dataType:'html',
 			async: true,
 			beforeSend:function(xhr, settings){
 			    layer.open({type: 2,shadeClose: true});

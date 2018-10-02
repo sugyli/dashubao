@@ -1,0 +1,80 @@
+{% extends 'dashubao/w/shuku-base.html' %}
+{% block title %}{{ WEB1_NAME }}-{{ WEB1_URL }}{% endblock %}
+{% block keywords %}小说,大书包,大书包小说网{% endblock %}
+{% block description %}大书包小说网收录了当前最好看的小说,是广大小说阅读爱好者必备的小说网。{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<body>
+{% include 'dashubao/p/navigation-w.html' %}
+<div class="fengtui">
+    {% for row in fav_noveldetail %}
+      <dl>
+          <a href="{{ row.get_info_path }}">
+            <dt>
+              <img src="{{ row.get_image_path|default:DEF_FENMIAN }}" alt="{{ row.novel_name }}" onerror="this.src='{% static 'images/noimg.jpg' %}'">
+            </dt>
+            <dd>
+              <h3>{{ row.novel_name }}</h3>
+              <span>{{ row.novel_author }}</span>
+              <p class="moreline">
+                  {{ row.novel_info|striptags|default:'还没有介绍欢迎同学举报' }}
+              </p>
+            </dd>
+         </a>
+      </dl>
+    {% endfor %}
+</div>
+<div class="main">
+    <div class="lastupdate">
+       <h2>最新更新</h2>
+       <ul>
+         <li class="t">
+           <span class="lx">类型</span>
+           <span class="sm">书名</span>
+           <span class="zj">最新章节</span>
+           <span class="zz">作者</span>
+           <span class="sj">时间</span>
+         </li>
+         {% for row in update_noveldetail %}
+         <li class="oneline">
+             <span class="lx oneline">[{{ row.novelclassify.caption }}]</span>
+             <span class="sm oneline">
+               <a href="{{ row.get_info_path }}">{{ row.novel_name }}</a>
+             </span>
+             <span class="zj oneline">
+               <a href="{{ row.get_last_chapter.get_content_path }}">{{ row.get_last_chapter }}</a>
+             </span>
+             <span class="zz oneline">{{ row.novel_author }}</span>
+             <span class="sj oneline">{{ row.update_time|date:"H:i" }}</span>
+         </li>
+         {% endfor %}
+
+       </ul>
+     </div>
+    <div class="postdate">
+       <h2>新书入库</h2>
+          <ul>
+            {% for row in create_noveldetail %}
+            <li class="oneline">
+            <span class="lx">[{{ row.novelclassify.caption }}]</span>
+            <span class="sm oneline"><a href="{{ row.get_info_path }}">{{ row.novel_name }}</a></span>
+            <span class="zz oneline">{{ row.novel_author }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+    </div>
+</div>
+<div class="link">
+    友情链接：
+    {% for row in youqing %}
+    <a href="{{ row.url }}" target="_blank">{{ row.name }}</a>
+    {% endfor %}
+</div>
+
+{% include 'dashubao/p/footer-w.html' %}
+</body>
+{% endblock %}
+{% block custom_js %}
+
+
+{% endblock %}

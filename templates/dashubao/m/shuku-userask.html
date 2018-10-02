@@ -79,6 +79,7 @@
         <div class="select-wrap pager-btnB pager-btn" id="changedata">
             <select class="pager-btnB" onfocus="this.style.width=document.body.clientWidth*0.78 + 'px'" onblur="this.style.width=document.body.clientWidth*0.78+ 'px'">
                 <option selected="selected" value="其他问题">其他问题</option>
+                <option value="我要求书">我要求书</option>
                 <option value="章节内容错误">章节内容错误</option>
                 <option value="错别字较多">错别字较多</option>
                 <option value="低俗情色">低俗情色</option>
@@ -91,7 +92,7 @@
 </body>
 <script type="text/javascript" src="{% static 'm/js/jquery-content.js' %}"></script>
 <script type="text/javascript" src="{% static 'layer_mobile/layer.js' %}"></script>
-<script type="text/javascript" src="{% static 'm/js/p.js' %}"></script>
+<script type="text/javascript" src="{% static 'm/js/../../../static/js/p.js' %}"></script>
 <script>
     $("body").on("click", "button", function () {
         var selecttext = $('#changedata option:selected').text();//选中的文本
@@ -130,6 +131,6 @@
             }
 	    });
     });
-
+    $.fn.cookie('is_login', 1, { expires: 3600, path: "/" });
 </script>
 </html>

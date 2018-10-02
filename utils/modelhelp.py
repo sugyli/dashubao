@@ -32,7 +32,7 @@ def get_one_chapter(subsection=False,kwargs={}):
 def get_all_chapter(isdaoxu=None,subsection=False,kwargs={}):
     '''
 
-    :param isdaoxu:
+    :param isdaoxu 不存在 就是递减:
     :param subsection: 是否需要分卷
     :param kwargs:
     :return:
@@ -56,10 +56,6 @@ def get_one_book(kwargs={}):
 def get_all_book(kwargs={}):
     return novels_models.NovelDetail.objects.filter(**kwargs, ishide=0)
 
-
-
-
-
 def authenticate(username=None, password=None):
     '''
     验证用户是否存在
@@ -75,7 +71,6 @@ def authenticate(username=None, password=None):
         if len(password) > 0 and (user.check_password(password)
                                   or user.old_password == help.get_md5(password)):
             return user
-
     except Exception as e:
         logger.debug(e)
         return None
@@ -84,3 +79,15 @@ def authuser(username):
 
     return users_models.UserProfile.objects.filter(Q(username=username) | Q(email=username))
 
+def ajaxuser(user):
+
+    return {
+        'username': user.username,
+        'caption': user.get_grade(),
+        'message': user.get_unread_message_count()
+    }
+
+
+def get_fenlei():
+
+    return novels_models.NovelClassify.objects.all().exclude(sortid=0)

@@ -1,5 +1,7 @@
 {% extends 'dashubao/m/shuku-base.html' %}
 {% block title %}{{ WAP1_NAME }}-{{ WAP1_URL }}{% endblock %}
+{% block keywords %}小说,大书包,大书包小说网,{{ WAP1_NAME }}{% endblock %}
+{% block description %}{{ WAP1_NAME }}收录了当前最好看的小说,是广大小说阅读爱好者必备的小说网。{% endblock %}
 {% load staticfiles %}
 {% block content %}
 <body data-spm="fic-main">
@@ -38,6 +40,27 @@
                     </div>
                 </div>
             </div>
+
+            <div class="feed feedBook_recommend recommendBoy">
+                <div class="main">
+                    <div class="topic">
+                        <h3>热门书籍</h3>
+                    </div>
+                    <ul class="books">
+                        {% for row in fav_noveldetail %}
+                        <li class="book">
+                            <a href="{{ row.get_info_path }}">
+                                <img onerror="this.src='{% static 'images/noimg.jpg' %}'" src="{{ row.get_image_path|default:DEF_FENMIAN }}">
+                                <span>{{ row.novel_name }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+
+
             {% for row in noveldetail.object_list %}
             <div class="feed feedBook newbooklist">
                 <a href="{{ row.get_info_path }}" class="main">

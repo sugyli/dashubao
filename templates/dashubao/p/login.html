@@ -59,10 +59,10 @@
     <form method="post" action="{% url 'users:users_login' %}" data-ajax="false" autocomplete="off">
       <div class="ui-field-contain" >
           <div class="{% if login_form.errors.username %}errorput{% endif %}">
-              <input type="text" data-theme="a" data-iconpos="left" data-icon="user" placeholder="请输入登录账号" data-clear-btn="true" name="username">
+              <input type="text" data-theme="a" data-iconpos="left" data-icon="user" placeholder="请输入登录账号" data-clear-btn="true" name="username" autocomplete="off">
           </div>
           <div class="{% if login_form.errors.password %}errorput{% endif %}" style="margin-top: 15px">
-              <input type="password" data-theme="a" placeholder="请输入6-20位非中文字符密码" data-clear-btn="true" name="password">
+              <input type="password" data-theme="a" placeholder="请输入6-20位非中文字符密码" data-clear-btn="true" name="password" autocomplete="off">
           </div>
       </div>
     <button class="button1">提交</button>

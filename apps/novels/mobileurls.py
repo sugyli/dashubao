@@ -4,7 +4,7 @@ from novels import views
 
 urlpatterns = [
     path('_info/<slug:bookid>/', views.M_InfoView.as_view(), name="novels_info"),
-    path('_content/<slug:bookid>/<slug:chapterid>/', views.M_ContentView.as_view(), name="novels_content"),
+    path('_content/<slug:chapterid>/', views.M_ContentView.as_view(), name="novels_content"),
 
     # path('_wapsort/', views.M_WapSortView.as_view(), name="novels_wapsort_index"),
     path('_sortlist/<int:sortid>/', views.M_SortListView.as_view(), name="novels_sortlist"),

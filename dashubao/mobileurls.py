@@ -1,6 +1,5 @@
 
-from django.urls import path
-from django.urls import include
+from django.urls import path,include
 
 from novels import views
 
@@ -20,6 +19,6 @@ urlpatterns = [
     path('search/', include(
         ('search.mobileurls', 'search'), namespace="search")),
 
-    path('info-<int:bookid>/', views.M_InfoView.as_view(), name="novels_info"),
-    path('wapbook-<int:bookid>-<int:chapterid>/', views.M_ContentView.as_view(), name="novels_content")
+    path('info-<int:bookid>/', views.Old_M_InfoView.as_view(), name="old_novels_info"),
+    path('wapbook-<int:bookid>-<int:chapterid>/', views.Old_M_ContentView.as_view(), name="old_novels_content")
 ]

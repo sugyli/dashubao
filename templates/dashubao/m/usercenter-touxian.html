@@ -4,7 +4,7 @@
 {% block content %}
 <body class="huibg">
 <nav class="navbar text-center">
-   <button class="topleft" onclick ="window.location.href='{% url 'users:users_home' %}'"><span class="iconfont icon-fanhui"> < </span></button>
+   <button class="topleft" onclick ="javascript:history.go(-1);"><span class="iconfont icon-fanhui"> < </span></button>
   <a class="navbar-tit center-block">等级说明</a>
   <button class="topnav" id="open-button"><span class="iconfont icon-1"></span></button>
 </nav>
@@ -15,8 +15,9 @@
   {% for r in z %}
   <div class="cdv dzi">
       <a href="javascript:">
-      <p>最小积分：{{ r.min }}<button class="label label-danger pull-right">{{ r.level }}</button></p>
-      <p>最大积分：{{ r.max }}</p>
+      <p>积分：{{ r.min }} <= 积分 < {{ r.max }}<button class="label label-danger pull-right">{{ r.level }}</button></p>
+      <p>日推荐：{{ r.piao }}票</p>
+      <p>书架：无限制(分类后期开放)</p>
       </a>
   </div>
   {% endfor %}

@@ -50,7 +50,7 @@
        <div class="icc"><i class="iconfont icon-chakangonglve"></i></div>
        <div class="lzz">我的消息</div>
        {% if request.user.get_unread_message_count > 0 %}
-       <div class="rizi lvzi">{{ request.user.get_unread_message_count }}</div>
+       <div class="rizi lvzi" style="color: red; font-weight: bold;">{{ request.user.get_unread_message_count }}</div>
        {% else %}
        <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
        {% endif %}

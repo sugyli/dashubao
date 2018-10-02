@@ -14,10 +14,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 #from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 
 import xadmin
+from novels import views
 
 urlpatterns = [
     path('sugyli_admin/', xadmin.site.urls),
+    path('', views.IndexView.as_view(),name="novels_index"),
+
+    path('novels', include(('novels.urls', 'novels'), namespace="novels")),
+
+    path('users/', include(('users.urls', 'users'), namespace="users")),
+    path('operation/', include(('operation.urls', 'operation'), namespace="operation")),
+
+    path('search/', include(
+            ('search.urls', 'search'), namespace="search")),
+
+    path('book/<int:pid>/<int:bookid>/', views.Old_InfoView.as_view(), name="old_novels_info"),
+    path('book/<int:pid>/<int:bookid>/<int:chapterid>.html', views.Old_ContentView.as_view(), name="old_novels_content")
 ]

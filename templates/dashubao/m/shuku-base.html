@@ -13,16 +13,24 @@
     <meta http-equiv="Cache-Control" content="no-transform"/>
     <meta name="MobileOptimized" content="240"/>
     <meta name="applicable-device" content="mobile"/>
+    <meta name="data-spm" content="smwp">
 
     <link rel="stylesheet" type="text/css" href="{% static 'm/h5/css/read/v4/tags/0.0.30/c/g.css' %}" media="all"/>
     <script src="{% static 'm/js/jquery.min.js' %}"></script>
     <script src="{% static 'layer_mobile/layer.js' %}"></script>
-    <script src="{% static 'm/js/p.js' %}"></script>
+    <script src="{% static 'js/p.js' %}"></script>
     {% block custom_css %}
     {% endblock %}
 </head>
 {% block content %}
 {% endblock %}
+<script>
+    var config = {
+        'adduserzan': "{% url 'operation:operation_adduserzan' %}",
+        'adduserfav': "{% url 'operation:operation_adduserfav' %}",
+        'csrf_token': '{{ csrf_token }}',
+    }
+</script>
 {% block custom_js %}
 {% endblock %}
 </html>

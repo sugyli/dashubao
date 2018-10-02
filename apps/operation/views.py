@@ -1,15 +1,17 @@
 import json
+import datetime
 
-
-from django.shortcuts import render
+#from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import login
+from django.shortcuts import reverse
 
 from operation import forms as operation_forms
 from users import forms as users_forms
 from operation import models as operation_models
-from users import models as users_models
+#from users import models as users_models
 from utils import modelhelp
 
 
@@ -20,56 +22,39 @@ class AddUserZan(View):
 
     def post(self, request):
 
-        isview = request.POST.get('isview', '')
+        if not request.user.is_authenticated:
+            # 判断用户登录状态
+            return HttpResponse('{"status":"fail","msg":"还没有登录"}', content_type='application/json')
+
         bookid = request.POST.get('bookid', '')
         bookid = bookid.strip()
-        isview = isview.strip()
-        if isview:
-            if request.user.is_authenticated and bookid:
-                user = request.user
-                novel = modelhelp.get_one_book({'url_md5':bookid})
-                if novel and operation_models.UserZan.objects.filter(user=user, novel=novel):
-                    response = HttpResponse('{"status":"success"}', content_type='application/json')
-                    response.set_cookie('zan', 1)
-                    return response
-            response = HttpResponse('{"status":"fail"}', content_type='application/json')
-            response.set_cookie('zan', 2)
-            return response
+        novel = modelhelp.get_one_book({'url_md5': bookid})
+        if not novel:
+            return HttpResponse('{"status":"fail","msg":"这本书不存在"}', content_type='application/json')
 
-        else:
+        user = request.user
+        piao = user.get_piao_count()
 
-            if not request.user.is_authenticated:
-                # 判断用户登录状态
-                response = HttpResponse('{"status":"fail","msg":"还没有登录"}', content_type='application/json')
-                response.set_cookie('zan', 2)
-                return response
-            if bookid:
-                user = request.user
-                novel = modelhelp.get_one_book({'url_md5':bookid})
-                if novel:
-                    uz_obj = operation_models.UserZan.objects.filter(user=user, novel=novel)
-                    if uz_obj:
-                        uz_obj.delete()
-                        novel.novel_zan_nums -= 1
-                        if novel.novel_zan_nums < 0:
-                            novel.novel_zan_nums = 0
-                        novel.save()
-                        response = HttpResponse('{"status":"success","msg":"已经取消赞"}', content_type='application/json')
-                        response.set_cookie('zan', 2)
-                        return response
-                    else:
-                        uz_obj = operation_models.UserZan()
-                        uz_obj.user = user
-                        uz_obj.novel = novel
-                        uz_obj.save()
-                        novel.novel_zan_nums += 1
-                        novel.save()
-                        response = HttpResponse('{"status":"success","msg":"谢谢点赞"}', content_type='application/json')
-                        response.set_cookie('zan', 1)
-                        return response
+        today = datetime.date.today()
 
-            response.set_cookie('zan', 2)
-            return HttpResponse('{"status":"fail","msg":"提交失败"}', content_type='application/json')
+        yiyongpiao = operation_models.UserZan.objects.filter(user=user,create_time=today).count()
+
+        if yiyongpiao >= piao:
+            return HttpResponse('{"status":"success","msg":"您今天的推荐票已经用完"}', content_type='application/json')
+
+        uz_obj = operation_models.UserZan()
+        uz_obj.user = user
+        uz_obj.novel = novel
+        uz_obj.save()
+        novel.novel_zan_nums += 1
+        novel.save()
+        user.score += 1
+        user.save()
+        shen = piao - (yiyongpiao+1)
+
+        return HttpResponse('{"status":"success","msg":"投票成功获得1积分剩余%s票"}'%(shen), content_type='application/json')
+
+
 
 
 class AddUserFav(View):
@@ -150,4 +135,69 @@ class UserUpdatePwd(View):
 
         else:
             return HttpResponse(json.dumps(modify_form.errors), content_type='application/json')
+
+
+
+
+class IsLogin(View):
+    '''
+
+    ajax 验证登录
+    '''
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            login_form = users_forms.LoginForm(request.POST)
+            if login_form.is_valid():
+                user_name = request.POST.get("username", "")
+                pass_word = request.POST.get("password", "")
+                user_name = user_name.strip()
+                pass_word = pass_word.strip()
+                user = modelhelp.authenticate(username=user_name, password=pass_word)
+                if user is not None:
+                    if user.is_active:
+                        login(request, user)
+                        user = json.dumps(modelhelp.ajaxuser(user))
+                        response = HttpResponse('{"status":"success","msg":"登录成功","data":%s}' % user,
+                                                content_type='application/json')
+                        response.set_cookie('is_login', 1)
+                        return response
+                    else:
+
+                        response = HttpResponse('{"status":"fail","msg":"账户未激活"}', content_type='application/json')
+
+                else:
+                    response = HttpResponse('{"status":"fail","msg":"用户名或密码错误"}', content_type='application/json')
+
+            else:
+
+                response = HttpResponse(json.dumps(login_form.errors), content_type='application/json')
+
+
+            response.delete_cookie('is_login')
+            return response
+
+        user = json.dumps(modelhelp.ajaxuser(request.user))
+        response = HttpResponse('{"status":"success","msg":"用户是登录状态","data":%s}'%user, content_type='application/json')
+        response.set_cookie('is_login', 1)
+        return response
+
+
+class IsReadBookshelf(View):
+    '''
+    书架记录
+    '''
+
+    def get(self, request,bookid, chapterid):
+        if request.user.is_authenticated:
+            novelfavorite = operation_models.NovelFavorite.objects.filter(user=request.user, novel=bookid, chapterid=chapterid).first()
+
+            if novelfavorite:
+                novelfavorite.update_time = datetime.datetime.now()
+                novelfavorite.save()
+
+
+        return HttpResponseRedirect(reverse('novels:novels_content', args=[chapterid]))
+
+
 
