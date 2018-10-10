@@ -1,7 +1,7 @@
 {% extends 'dashubao/m/shuku-base.html' %}
-{% block title %}{{ noveldetail.novel_name }}最新更新_{{ noveldetail.novel_name }}最新章节_{{ WAP1_NAME }}_{{ WAP1_URL }}{% endblock %}
-{% block keywords %}{{ noveldetail.novel_name }},小说{{ noveldetail.novel_name }},{{ noveldetail.novel_name }}最新章节,{{ noveldetail.novel_name }}全文阅读{% endblock %}
-{% block description %}{{ noveldetail.novel_name }}是由{{ noveldetail.novel_author }}所写的{{ noveldetail.novelclassify.caption }}类小说，本站提供{{ noveldetail.novel_name }}最新章节观看,{{ noveldetail.novel_name }}全文阅读等服务，如果您发现{{ noveldetail.novel_name }}更新慢了,请第一时间联系{{ WAP1_NAME }}。{% endblock %}
+{% block title %}{{ noveldetail.novel_name }}最新更新_{{ noveldetail.novel_name }}最新章节_{{ noveldetail.quanping }}_{{ WAP1_NAME }}_{{ WAP1_URL }}{% endblock %}
+{% block keywords %}{{ noveldetail.novel_name }},小说{{ noveldetail.novel_name }},{{ noveldetail.novel_name }}最新章节,{{ noveldetail.novel_name }}全文阅读,{{ noveldetail.quanping }}{% endblock %}
+{% block description %}({{ noveldetail.quanping }}){{ noveldetail.novel_name }}是由{{ noveldetail.novel_author }}所写的{{ noveldetail.novelclassify.caption }}类小说，本站提供{{ noveldetail.novel_name }}最新章节观看,{{ noveldetail.novel_name }}全文阅读等服务，如果您发现{{ noveldetail.novel_name }}更新慢了,请第一时间联系{{ WAP1_NAME }}。{% endblock %}
 {% load staticfiles %}
 {% block custom_css %}
     <style>

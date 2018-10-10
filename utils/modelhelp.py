@@ -40,7 +40,6 @@ def get_all_chapter(isdaoxu=None,subsection=False,kwargs={}):
     if not subsection and not 'chapter_type' in kwargs:
         kwargs.update(chapter_type=0)
     kwargs.update(ishide=0)
-
     if isdaoxu:
         return novels_models.NovelChapter.objects.filter(
             **kwargs)
@@ -50,10 +49,12 @@ def get_all_chapter(isdaoxu=None,subsection=False,kwargs={}):
 
 
 def get_one_book(kwargs={}):
+    kwargs.update(have_chapter=1)
     return novels_models.NovelDetail.objects.filter(**kwargs, ishide=0).first()
 
 
 def get_all_book(kwargs={}):
+    kwargs.update(have_chapter=1)
     return novels_models.NovelDetail.objects.filter(**kwargs, ishide=0)
 
 def authenticate(username=None, password=None):
@@ -91,3 +92,13 @@ def ajaxuser(user):
 def get_fenlei():
 
     return novels_models.NovelClassify.objects.all().exclude(sortid=0)
+
+def add_auth_response(response):
+
+    response.set_cookie('is_login', 1)
+    return response
+
+def del_auth_response(response):
+
+    response.delete_cookie('is_login')
+    return response

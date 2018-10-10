@@ -1,6 +1,8 @@
 import datetime
 import math
 import json
+from utils import modelhelp
+
 
 
 from django.shortcuts import render
@@ -48,8 +50,7 @@ class LogoutView(View):
         if next_to:
             url = next_to
         response = HttpResponseRedirect(url)
-        response.delete_cookie('is_login')
-        return response
+        return modelhelp.del_auth_response(response)
 
 
 class LoginView(View):
@@ -82,8 +83,7 @@ class LoginView(View):
                     else:
                         response = HttpResponseRedirect(
                             reverse("users:users_home"))
-                    response.set_cookie('is_login', 1)
-                    return response
+                    return modelhelp.add_auth_response(response)
                 else:
                     return render(
                         request, get_temp(

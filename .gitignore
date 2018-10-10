@@ -2,3 +2,15 @@ dashubao/config.py
 .idea/
 **/__pycache__
 logs/*
+middleware
+utils/bookshelf_sql.py
+utils/oldbook_sql.py
+utils/oldbook_sql_1.py
+utils/oldchapter_sql_2.py
+utils/oldchapter_sql_3.py
+utils/oldchapter_sql_4.py
+utils/oldchapter_sql_5.py
+utils/oldchapter_sql_6.py
+utils/oldchapter_sql_7.py
+utils/oldchapter_sql_8.py
+utils/users_sql.py

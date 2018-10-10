@@ -17,6 +17,5 @@
 # s=urllib.parse.quote(s)
 # print(s)
 
-mylist = [1,2,2,2,2,3,3,3,4,4,4,4,2,5]
-myset = set(mylist) #myset是另外一个列表，里面的内容是mylist里面的无重复 项
-print(myset)
+import logging
+logging.info(u"麻生希")

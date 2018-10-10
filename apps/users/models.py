@@ -26,7 +26,7 @@ class UserProfile(AbstractUser):
     mobile = models.CharField(max_length=11, null=True, blank=True,unique=True,verbose_name=u"手机号码")
     image = models.ImageField(upload_to=user_directory_path,default=u"upload/image/default.png", max_length=300,null=True, blank=True,verbose_name=u"用户头像")
     score = models.IntegerField(default=0, verbose_name=u'积分')
-    isolduser = models.BooleanField(default=False, verbose_name=u"是否老用户")
+    olduserid = models.IntegerField(default=0, verbose_name=u'老用户ID',null=True, blank=True,unique=True)
 
 
     class Meta:

@@ -60,7 +60,7 @@ class Old_M_InfoView(View):
         return HttpResponseRedirect('/')
 
 class M_InfoView(View):
-    def get(self, request, bookid):
+    def get(self, request, pinyin, bookid):
 
         isdaoxu = request.GET.get('isdaoxu', '')
         chapterid = request.GET.get('chapterid', 0)
@@ -260,11 +260,12 @@ class Old_InfoView(View):
 
 
 class InfoView(View):
-    def get(self, request, bookid):
+    def get(self, request, pinyin,bookid):
         isdaoxu = request.GET.get('isdaoxu', '')
         noveldetail = modelhelp.get_one_book({'url_md5': bookid})
         if noveldetail:
             all_chapter = noveldetail.get_book_chapter(isdaoxu=isdaoxu)
+            print(all_chapter)
             if all_chapter:
                 try:
                     page = request.GET.get('page', 1)
@@ -298,7 +299,7 @@ class Old_ContentView(View):
 
 
 class ContentView(View):
-    def get(self, request, chapterid):
+    def get(self, request , chapterid):
 
         chapter = modelhelp.get_one_chapter(kwargs={'chapter_url_md5': chapterid})
 

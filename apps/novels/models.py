@@ -25,7 +25,7 @@ class NovelContentComefrom(models.Model):
 class NovelClassify(models.Model):
     caption = models.CharField(max_length=20, verbose_name=u"分类", unique=True)
     sortid = models.PositiveSmallIntegerField(
-        default=0, verbose_name=u"分类ID", unique=True)
+        default=0, verbose_name=u"分类ID")
     create_time = models.DateTimeField(
         default=datetime.now, verbose_name=u"添加时间")
 
@@ -48,13 +48,15 @@ class NovelDetail(models.Model):
         verbose_name=u"查询主键",
         unique=True)
     novel_name = models.CharField(max_length=300, verbose_name=u"小说名")
+    slug = models.CharField(max_length=500, verbose_name=u"拼音",default='')
+    quanping = models.CharField(max_length=500, verbose_name=u"拼音", default='')
+
     novel_author = models.CharField(max_length=300, verbose_name=u"作者")
     novel_comefrom = models.CharField(
         max_length=20,
         verbose_name=u"来源网站",
         default='',
-        null=True,
-        blank=True)
+        )
     novel_info = models.TextField(
         default='',
         verbose_name=u"小说简介",
@@ -78,22 +80,28 @@ class NovelDetail(models.Model):
         verbose_name=u"点击数",
         null=True,
         blank=True)
-    novel_status = models.BooleanField(default=False, verbose_name=u"是否完本")
+    novel_status = models.BooleanField(default=False, verbose_name=u"是否完本",null=True, blank=True)
     ishide = models.BooleanField(
         default=False,
-        verbose_name=u"是否隐藏")
+        verbose_name=u"是否隐藏",null=True, blank=True)
+    have_chapter = models.BooleanField(
+        default=False,
+        verbose_name=u"是否有章节", null=True, blank=True)
+    stop_update = models.BooleanField(
+        default=False,
+        verbose_name=u"采集更新",null=True, blank=True)
     image = models.ImageField(
         upload_to="courses/%Y/%m/%d",
-        default=u"courses/default.png",
+        default="",
         verbose_name=u"封面图",
         max_length=300, null=True, blank=True)
     novelclassify = models.ForeignKey(
         NovelClassify,
-        to_field='sortid',
         on_delete=models.SET_NULL,
         verbose_name=u"小说类型",
         default=0, null=True,
         blank=True)
+
 
     all_chapter = None
 
@@ -112,7 +120,7 @@ class NovelDetail(models.Model):
 
     def get_info_path(self):
 
-        return reverse('novels:novels_info', args=[self.url_md5])
+        return reverse('novels:novels_info', args=[self.slug,self.url_md5])
 
         # if self.novel_old_id > 0:
         #     return reverse('novels_info', args=[self.novel_old_id])
@@ -222,7 +230,7 @@ class NovelContent(models.Model):
         default='', null=True,
         blank=True)
     content = models.TextField(verbose_name=u"小说内容")
-    chapter = models.ManyToManyField(NovelChapter)
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterContent')
     num_words = models.IntegerField(
         default=0, verbose_name=u"统计字数", null=True, blank=True)
 
@@ -243,3 +251,14 @@ class NovelContent(models.Model):
         verbose_name=u"是否隐藏",
         null=True,
         blank=True)
+
+
+class ChapterContent(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelContent,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]

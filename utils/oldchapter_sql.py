@@ -33,8 +33,6 @@ def str_count(str):
 
     return str , c
 
-
-
 try:
     # 开始时间
     start_time = datetime.now()
@@ -48,28 +46,28 @@ try:
         cursorclass=cursors.SSCursor)
 
     conn2 = MySQLdb.connect(
-        host='127.0.0.1',
-        user='root',
-        passwd='123456',
-        db='dashubao',
+        host='60.171.117.207',
+        user='cbscbx',
+        passwd='chenbenshouchenbenxing5566778899',
+        db='shubao',
         charset='utf8')
     conn3 = MySQLdb.connect(
-        host='127.0.0.1',
-        user='root',
-        passwd='123456',
-        db='dashubao',
+        host='60.171.117.207',
+        user='cbscbx',
+        passwd='chenbenshouchenbenxing5566778899',
+        db='shubao',
         charset='utf8')
     cursor = conn.cursor()
     cursor2 = conn2.cursor()
     cursor3 = conn3.cursor()
     # 使用execute方法执行SQL语句
     cursor3.execute(
-        "select * from novels_noveldetail  order by id asc")
+        "select * from novels_noveldetail where novel_old_id > 50999 and novel_old_id<= 54999   order by novel_old_id asc limit 10000")
     # 使用 fetchone() 方法获取一条数据
     # data = cursor.fetchone()
     #cursor.execute('set global wait_timeout=600000')
     cursor.execute('set global max_allowed_packet = 67108864')
-    batch_size = 20
+    batch_size = 5000
     while True:
         # 每次获取时会从上次游标的位置开始移动size个位置，返回size条数据
         data = cursor3.fetchmany(batch_size)
@@ -81,13 +79,12 @@ try:
         else:
             for item in data:
 
-                print('查询到id %s 书名 %s 的数据 准备添加章节' % (item[0], item[3]))
+                print('查询到oid %s 书名 %s 的数据 准备添加章节' % (item[11], item[3]))
                 cursor.execute(
-                    "select * from jieqi_article_chapter where articleid =%d and chaptertype = 0  order by chapterorder asc" %
-                    (item[9]))
+                    "select * from jieqi_article_chapter where articleid =%d and chaptertype = 0  order by chapterorder asc"%item[11])
                 count = 1
                 while True:
-                    chapterdata = cursor.fetchmany(100)
+                    chapterdata = cursor.fetchmany(batch_size)
                     if not chapterdata:
                         count = 1
                         print('没有章节数据了-------2')
@@ -96,7 +93,7 @@ try:
 
                         for i, v in enumerate(chapterdata):
 
-                            print('添加章节 %s 入库' % (v[9]))
+                            print('添加章节 %s 入库 %s' % (v[9],item[11]))
 
                             sql = """
                                     insert into novels_novelchapter(chapter_name,chapter_order,chapter_type, create_time,update_time,chapter_url,chapter_url_md5,noveldetail_id,ishide,chapter_old_id) VALUES (%s,%s, %s, %s ,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE chapter_name=VALUES(chapter_name),chapter_order=VALUES(chapter_order),create_time=VALUES(create_time),update_time=VALUES(update_time),chapter_url=VALUES(chapter_url),chapter_url_md5=VALUES(chapter_url_md5)
@@ -116,7 +113,7 @@ try:
                                 v[9], count, 0, c_d, p_d, url, md5_url, item[2], 0, v[0])
                             cursor2.execute(sql, params)
                             # get_chapter_insert_id = cursor2.execute("select LAST_INSERT_ID()")
-                            cursor2.execute("select id from novels_novelchapter where chapter_url_md5 = %s", [md5_url])
+                            cursor2.execute("select chapter_url_md5 from novels_novelchapter where chapter_url_md5 = %s", [md5_url])
 
                             get_chapter_insert_id = cursor2.fetchone()[0]
 
@@ -124,7 +121,7 @@ try:
                             #     cursor2.execute("update novels_noveldetail SET first_chapter_addr=%s where url_md5 = %s ",(md5_url,item[2]))
 
                             try:
-                                path = '/Users/sugyil/txt/%d/%d/%d.txt' % (item[9] // 1000, item[9], v[0])
+                                path = '/Users/sugyil/Downloads/txt/%d/%d/%d.txt' % (item[11] // 1000, item[11], v[0])
                                 with open(path, 'r', encoding='gbk') as f:
 
                                     t = f.read()
@@ -135,32 +132,34 @@ try:
 
                                              """
                                         md5_url2 = get_md5(path)
-                                        params2 = (t, path, md5_url2, c_d, p_d, num, 100, 0)
+                                        params2 = (t, path, md5_url2, c_d, p_d, num, 97, 0)
                                         cursor2.execute(sql2, params2)
 
-                                        cursor2.execute("select id from novels_novelcontent where content_url_md5 = %s",
-                                                        [md5_url2])
+                                        cursor2.execute("select content_url_md5 from novels_novelcontent where content_url_md5 = %s",[md5_url2])
+
                                         get_content_insert_id = cursor2.fetchone()[0]
 
                                         sql3 = """
-                                                insert into novels_novelcontent_chapter(novelcontent_id,novelchapter_id) VALUES (%s,%s) ON DUPLICATE KEY UPDATE novelcontent_id=VALUES(novelcontent_id),novelchapter_id=VALUES(novelchapter_id)
+                                                insert into novels_chaptercontent(novelcontent_id,novelchapter_id,create_time) VALUES (%s,%s,%s) ON DUPLICATE KEY UPDATE novelcontent_id=VALUES(novelcontent_id),novelchapter_id=VALUES(novelchapter_id)
 
                                             """
 
-                                        params3 = (get_content_insert_id, get_chapter_insert_id)
+                                        params3 = (get_content_insert_id, get_chapter_insert_id,c_d)
                                         cursor2.execute(sql3, params3)
-                                        print('添加本章节内容成功')
+                                        print('%s 添加本章节内容成功'%item[11])
                                     else:
                                         print('内容为空不添加')
 
                             except Exception as e:
                                 print('TXT丢失 ', e)
-                                if count == 1:
-                                    with open('/Users/sugyil/txt/log.txt', 'a+') as f:
-                                        f.write(path + '\t\n')
-                                else:
-                                    with open('/Users/sugyil/txt/log.txt', 'w+') as f:
-                                        f.write(path + '\t\n')
+                                with open('/Users/sugyil/Downloads/txt/log.txt', 'a+') as f:
+                                    f.write(path + 'TXT丢失2\t\n')
+                                # if count == 1:
+                                #     with open('/Users/sugyil/Downloads/txt/log.txt', 'a+') as f:
+                                #         f.write(path + 'TXT丢失1\t\n')
+                                # else:
+                                #     with open('/Users/sugyil/Downloads/txt/log.txt', 'w+') as f:
+                                #         f.write(path + 'TXT丢失2\t\n')
 
                             finally:
                                 if f:
@@ -169,10 +168,7 @@ try:
                             conn2.commit()
                             count += 1
 
-                print('%s 的章节数据添加完成' % item[4])
-
-
-        print('fetchmany获取全量数据所用时间:', (datetime.now() - start_time).seconds)
+                print('%s 的章节数据添加完成' % item[11])
 
 except Exception as e:
     print(e)

@@ -24,14 +24,16 @@ class AddUserZan(View):
 
         if not request.user.is_authenticated:
             # 判断用户登录状态
-            return HttpResponse('{"status":"fail","msg":"还没有登录"}', content_type='application/json')
+            response = HttpResponse('{"status":"fail","msg":"还没有登录"}', content_type='application/json')
+            return modelhelp.del_auth_response(response)
+
 
         bookid = request.POST.get('bookid', '')
         bookid = bookid.strip()
         novel = modelhelp.get_one_book({'url_md5': bookid})
         if not novel:
-            return HttpResponse('{"status":"fail","msg":"这本书不存在"}', content_type='application/json')
-
+            response = HttpResponse('{"status":"fail","msg":"这本书不存在"}', content_type='application/json')
+            return modelhelp.add_auth_response(response)
         user = request.user
         piao = user.get_piao_count()
 
@@ -40,8 +42,8 @@ class AddUserZan(View):
         yiyongpiao = operation_models.UserZan.objects.filter(user=user,create_time=today).count()
 
         if yiyongpiao >= piao:
-            return HttpResponse('{"status":"success","msg":"您今天的推荐票已经用完"}', content_type='application/json')
-
+            response = HttpResponse('{"status":"success","msg":"您今天的推荐票已经用完"}', content_type='application/json')
+            return modelhelp.add_auth_response(response)
         uz_obj = operation_models.UserZan()
         uz_obj.user = user
         uz_obj.novel = novel
@@ -52,8 +54,8 @@ class AddUserZan(View):
         user.save()
         shen = piao - (yiyongpiao+1)
 
-        return HttpResponse('{"status":"success","msg":"投票成功获得1积分剩余%s票"}'%(shen), content_type='application/json')
-
+        response = HttpResponse('{"status":"success","msg":"投票成功获得1积分剩余%s票"}'%(shen), content_type='application/json')
+        return modelhelp.add_auth_response(response)
 
 
 
@@ -65,8 +67,8 @@ class AddUserFav(View):
     def post(self, request):
         if not request.user.is_authenticated:
             # 判断用户登录状态
-            return HttpResponse('{"status":"fail","msg":"还没有登录"}', content_type='application/json')
-
+            response = HttpResponse('{"status":"fail","msg":"还没有登录"}', content_type='application/json')
+            return modelhelp.del_auth_response(response)
         userfav_form = operation_forms.AddUserFavForm(request.POST)
         if userfav_form.is_valid():
             bookid = request.POST.get('bookid', '')
@@ -83,12 +85,13 @@ class AddUserFav(View):
                     if novel.novel_fav_nums < 0:
                         novel.novel_fav_nums = 0
                     novel.save()
-                    return HttpResponse('{"status":"success","msg":"删除书签成功"}', content_type='application/json')
+                    response = HttpResponse('{"status":"success","msg":"删除书签成功"}', content_type='application/json')
+                    return modelhelp.add_auth_response(response)
                 else:
                     exist_records.chapterid = chapterid
                     exist_records.save()
-                    return HttpResponse('{"status":"success","msg":"修改书签成功"}', content_type='application/json')
-
+                    response = HttpResponse('{"status":"success","msg":"修改书签成功"}', content_type='application/json')
+                    return modelhelp.add_auth_response(response)
             elif novel:
                 user_fav = operation_models.NovelFavorite()
                 user_fav.user = request.user
@@ -97,14 +100,14 @@ class AddUserFav(View):
                 user_fav.save()
                 novel.novel_fav_nums += 1
                 novel.save()
-                return HttpResponse('{"status":"success","msg":"添加书签成功"}', content_type='application/json')
-
+                response = HttpResponse('{"status":"success","msg":"添加书签成功"}', content_type='application/json')
+                return modelhelp.add_auth_response(response)
             else:
-                return HttpResponse('{"status":"fail","msg":"提交失败"}', content_type='application/json')
-
+                response = HttpResponse('{"status":"fail","msg":"提交失败"}', content_type='application/json')
+                return modelhelp.add_auth_response(response)
         else:
-            return HttpResponse(json.dumps(userfav_form.errors), content_type='application/json')
-
+            response = HttpResponse(json.dumps(userfav_form.errors), content_type='application/json')
+            return modelhelp.add_auth_response(response)
 
 
 class UserUpdatePwd(View):
@@ -114,8 +117,8 @@ class UserUpdatePwd(View):
     def post(self, request):
         if not request.user.is_authenticated:
             #判断用户登录状态
-            return HttpResponse('{"status":"fail","msg":"还没有登录"}', content_type='application/json')
-
+            response = HttpResponse('{"status":"fail","msg":"还没有登录"}', content_type='application/json')
+            return modelhelp.del_auth_response(response)
         modify_form = users_forms.ModifyPwdForm(request.POST)
         if modify_form.is_valid():
             pwd1 = request.POST.get("password1", "")
@@ -123,19 +126,21 @@ class UserUpdatePwd(View):
             pwd2 = request.POST.get("password2", "")
             pwd2 = pwd2.strip()
             if pwd1 != pwd2:
-                return HttpResponse('{"status":"fail","msg":"密码不一致"}', content_type='application/json')
+                response = HttpResponse('{"status":"fail","msg":"密码不一致"}', content_type='application/json')
+                return modelhelp.add_auth_response(response)
             user = request.user
             if user.is_superuser > 0:
-                return HttpResponse('{"status":"fail","msg":"此账户只能在后台修改密码"}', content_type='application/json')
+                response = HttpResponse('{"status":"fail","msg":"此账户只能在后台修改密码"}', content_type='application/json')
+                return modelhelp.add_auth_response(response)
             user.password = make_password(pwd2)
             user.old_password = ''
             user.save()
 
-            return HttpResponse('{"status":"success","msg":"密码修改成功"}', content_type='application/json')
-
+            response = HttpResponse('{"status":"success","msg":"密码修改成功"}', content_type='application/json')
+            return modelhelp.add_auth_response(response)
         else:
-            return HttpResponse(json.dumps(modify_form.errors), content_type='application/json')
-
+            response = HttpResponse(json.dumps(modify_form.errors), content_type='application/json')
+            return modelhelp.add_auth_response(response)
 
 
 
@@ -160,8 +165,7 @@ class IsLogin(View):
                         user = json.dumps(modelhelp.ajaxuser(user))
                         response = HttpResponse('{"status":"success","msg":"登录成功","data":%s}' % user,
                                                 content_type='application/json')
-                        response.set_cookie('is_login', 1)
-                        return response
+                        return modelhelp.add_auth_response(response)
                     else:
 
                         response = HttpResponse('{"status":"fail","msg":"账户未激活"}', content_type='application/json')
@@ -174,13 +178,11 @@ class IsLogin(View):
                 response = HttpResponse(json.dumps(login_form.errors), content_type='application/json')
 
 
-            response.delete_cookie('is_login')
-            return response
+            return modelhelp.del_auth_response(response)
 
         user = json.dumps(modelhelp.ajaxuser(request.user))
         response = HttpResponse('{"status":"success","msg":"用户是登录状态","data":%s}'%user, content_type='application/json')
-        response.set_cookie('is_login', 1)
-        return response
+        return modelhelp.add_auth_response(response)
 
 
 class IsReadBookshelf(View):
