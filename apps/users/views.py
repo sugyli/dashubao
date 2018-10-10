@@ -1,9 +1,6 @@
 import datetime
 import math
 import json
-from utils import modelhelp
-
-
 
 from django.shortcuts import render
 from django.views.generic import View
@@ -14,7 +11,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.hashers import make_password
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
-
 
 from users import forms as users_forms
 from users import models as users_models
