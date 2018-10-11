@@ -2,6 +2,7 @@
 from django.urls import path,include
 
 from novels import views
+from Django.views.generic.base import RedirectView
 
 
 urlpatterns = [
@@ -20,5 +21,6 @@ urlpatterns = [
         ('search.mobileurls', 'search'), namespace="search")),
 
     path('info-<int:bookid>/', views.Old_M_InfoView.as_view(), name="old_novels_info"),
-    path('wapbook-<int:bookid>-<int:chapterid>/', views.Old_M_ContentView.as_view(), name="old_novels_content")
+    path('wapbook-<int:bookid>-<int:chapterid>/', views.Old_M_ContentView.as_view(), name="old_novels_content"),
+    path('favicon.ico', RedirectView.as_view(url=r'static/favicon.ico')),
 ]
