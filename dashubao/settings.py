@@ -72,7 +72,7 @@ MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',
 ]
 ROOT_HOSTCONF = 'dashubao.hosts'
-DEFAULT_HOST = 'm'
+DEFAULT_HOST = 'www'
 
 ROOT_URLCONF = 'dashubao.urls'
 
