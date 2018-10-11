@@ -7,7 +7,7 @@ from novels import views
 urlpatterns = [
     path('', views.M_IndexView.as_view(),name="novels_index"),
 
-    path('novel', include(
+    path('novels', include(
         ('novels.mobileurls', 'novels'), namespace="novels")),
 
     path('users/', include(
