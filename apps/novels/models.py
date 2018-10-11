@@ -108,6 +108,7 @@ class NovelDetail(models.Model):
     class Meta:
         index_together = [
             ["novel_old_id"],
+            ["have_chapter"]
         ]
         unique_together = [
             ('novel_name', 'novel_author', 'novel_comefrom')

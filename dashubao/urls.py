@@ -34,3 +34,7 @@ urlpatterns = [
     path('book/<int:pid>/<int:bookid>/', views.Old_InfoView.as_view(), name="old_novels_info"),
     path('book/<int:pid>/<int:bookid>/<int:chapterid>.html', views.Old_ContentView.as_view(), name="old_novels_content")
 ]
+
+
+handler404 = 'novels.views.page_not_found'
+handler500 = 'novels.views.page_error'

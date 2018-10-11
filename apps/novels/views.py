@@ -1,6 +1,7 @@
 import logging
 import math
 
+from django.shortcuts import render_to_response
 from django.conf import settings
 from django.shortcuts import render
 from django.views.generic import View
@@ -338,3 +339,21 @@ class ContentView(View):
             return render(request, get_temp("error.html", temp_dir_p), {
                 'message': '正在生成章节'
             })
+
+
+
+def page_not_found(request,**kwargs):
+    # 全局404处理函数
+    response = render_to_response(get_temp("error.html", temp_dir_p), {
+        'message': '404 此页面丢失了'
+    })
+    response.status_code = 200
+    return response
+
+def page_error(request,**kwargs):
+    # 全局500处理函数
+    response = render_to_response(get_temp("error.html", temp_dir_p), {
+        'message': '500错误了'
+    })
+    response.status_code = 200
+    return response
