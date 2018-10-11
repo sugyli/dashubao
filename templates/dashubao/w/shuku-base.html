@@ -22,6 +22,7 @@
 <script>
     var config = {
         "verifylogin_url": "{% url 'operation:operation_login' %}",
+        'csrf_token': '{{ csrf_token }}',
         'userindex_url': "{% url 'users:users_home' %}",
         'message_url': "{% url 'users:users_message' %}",
         'logout_url': "{% url 'users:users_logout' %}",
