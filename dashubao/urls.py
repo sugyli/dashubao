@@ -34,7 +34,7 @@ urlpatterns = [
 
     path('book/<int:pid>/<int:bookid>/', views.Old_InfoView.as_view(), name="old_novels_info"),
     path('book/<int:pid>/<int:bookid>/<int:chapterid>.html', views.Old_ContentView.as_view(), name="old_novels_content"),
-    ('favicon.ico', RedirectView.as_view(url=r'static/favicon.ico'))
+    path('favicon.ico', RedirectView.as_view(url=r'static/favicon.ico'))
 
 ]
 

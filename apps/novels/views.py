@@ -355,5 +355,5 @@ def page_error(request,**kwargs):
     response = render_to_response(get_temp("error.html", temp_dir_p), {
         'message': '500错误了'
     })
-    response.status_code = 200
+    response.status_code = 500
     return response
