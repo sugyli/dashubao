@@ -118,7 +118,7 @@ class NovelDetail(models.Model):
         verbose_name_plural = verbose_name
 
     def get_image_path(self):
-        return settings.FENMIAN_URL + self.image
+        return "{0}{1}".format(settings.FENMIAN_URL,self.image)
 
     def get_info_path(self):
 
