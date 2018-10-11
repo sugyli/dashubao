@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.db import models
 from django.shortcuts import reverse
+from django.conf import settings
 
 #from utils import help
 from utils import modelhelp
@@ -117,7 +118,7 @@ class NovelDetail(models.Model):
         verbose_name_plural = verbose_name
 
     def get_image_path(self):
-        return self.image
+        return settings.FENMIAN_URL + self.image
 
     def get_info_path(self):
 
