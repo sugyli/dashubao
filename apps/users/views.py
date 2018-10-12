@@ -134,9 +134,10 @@ class RegisterView(View):
 
             #send_register_email(user_name, "register")
             return render(
-                request, get_temp(
-                    "login.html", temp_dir_p), {
-                    "msg": "注册成功,请登录"})
+                request, get_temp("login.html", temp_dir_p), {
+                    "msg": "注册成功,请登录",
+                    "register_name": user_name
+                })
         else:
             return render(
                 request, get_temp('register.html', temp_dir_p), {
