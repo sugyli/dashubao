@@ -3,3 +3,5 @@ Disallow: /users/
 Disallow: /novels_historybookshelf/
 Disallow: /search/
 Disallow: /oldfenmian/
+Disallow: /sugyli_admin/
+Disallow: /operation/
