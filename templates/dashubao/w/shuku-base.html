@@ -16,6 +16,11 @@
     <script src="{% static 'w/js/jquery.min.js' %}"></script>
     <script src="{% static 'layer_mobile/layer.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/p.js' %}"></script>
+    <script>
+      if(navigator.userAgent.match(/(iPhone|iPod|Android)/i)){
+        location.href = {{ WAP1_URL }}{{ request.path }};
+      }
+    </script>
   </head>
 {% block content %}
 {% endblock %}
@@ -30,6 +35,7 @@
         'adduserzan': "{% url 'operation:operation_adduserzan' %}",
         'adduserfav': "{% url 'operation:operation_adduserfav' %}"
     }
+    webtj();
 </script>
 <script type="text/javascript" src="{% static 'w/js/index.js' %}"></script>
 {% block custom_js %}
