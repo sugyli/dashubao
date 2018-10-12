@@ -11,5 +11,6 @@ def read_settings_file(request):
         'WAP1_URL': settings.WAP1_URL,
         'DEF_FENMIAN': settings.DEF_FENMIAN,
         'FENLEI': modelhelp.get_fenlei(),
-        'COME_FROM': help.encryption_urllib_base64(request.path)
+        'COME_FROM': help.encryption_urllib_base64(request.path),
+        'NOTEXT': settings.NOTEXT,
     }

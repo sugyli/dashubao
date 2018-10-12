@@ -116,7 +116,7 @@
     {% endif %}
     <div class="article-bd" id="content">
      {% autoescape off %}
-        {{ content.content|default:'本章节还没有智能匹配到欢迎同学举报' }}
+        {{ content.content|default: NOTEXT }}
      {% endautoescape %}
     </div>
     <div class="reward-link"><a href="javascript:void(0);" class="zan"><span class="circle"><i class="icon dianzan-icon"></i></span>给作者点赞</a></div>

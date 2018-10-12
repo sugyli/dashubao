@@ -470,6 +470,7 @@ WAP_CHAPTER_LIST = 15
 WEB_CHAPTER_LIST = 3000
 SCT = 1200
 EMAIL_V_URL = "https://51xunyue.com"
+NOTEXT ="本章内容不存在,欢迎举报"
 
 
 
