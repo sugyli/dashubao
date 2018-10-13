@@ -2,7 +2,7 @@ import hashlib
 import base64
 import urllib.parse
 import re
-#from django.conf import settings
+from django.conf import settings
 
 
 def get_md5(t):
