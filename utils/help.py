@@ -139,4 +139,4 @@ def format_str(content):
 #         if f:
 #             f.close()
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
