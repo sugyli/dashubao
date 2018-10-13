@@ -471,7 +471,6 @@ WEB_CHAPTER_LIST = 3000
 SCT = 1200
 EMAIL_V_URL = WEB1_URL
 NOTEXT ="本章内容不存在,欢迎举报"
-OPEN_GL = True
 
 
 

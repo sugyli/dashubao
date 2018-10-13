@@ -130,7 +130,6 @@ class M_ContentView(View):
                 kwargs={'noveldetail': chapter.noveldetail, 'chapter_order__gt': chapter.chapter_order})
 
             all_content = chapter.get_book_content()
-            print(all_content)
             comefrom = help.encryption_urllib_base64(request.path)
 
             if all_content:
@@ -147,7 +146,7 @@ class M_ContentView(View):
                 'previous_chapter': previous_chapter,
                 'next_chapter': next_chapter,
                 'comefrom': comefrom,
-                'page': page
+                'page': page,
             })
 
         else:
