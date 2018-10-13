@@ -116,9 +116,10 @@ def format_str(content):
 
 
 def guolv_content(content):
-    if not settings.OPEN_GL:
-        return content
+
     try:
+        if not settings.OPEN_GL:
+            return content
         f = open('./wj.txt', "r", encoding=u'utf-8', errors='ignore')
         while True:
             line = f.readline()
