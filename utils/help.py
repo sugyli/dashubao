@@ -2,6 +2,8 @@ import hashlib
 import base64
 import urllib.parse
 import re
+import os
+
 from django.conf import settings
 
 
@@ -118,7 +120,8 @@ def format_str(content):
 def guolv_content(content):
     if not settings.OPEN_GL:
         return content
-    wenjian = open('./wj.txt', "r", encoding=u'utf-8', errors='ignore')
+    path = os.path.join(utils, 'wj.txt')
+    wenjian = open(path, "r", encoding=u'utf-8', errors='ignore')
     while True:
         line = wenjian.readline()
         line = line.strip()

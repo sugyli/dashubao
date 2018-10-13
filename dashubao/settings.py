@@ -19,7 +19,9 @@ from dashubao import config
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
-sys.path.insert(0, os.path.join(BASE_DIR, 'utils'))
+
+utils = os.path.join(BASE_DIR, 'utils')
+sys.path.insert(0, utils)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
