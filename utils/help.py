@@ -120,7 +120,7 @@ def format_str(content):
 def guolv_content(content):
     if not settings.OPEN_GL:
         return content
-    path = os.path.join(utils, 'wj.txt')
+    path = os.path.join(settings.utils, 'wj.txt')
     wenjian = open(path, "r", encoding=u'utf-8', errors='ignore')
     while True:
         line = wenjian.readline()
