@@ -135,7 +135,6 @@ class M_ContentView(View):
             if all_content:
                 content = all_content.first()
                 print(content)
-                #content.content = help.guolv_content(content.content)
                 spare_content = all_content.values('id', 'comefrom__comefrom')
             else:
                 content = ''
@@ -330,7 +329,7 @@ class ContentView(View):
 
             if all_content:
                 content = all_content.first()
-                content.content = help.guolv_content(content.content)
+                print(content)
                 spare_content = all_content.values('id', 'comefrom__comefrom')
             else:
                 content = ''

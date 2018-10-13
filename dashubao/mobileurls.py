@@ -24,3 +24,7 @@ urlpatterns = [
     path('wapbook-<int:bookid>-<int:chapterid>/', views.Old_M_ContentView.as_view(), name="old_novels_content"),
     path('favicon.ico', RedirectView.as_view(url=r'static/favicon.ico'))
 ]
+
+
+handler404 = 'novels.views.page_not_found'
+handler500 = 'novels.views.page_error'
