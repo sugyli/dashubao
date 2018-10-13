@@ -116,23 +116,18 @@ def format_str(content):
 
 
 def guolv_content(content):
-
-    try:
-        if not settings.OPEN_GL:
-            return content
-        wenjian = open('wj.txt', "r", encoding=u'utf-8', errors='ignore')
-        while True:
-            line = wenjian.readline()
-            line = line.strip()
-            if line:
-                arr = line.split('|')
-                content = content.replace(arr[0],arr[1])
-            if not line:
-                break
-
+    if not settings.OPEN_GL:
         return content
-    finally:
-        if wenjian:
-            wenjian.close()
+    wenjian = open('wj.txt', "r", encoding=u'utf-8', errors='ignore')
+    while True:
+        line = wenjian.readline()
+        line = line.strip()
+        if line:
+            arr = line.split('|')
+            content = content.replace(arr[0], arr[1])
+        if not line:
+            break
+    wenjian.close()
+    return content
 
 # if __name__ == '__main__':
