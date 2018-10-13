@@ -115,28 +115,28 @@ def format_str(content):
     return content_str
 
 
-# def guolv_content(content):
-#
-#     try:
-#         if not settings.OPEN_GL:
-#             return content
-#         f = open('./wj.txt', "r", encoding=u'utf-8', errors='ignore')
-#         while True:
-#             line = f.readline()
-#             line = line.strip()
-#             if line:
-#                 arr = line.split('|')
-#                 content = content.replace(arr[0],arr[1])
-#             if not line:
-#                 break
-#
-#         return content
-#
-#     except Exception as e:
-#         print(e)
-#
-#     finally:
-#         if f:
-#             f.close()
+def guolv_content(content):
+
+    try:
+        if not settings.OPEN_GL:
+            return content
+        f = open('./wj.txt', "r", encoding=u'utf-8', errors='ignore')
+        while True:
+            line = f.readline()
+            line = line.strip()
+            if line:
+                arr = line.split('|')
+                content = content.replace(arr[0],arr[1])
+            if not line:
+                break
+
+        return content
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        if f:
+            f.close()
 
 # if __name__ == '__main__':

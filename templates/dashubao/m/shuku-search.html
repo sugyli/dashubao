@@ -67,7 +67,7 @@
                      <div class="info">{{ r.novel_author }} | {{ r.novelclassify.caption }} |{{ r.get_book_status }}</div>
                       <div class="desc">
                         {% autoescape off %}
-                            {{ r.novel_info|default:'还没有介绍欢迎同学添加' }}
+                            {{ r.novel_info|default:'还没有介绍欢迎同学举报' }}
                         {% endautoescape %}
 
                       </div>
