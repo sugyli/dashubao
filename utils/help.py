@@ -120,9 +120,9 @@ def guolv_content(content):
     try:
         if not settings.OPEN_GL:
             return content
-        f = open('./wj.txt', "r", encoding=u'utf-8', errors='ignore')
+        wenjian = open('wj.txt', "r", encoding=u'utf-8', errors='ignore')
         while True:
-            line = f.readline()
+            line = wenjian.readline()
             line = line.strip()
             if line:
                 arr = line.split('|')
@@ -131,12 +131,8 @@ def guolv_content(content):
                 break
 
         return content
-
-    except Exception as e:
-        print(e)
-
     finally:
-        if f:
-            f.close()
+        if wenjian:
+            wenjian.close()
 
 # if __name__ == '__main__':
