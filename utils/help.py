@@ -2,6 +2,7 @@ import hashlib
 import base64
 import urllib.parse
 import re
+from django.conf import settings
 
 
 def get_md5(t):
@@ -112,6 +113,30 @@ def format_str(content):
         if is_chinese(i):
             content_str = content_str+i
     return content_str
+
+
+def guolv_content(content):
+    if not settings.OPEN_GL:
+        return content
+    try:
+        f = open('./wj.txt', "r", encoding=u'utf-8', errors='ignore')
+        while True:
+            line = f.readline()
+            line = line.strip()
+            if line:
+                arr = line.split('|')
+                content = content.replace(arr[0],arr[1])
+            if not line:
+                break
+
+        return content
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        if f:
+            f.close()
 
 
 

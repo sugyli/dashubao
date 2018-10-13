@@ -77,6 +77,11 @@ class M_InfoView(View):
                 p = Paginator(all_chapter, settings.WAP_CHAPTER_LIST)
                 chapters = p.page(page)
                 comefrom = help.encryption_urllib_base64(request.path)
+
+                if page == 1 and isdaoxu == '':
+                    noveldetail.novel_click_nums += 1
+                    noveldetail.save()
+
                 return render(request, get_temp("shuku-info.html"), {
                     'noveldetail': noveldetail,
                     'chapters': chapters,
@@ -129,6 +134,7 @@ class M_ContentView(View):
 
             if all_content:
                 content = all_content.first()
+                content = help.guolv_content(content)
                 spare_content = all_content.values('id', 'comefrom__comefrom')
             else:
                 content = ''
@@ -266,7 +272,6 @@ class InfoView(View):
         noveldetail = modelhelp.get_one_book({'url_md5': bookid})
         if noveldetail:
             all_chapter = noveldetail.get_book_chapter(isdaoxu=isdaoxu)
-            print(all_chapter)
             if all_chapter:
                 try:
                     page = request.GET.get('page', 1)
@@ -275,6 +280,11 @@ class InfoView(View):
                 p = Paginator(all_chapter, settings.WEB_CHAPTER_LIST)
                 chapters = p.page(page)
                 comefrom = help.encryption_urllib_base64(request.path)
+
+                if page == 1 and isdaoxu == '':
+                    noveldetail.novel_click_nums += 1
+                    noveldetail.save()
+
                 return render(request, get_temp("shuku-info.html",temp_dir_w), {
                     'noveldetail': noveldetail,
                     'chapters': chapters,
@@ -319,6 +329,7 @@ class ContentView(View):
 
             if all_content:
                 content = all_content.first()
+                content = help.guolv_content(content)
                 spare_content = all_content.values('id', 'comefrom__comefrom')
             else:
                 content = ''
