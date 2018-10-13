@@ -122,9 +122,7 @@
     </li>
     {% endif %}
     <div class="article-bd" id="content">
-     {% autoescape off %}
-        {{ content.content|default: 'fff' }}
-     {% endautoescape %}
+
     </div>
     <div class="reward-link"><a href="javascript:void(0);" class="zan"><span class="circle"><i class="icon dianzan-icon"></i></span>给作者点赞</a></div>
     <div class="author-tips"><a href="{% url 'users:users_adduserask' comefrom %}">[提示] 我有错误举报！</a></div>

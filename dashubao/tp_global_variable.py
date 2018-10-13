@@ -12,5 +12,5 @@ def read_settings_file(request):
         'DEF_FENMIAN': settings.DEF_FENMIAN,
         'FENLEI': modelhelp.get_fenlei(),
         'COME_FROM': help.encryption_urllib_base64(request.path),
-        'NOTEXT': settings.NOTEXT,
+        'NOTEXT': settings.NOTEXT
     }
