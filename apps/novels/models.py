@@ -43,11 +43,13 @@ class NovelClassify(models.Model):
 
 
 class NovelDetail(models.Model):
-    url = models.CharField(max_length=500, verbose_name=u"来源地址")
     url_md5 = models.CharField(
         max_length=50,
         verbose_name=u"查询主键",
         unique=True)
+    url = models.CharField(max_length=500, verbose_name=u"来源地址")
+    caiji_url_md5 = models.CharField(default='',max_length=50,verbose_name=u"判断采集url",null=True,blank=True)
+
     novel_name = models.CharField(max_length=300, verbose_name=u"小说名")
     slug = models.CharField(max_length=500, verbose_name=u"拼音",default='')
     quanping = models.CharField(max_length=500, verbose_name=u"拼音", default='')
@@ -253,6 +255,19 @@ class NovelContent(models.Model):
         verbose_name=u"是否隐藏",
         null=True,
         blank=True)
+    jiami = models.BooleanField(
+        default=False,
+        verbose_name=u"是加密", null=True, blank=True)
+
+
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+            ["jiami"]
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
 
 
 class ChapterContent(models.Model):

@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse, HttpResponseRedirect
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
-#from django.urls import reverse
+from django.urls import reverse
 from django.db.models import Q
 from utils import modelhelp
 from utils import help
@@ -68,6 +68,10 @@ class M_InfoView(View):
         chapterid = int(chapterid)
         noveldetail = modelhelp.get_one_book({'url_md5': bookid})
         if noveldetail:
+            #如果地址不对301
+            if noveldetail.slug != pinyin.strip:
+                HttpResponseRedirect(noveldetail.get_info_path())
+
             all_chapter = noveldetail.get_book_chapter(isdaoxu=isdaoxu)
             if all_chapter:
                 try:
@@ -271,6 +275,10 @@ class InfoView(View):
         isdaoxu = request.GET.get('isdaoxu', '')
         noveldetail = modelhelp.get_one_book({'url_md5': bookid})
         if noveldetail:
+            #如果地址不对301
+            if noveldetail.slug != pinyin.strip:
+                HttpResponseRedirect(noveldetail.get_info_path())
+
             all_chapter = noveldetail.get_book_chapter(isdaoxu=isdaoxu)
             if all_chapter:
                 try:

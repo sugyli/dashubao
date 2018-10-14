@@ -6,6 +6,7 @@ middleware
 utils/bookshelf_sql.py
 utils/oldbook_sql.py
 utils/oldbook_sql_1.py
+utils/oldbook_sql_2.py
 utils/oldchapter_sql.py
 utils/oldchapter_sql_2.py
 utils/oldchapter_sql_3.py
