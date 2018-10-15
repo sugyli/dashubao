@@ -123,7 +123,6 @@ def format_str(content):
 def guolv_content(content,cid=0,chapterid=0):
 
     try:
-        #content = decrypt_urllib_base64(content)
         if not settings.OPEN_GL:
             return content
         path = os.path.join(settings.BASE_DIR, 'wj.txt')

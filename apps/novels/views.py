@@ -160,18 +160,22 @@ class M_ContentView(View):
                 'message': '正在生成章节'
             })
 
-    def post(self, request, bookid, chapterid):
+    def post(self, request , chapterid):
 
+        chapter = modelhelp.get_one_chapter(kwargs={'chapter_url_md5': chapterid})
         cid = request.POST.get('cid', 0)
         cid = int(cid)
         try:
-            content_obj = novels_models.NovelContent.objects.get(id=cid)
-            content = help.guolv_content(content_obj.content ,cid=cid)
-            return HttpResponse(content, content_type='text/html')
+            if chapter and cid > 0:
+                all_content = chapter.get_book_content()
+                content_obj = all_content.get(id=cid)
+                content = help.guolv_content(content_obj.content, cid=cid)
+                return HttpResponse(content, content_type='text/html')
 
+            return HttpResponse('没有获取到内容', content_type='text/html')
         except Exception as e:
             logger.error(e)
-            return HttpResponse('', content_type='text/html')
+            return HttpResponse('出错了', content_type='text/html')
 
 
 class M_SortListView(View):
@@ -361,18 +365,22 @@ class ContentView(View):
                 'message': '正在生成章节'
             })
 
-    def post(self, request, bookid, chapterid):
+    def post(self, request , chapterid):
 
+        chapter = modelhelp.get_one_chapter(kwargs={'chapter_url_md5': chapterid})
         cid = request.POST.get('cid', 0)
         cid = int(cid)
         try:
-            content_obj = novels_models.NovelContent.objects.get(id=cid)
-            content = help.guolv_content(content_obj.content ,cid=cid)
-            return HttpResponse(content, content_type='text/html')
+            if chapter and cid > 0:
+                all_content = chapter.get_book_content()
+                content_obj = all_content.get(id=cid)
+                content = help.guolv_content(content_obj.content, cid=cid)
+                return HttpResponse(content, content_type='text/html')
 
+            return HttpResponse('没有获取到内容', content_type='text/html')
         except Exception as e:
             logger.error(e)
-            return HttpResponse('', content_type='text/html')
+            return HttpResponse('出错了', content_type='text/html')
 
 
 

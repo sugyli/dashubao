@@ -244,8 +244,29 @@ class NovelChapter(models.Model):
         #             self.chapter_url_md5])
 
     def get_book_content(self):
-
-
+        if self.fenbiao:
+            id = str(self.id)
+            last_nb = id[-1]
+            if last_nb == '1':
+                return self.novelnewcontentone_set.filter(ishide=0).order_by("-comefrom")
+            elif last_nb == '2':
+                return self.novelnewcontenttwo_set.filter(ishide=0).order_by("-comefrom")
+            elif last_nb == '3':
+                return self.novelnewcontentthree_set.filter(ishide=0).order_by("-comefrom")
+            elif last_nb == '4':
+                return self.novelnewcontentfour_set.filter(ishide=0).order_by("-comefrom")
+            elif last_nb == '5':
+                return self.novelnewcontentfive_set.filter(ishide=0).order_by("-comefrom")
+            elif last_nb == '6':
+                return self.novelnewcontentsix_set.filter(ishide=0).order_by("-comefrom")
+            elif last_nb == '7':
+                return self.novelnewcontentseven_set.filter(ishide=0).order_by("-comefrom")
+            elif last_nb == '8':
+                return self.novelnewcontenteight_set.filter(ishide=0).order_by("-comefrom")
+            elif last_nb == '9':
+                return self.novelnewcontentnine_set.filter(ishide=0).order_by("-comefrom")
+            else:
+                return self.novelnewcontent_set.filter(ishide=0).order_by("-comefrom")
 
         return self.novelcontent_set.filter(ishide=0).order_by("-comefrom")
 
