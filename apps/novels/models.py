@@ -206,7 +206,7 @@ class NovelChapter(models.Model):
 
     chapter_order = models.SmallIntegerField(default=0, verbose_name=u"排序")
     chapter_old_id = models.IntegerField(
-        default=0, verbose_name=u"对于老站编号")
+        default=0, verbose_name=u"对于老站编号", null=True, blank=True)
 
     class Meta:
         index_together = [
@@ -217,6 +217,9 @@ class NovelChapter(models.Model):
             ["chapter_type"],
             ["create_time"],
             ["update_time"]
+        ]
+        unique_together = [
+            ('noveldetail', 'chapter_order')
         ]
         verbose_name = u"小说章节"
         verbose_name_plural = verbose_name
