@@ -222,7 +222,10 @@ class NovelChapter(models.Model):
         #             self.chapter_url_md5])
 
     def get_book_content(self):
-        return self.novelcontent_set.filter().order_by("-comefrom")
+
+
+
+        return self.novelcontent_set.filter(ishide=0).order_by("-comefrom")
 
 
     def __str__(self):
@@ -272,6 +275,490 @@ class NovelContent(models.Model):
 class ChapterContent(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelContent,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]
+
+
+class NovelNewContent(models.Model):
+    comefrom = models.ForeignKey(
+        NovelContentComefrom,
+        on_delete=models.SET_NULL,
+        to_field='comefrom_id',
+        verbose_name=u"小说来源",
+        default='', null=True,
+        blank=True)
+    content = models.TextField(verbose_name=u"小说内容")
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterNewContent')
+    num_words = models.IntegerField(
+        default=0, verbose_name=u"统计字数", null=True, blank=True)
+
+    content_url = models.CharField(
+        max_length=500,
+        verbose_name=u"来源地址",
+        default='')
+    content_url_md5 = models.CharField(
+        max_length=50,
+        verbose_name=u"查询主键",
+        unique=True, default='')
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+    update_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"更新时间")
+
+    ishide = models.BooleanField(
+        default=False,
+        verbose_name=u"是隐藏",
+        null=True,
+        blank=True)
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
+
+class ChapterNewContent(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelNewContent,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]
+
+class NovelNewContentOne(models.Model):
+    comefrom = models.ForeignKey(
+        NovelContentComefrom,
+        on_delete=models.SET_NULL,
+        to_field='comefrom_id',
+        verbose_name=u"小说来源",
+        default='', null=True,
+        blank=True)
+    content = models.TextField(verbose_name=u"小说内容")
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterNewContentOne')
+    num_words = models.IntegerField(
+        default=0, verbose_name=u"统计字数", null=True, blank=True)
+
+    content_url = models.CharField(
+        max_length=500,
+        verbose_name=u"来源地址",
+        default='')
+    content_url_md5 = models.CharField(
+        max_length=50,
+        verbose_name=u"查询主键",
+        unique=True, default='')
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+    update_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"更新时间")
+
+    ishide = models.BooleanField(
+        default=False,
+        verbose_name=u"是隐藏",
+        null=True,
+        blank=True)
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
+
+class ChapterNewContentOne(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelNewContentOne,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]
+
+class NovelNewContentTwo(models.Model):
+    comefrom = models.ForeignKey(
+        NovelContentComefrom,
+        on_delete=models.SET_NULL,
+        to_field='comefrom_id',
+        verbose_name=u"小说来源",
+        default='', null=True,
+        blank=True)
+    content = models.TextField(verbose_name=u"小说内容")
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterNewContentTwo')
+    num_words = models.IntegerField(
+        default=0, verbose_name=u"统计字数", null=True, blank=True)
+
+    content_url = models.CharField(
+        max_length=500,
+        verbose_name=u"来源地址",
+        default='')
+    content_url_md5 = models.CharField(
+        max_length=50,
+        verbose_name=u"查询主键",
+        unique=True, default='')
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+    update_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"更新时间")
+
+    ishide = models.BooleanField(
+        default=False,
+        verbose_name=u"是隐藏",
+        null=True,
+        blank=True)
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
+
+class ChapterNewContentTwo(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelNewContentTwo,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]
+
+class NovelNewContentThree(models.Model):
+    comefrom = models.ForeignKey(
+        NovelContentComefrom,
+        on_delete=models.SET_NULL,
+        to_field='comefrom_id',
+        verbose_name=u"小说来源",
+        default='', null=True,
+        blank=True)
+    content = models.TextField(verbose_name=u"小说内容")
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterNewContentThree')
+    num_words = models.IntegerField(
+        default=0, verbose_name=u"统计字数", null=True, blank=True)
+
+    content_url = models.CharField(
+        max_length=500,
+        verbose_name=u"来源地址",
+        default='')
+    content_url_md5 = models.CharField(
+        max_length=50,
+        verbose_name=u"查询主键",
+        unique=True, default='')
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+    update_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"更新时间")
+
+    ishide = models.BooleanField(
+        default=False,
+        verbose_name=u"是隐藏",
+        null=True,
+        blank=True)
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
+
+class ChapterNewContentThree(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelNewContentThree,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]
+
+
+class NovelNewContentFour(models.Model):
+    comefrom = models.ForeignKey(
+        NovelContentComefrom,
+        on_delete=models.SET_NULL,
+        to_field='comefrom_id',
+        verbose_name=u"小说来源",
+        default='', null=True,
+        blank=True)
+    content = models.TextField(verbose_name=u"小说内容")
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterNewContentFour')
+    num_words = models.IntegerField(
+        default=0, verbose_name=u"统计字数", null=True, blank=True)
+
+    content_url = models.CharField(
+        max_length=500,
+        verbose_name=u"来源地址",
+        default='')
+    content_url_md5 = models.CharField(
+        max_length=50,
+        verbose_name=u"查询主键",
+        unique=True, default='')
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+    update_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"更新时间")
+
+    ishide = models.BooleanField(
+        default=False,
+        verbose_name=u"是隐藏",
+        null=True,
+        blank=True)
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
+
+class ChapterNewContentFour(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelNewContentFour,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]
+
+class NovelNewContentFive(models.Model):
+    comefrom = models.ForeignKey(
+        NovelContentComefrom,
+        on_delete=models.SET_NULL,
+        to_field='comefrom_id',
+        verbose_name=u"小说来源",
+        default='', null=True,
+        blank=True)
+    content = models.TextField(verbose_name=u"小说内容")
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterNewContentFive')
+    num_words = models.IntegerField(
+        default=0, verbose_name=u"统计字数", null=True, blank=True)
+
+    content_url = models.CharField(
+        max_length=500,
+        verbose_name=u"来源地址",
+        default='')
+    content_url_md5 = models.CharField(
+        max_length=50,
+        verbose_name=u"查询主键",
+        unique=True, default='')
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+    update_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"更新时间")
+
+    ishide = models.BooleanField(
+        default=False,
+        verbose_name=u"是隐藏",
+        null=True,
+        blank=True)
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
+
+class ChapterNewContentFive(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelNewContentFive,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]
+
+class NovelNewContentSix(models.Model):
+    comefrom = models.ForeignKey(
+        NovelContentComefrom,
+        on_delete=models.SET_NULL,
+        to_field='comefrom_id',
+        verbose_name=u"小说来源",
+        default='', null=True,
+        blank=True)
+    content = models.TextField(verbose_name=u"小说内容")
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterNewContentSix')
+    num_words = models.IntegerField(
+        default=0, verbose_name=u"统计字数", null=True, blank=True)
+
+    content_url = models.CharField(
+        max_length=500,
+        verbose_name=u"来源地址",
+        default='')
+    content_url_md5 = models.CharField(
+        max_length=50,
+        verbose_name=u"查询主键",
+        unique=True, default='')
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+    update_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"更新时间")
+
+    ishide = models.BooleanField(
+        default=False,
+        verbose_name=u"是隐藏",
+        null=True,
+        blank=True)
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
+
+class ChapterNewContentSix(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelNewContentSix,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]
+
+class NovelNewContentSeven(models.Model):
+    comefrom = models.ForeignKey(
+        NovelContentComefrom,
+        on_delete=models.SET_NULL,
+        to_field='comefrom_id',
+        verbose_name=u"小说来源",
+        default='', null=True,
+        blank=True)
+    content = models.TextField(verbose_name=u"小说内容")
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterNewContentSeven')
+    num_words = models.IntegerField(
+        default=0, verbose_name=u"统计字数", null=True, blank=True)
+
+    content_url = models.CharField(
+        max_length=500,
+        verbose_name=u"来源地址",
+        default='')
+    content_url_md5 = models.CharField(
+        max_length=50,
+        verbose_name=u"查询主键",
+        unique=True, default='')
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+    update_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"更新时间")
+
+    ishide = models.BooleanField(
+        default=False,
+        verbose_name=u"是隐藏",
+        null=True,
+        blank=True)
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
+
+class ChapterNewContentSeven(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelNewContentSeven,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]
+
+
+class NovelNewContentEight(models.Model):
+    comefrom = models.ForeignKey(
+        NovelContentComefrom,
+        on_delete=models.SET_NULL,
+        to_field='comefrom_id',
+        verbose_name=u"小说来源",
+        default='', null=True,
+        blank=True)
+    content = models.TextField(verbose_name=u"小说内容")
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterNewContentEight')
+    num_words = models.IntegerField(
+        default=0, verbose_name=u"统计字数", null=True, blank=True)
+
+    content_url = models.CharField(
+        max_length=500,
+        verbose_name=u"来源地址",
+        default='')
+    content_url_md5 = models.CharField(
+        max_length=50,
+        verbose_name=u"查询主键",
+        unique=True, default='')
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+    update_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"更新时间")
+
+    ishide = models.BooleanField(
+        default=False,
+        verbose_name=u"是隐藏",
+        null=True,
+        blank=True)
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
+
+class ChapterNewContentEight(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelNewContentEight,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
+    create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    class Meta:
+        unique_together = [
+            ('novelchapter', 'novelcontent')
+        ]
+
+
+class NovelNewContentNine(models.Model):
+    comefrom = models.ForeignKey(
+        NovelContentComefrom,
+        on_delete=models.SET_NULL,
+        to_field='comefrom_id',
+        verbose_name=u"小说来源",
+        default='', null=True,
+        blank=True)
+    content = models.TextField(verbose_name=u"小说内容")
+    chapter = models.ManyToManyField(NovelChapter,through='ChapterNewContentNine')
+    num_words = models.IntegerField(
+        default=0, verbose_name=u"统计字数", null=True, blank=True)
+
+    content_url = models.CharField(
+        max_length=500,
+        verbose_name=u"来源地址",
+        default='')
+    content_url_md5 = models.CharField(
+        max_length=50,
+        verbose_name=u"查询主键",
+        unique=True, default='')
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+    update_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"更新时间")
+
+    ishide = models.BooleanField(
+        default=False,
+        verbose_name=u"是隐藏",
+        null=True,
+        blank=True)
+
+    class Meta:
+        index_together = [
+            ["ishide"],
+        ]
+        verbose_name = u"小说内容"
+        verbose_name_plural = verbose_name
+
+class ChapterNewContentNine(models.Model):
+    novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
+    novelcontent = models.ForeignKey(NovelNewContentNine,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
     class Meta:
         unique_together = [
