@@ -7,8 +7,8 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse, HttpResponseRedirect
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
-from django.urls import reverse
-from django.db.models import Q
+#from django.urls import reverse
+#from django.db.models import Q
 from utils import modelhelp
 from utils import help
 from novels import models as novels_models
@@ -69,8 +69,8 @@ class M_InfoView(View):
         noveldetail = modelhelp.get_one_book({'url_md5': bookid})
         if noveldetail:
             #如果地址不对301
-            if noveldetail.slug != pinyin.strip:
-                HttpResponseRedirect(noveldetail.get_info_path())
+            if noveldetail.slug != pinyin.strip():
+                return HttpResponseRedirect(noveldetail.get_info_path())
 
             all_chapter = noveldetail.get_book_chapter(isdaoxu=isdaoxu)
             if all_chapter:
@@ -138,7 +138,7 @@ class M_ContentView(View):
 
             if all_content:
                 content = all_content.first()
-                content.content = help.guolv_content(content.content)
+                content.content = help.guolv_content(content.content,chapterid=chapterid)
                 spare_content = all_content.values('id', 'comefrom__comefrom')
             else:
                 content = ''
@@ -166,10 +166,11 @@ class M_ContentView(View):
         cid = int(cid)
         try:
             content_obj = novels_models.NovelContent.objects.get(id=cid)
-            return HttpResponse(content_obj.content, content_type='text/html')
+            content = help.guolv_content(content_obj.content ,cid=cid)
+            return HttpResponse(content, content_type='text/html')
 
         except Exception as e:
-            logger.debug(e)
+            logger.error(e)
             return HttpResponse('', content_type='text/html')
 
 
@@ -276,8 +277,9 @@ class InfoView(View):
         noveldetail = modelhelp.get_one_book({'url_md5': bookid})
         if noveldetail:
             #如果地址不对301
-            if noveldetail.slug != pinyin.strip:
-                HttpResponseRedirect(noveldetail.get_info_path())
+            if noveldetail.slug != pinyin.strip():
+
+                return HttpResponseRedirect(noveldetail.get_info_path())
 
             all_chapter = noveldetail.get_book_chapter(isdaoxu=isdaoxu)
             if all_chapter:
@@ -337,7 +339,7 @@ class ContentView(View):
 
             if all_content:
                 content = all_content.first()
-                content.content = help.guolv_content(content.content)
+                content.content = help.guolv_content(content.content, chapterid=chapterid)
                 spare_content = all_content.values('id', 'comefrom__comefrom')
             else:
                 content = ''
@@ -358,6 +360,19 @@ class ContentView(View):
             return render(request, get_temp("error.html", temp_dir_p), {
                 'message': '正在生成章节'
             })
+
+    def post(self, request, bookid, chapterid):
+
+        cid = request.POST.get('cid', 0)
+        cid = int(cid)
+        try:
+            content_obj = novels_models.NovelContent.objects.get(id=cid)
+            content = help.guolv_content(content_obj.content ,cid=cid)
+            return HttpResponse(content, content_type='text/html')
+
+        except Exception as e:
+            logger.error(e)
+            return HttpResponse('', content_type='text/html')
 
 
 

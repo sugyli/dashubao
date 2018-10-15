@@ -87,6 +87,9 @@ class NovelDetail(models.Model):
     ishide = models.BooleanField(
         default=False,
         verbose_name=u"是否隐藏",null=True, blank=True)
+
+    iswenziname = models.BooleanField(default=True,verbose_name=u"是否文字标题",null=True, blank=True)
+
     have_chapter = models.BooleanField(
         default=False,
         verbose_name=u"是否有章节", null=True, blank=True)
@@ -111,7 +114,8 @@ class NovelDetail(models.Model):
     class Meta:
         index_together = [
             ["novel_old_id"],
-            ["have_chapter"]
+            ["have_chapter"],
+            ["iswenziname"],
         ]
         unique_together = [
             ('novel_name', 'novel_author', 'novel_comefrom')
@@ -218,7 +222,7 @@ class NovelChapter(models.Model):
         #             self.chapter_url_md5])
 
     def get_book_content(self):
-        return self.novelcontent_set.filter(ishide=0).order_by("-comefrom")
+        return self.novelcontent_set.filter().order_by("-comefrom")
 
 
     def __str__(self):
@@ -250,21 +254,16 @@ class NovelContent(models.Model):
         default=datetime.now, verbose_name=u"添加时间")
     update_time = models.DateTimeField(
         default=datetime.now, verbose_name=u"更新时间")
+
     ishide = models.BooleanField(
         default=False,
-        verbose_name=u"是否隐藏",
+        verbose_name=u"是隐藏",
         null=True,
         blank=True)
-    jiami = models.BooleanField(
-        default=False,
-        verbose_name=u"是加密", null=True, blank=True)
-
-
 
     class Meta:
         index_together = [
             ["ishide"],
-            ["jiami"]
         ]
         verbose_name = u"小说内容"
         verbose_name_plural = verbose_name
@@ -274,7 +273,6 @@ class ChapterContent(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelContent,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
-
     class Meta:
         unique_together = [
             ('novelchapter', 'novelcontent')

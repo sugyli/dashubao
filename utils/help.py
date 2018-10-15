@@ -3,9 +3,12 @@ import base64
 import urllib.parse
 import re
 import os
+import logging
 
 from django.conf import settings
 
+
+logger = logging.getLogger(__name__)
 
 def get_md5(t):
     if isinstance(t, str):
@@ -117,20 +120,28 @@ def format_str(content):
     return content_str
 
 
-def guolv_content(content):
-    if not settings.OPEN_GL:
+def guolv_content(content,cid=0,chapterid=0):
+
+    try:
+        #content = decrypt_urllib_base64(content)
+        if not settings.OPEN_GL:
+            return content
+        path = os.path.join(settings.BASE_DIR, 'wj.txt')
+        wenjian = open(path, "r", encoding=u'utf-8', errors='ignore')
+        while True:
+            line = wenjian.readline()
+            line = line.strip()
+            if line:
+                arr = line.split('|')
+                content = content.replace(arr[0], arr[1])
+            if not line:
+                break
+        wenjian.close()
         return content
-    path = os.path.join(settings.BASE_DIR, 'wj.txt')
-    wenjian = open(path, "r", encoding=u'utf-8', errors='ignore')
-    while True:
-        line = wenjian.readline()
-        line = line.strip()
-        if line:
-            arr = line.split('|')
-            content = content.replace(arr[0], arr[1])
-        if not line:
-            break
-    wenjian.close()
-    return content
+    except Exception as e:
+        logger.error('内容id = %s or 章节id = %s 内容转换出现问题'%(cid,chapterid))
+        return ''
+
+
 
 # if __name__ == '__main__':
