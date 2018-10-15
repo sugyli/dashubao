@@ -60,7 +60,6 @@ import base64
 # a = decrypt_urllib_base64(a)
 #
 # print(a)
+a = str(1)
 
-t = ('wo','ni','ta')
-a ,*o = t
-print(a,o)
+print(a[-1])
