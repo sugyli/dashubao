@@ -88,10 +88,6 @@ class NovelDetail(models.Model):
         default=False,
         verbose_name=u"是否隐藏",null=True, blank=True)
 
-    fenbiao = models.BooleanField(
-        default=False,
-        verbose_name=u"使用分表的内容", null=True, blank=True)
-
     iswenziname = models.BooleanField(default=True,verbose_name=u"是否文字标题",null=True, blank=True)
 
     have_chapter = models.BooleanField(
@@ -120,7 +116,10 @@ class NovelDetail(models.Model):
             ["novel_old_id"],
             ["have_chapter"],
             ["iswenziname"],
-            ["fenbiao"]
+            ["stop_update"],
+            ["ishide"],
+            ["create_time"],
+            ["update_time"],
         ]
         unique_together = [
             ('novel_name', 'novel_author', 'novel_comefrom')
@@ -200,11 +199,25 @@ class NovelChapter(models.Model):
         verbose_name=u"是隐藏",
         null=True,
         blank=True)
+
+    fenbiao = models.BooleanField(
+        default=False,
+        verbose_name=u"使用分表的内容", null=True, blank=True)
+
     chapter_order = models.SmallIntegerField(default=0, verbose_name=u"排序")
     chapter_old_id = models.IntegerField(
         default=0, verbose_name=u"对于老站编号")
 
     class Meta:
+        index_together = [
+            ["fenbiao"],
+            ["ishide"],
+            ["chapter_order"],
+            ["chapter_old_id"],
+            ["chapter_type"],
+            ["create_time"],
+            ["update_time"]
+        ]
         verbose_name = u"小说章节"
         verbose_name_plural = verbose_name
 
