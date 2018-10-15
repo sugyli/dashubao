@@ -18,7 +18,7 @@
     <script type="text/javascript" src="{% static 'js/p.js' %}"></script>
     <script>
       if(navigator.userAgent.match(/(iPhone|iPod|Android)/i)){
-        location.href = {{ WAP1_URL }}{{ request.path }};
+        location.href = "{{ WAP1_URL }}{{ request.path }}";
       }
     </script>
   </head>
