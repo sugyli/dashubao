@@ -267,7 +267,6 @@ class IndexView(View):
 
 class Old_InfoView(View):
     def get(self, request, pid, bookid):
-
         noveldetail = modelhelp.get_one_book({'novel_old_id': bookid})
         if noveldetail:
             return HttpResponseRedirect(noveldetail.get_info_path())
@@ -389,7 +388,7 @@ def page_not_found(request,**kwargs):
     response = render_to_response(get_temp("error.html", temp_dir_p), {
         'message': '404 此页面丢失了'
     })
-    response.status_code = 200
+    response.status_code = 302
     return response
 
 def page_error(request,**kwargs):
