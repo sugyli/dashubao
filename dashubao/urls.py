@@ -33,6 +33,7 @@ urlpatterns = [
             ('search.urls', 'search'), namespace="search")),
 
     path('book/<int:pid>/<int:bookid>/', views.Old_InfoView.as_view(), name="old_novels_info"),
+    path('book/<int:pid>/<int:bookid>/index.html', views.Old_InfoView.as_view()),
     path('book/<int:pid>/<int:bookid>/<int:chapterid>.html', views.Old_ContentView.as_view(), name="old_novels_content"),
     path('favicon.ico', RedirectView.as_view(url=r'static/favicon.ico'))
 
