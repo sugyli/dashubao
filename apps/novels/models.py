@@ -108,6 +108,7 @@ class NovelDetail(models.Model):
         default=0, null=True,
         blank=True)
 
+    caiji_status = models.CharField(default='ys',verbose_name=u"采集状态", choices=(("ys", "原始"), ("th", "替换"), ("tj", "添加")), max_length=2)
 
     all_chapter = None
 
@@ -120,6 +121,7 @@ class NovelDetail(models.Model):
             ["ishide"],
             ["create_time"],
             ["update_time"],
+            ["caiji_status"],
         ]
         unique_together = [
             ('novel_name', 'novel_author', 'novel_comefrom')
