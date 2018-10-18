@@ -62,7 +62,7 @@
                     }else if(result.password){
                         showmsg(result.password)
                     }else if(result.status == 'success'){
-                        window.location.href = '/';
+                        window.location.href = result.data;
                         return false
 
                     }else if(result.status == 'fail'){
