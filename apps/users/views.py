@@ -75,29 +75,23 @@ class LoginView(View):
                 if user.is_active:
                     login(request, user)
                     if next_to:
-                        response = HttpResponseRedirect(next_to)
+                        response = HttpResponse('{"status":"success","msg":"登录成功","data":"%s"}' % next_to,
+                                                content_type='application/json')
                     else:
-                        response = HttpResponseRedirect(
-                            reverse("users:users_home"))
+
+                        response = HttpResponse('{"status":"success","msg":"登录成功","data":"%s"}' % reverse("users:users_home"),
+                                                content_type='application/json')
                     return modelhelp.add_auth_response(response)
                 else:
-                    return render(
-                        request, get_temp(
-                            'login.html', temp_dir_p), {
-                            "msg": "用户未激活！", "next_to": next_to})
-            else:
-                return render(
-                    request, get_temp('login.html', temp_dir_p), {
-                        "msg": "用户名或密码错误！",
-                        "next_to": next_to
-                    })
-        else:
-            return render(
-                request, get_temp('login.html', temp_dir_p), {
-                    "login_form": login_form,
-                    "next_to": next_to,
+                    return HttpResponse('{"status":"fail","msg":"账户未激活","data":"%s"}'% next_to, content_type='application/json')
 
-                })
+            else:
+                return HttpResponse('{"status":"fail","msg":"用户名或密码错误","data":"%s"}' % next_to,
+                                    content_type='application/json')
+        else:
+            return HttpResponse(json.dumps(login_form.errors), content_type='application/json')
+
+
 
 
 class RegisterView(View):

@@ -2,154 +2,28 @@
 {% load staticfiles %}
 {% block title %}用户登录{% endblock %}
 {% block content %}
-{% block custom_css %}
-    <style>
-    body {
-        font: 14px/28px helvetica,"&#24494; &#36719; &#38597; &#40657; ",arial;
-        color: #333
-    }
-
-    body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,input,textarea,p,img,button {
-        padding: 0;
-        margin: 0
-    }
-
-    html {
-        -webkit-text-size-adjust: none
-    }
-
-    a {
-        text-decoration: none;
-        color: #333
-    }
-
-    img {
-        border: 0
-    }
-
-    ul,ol,li {
-        list-style: none
-    }
-    input {
-        outline: 0;
-    }
-    .header {
-        background-color: #208181;
-        font-size: 20px;
-        color: #fff;
-        height: 50px;
-        line-height: 50px;
-        text-align: center;
-        overflow: hidden;
-        display: block;
-        position: relative;
-        z-index: 999;
-    }
-    .header h1 {
-        font-size: 20px;
-        display: inline-block;
-        text-align: center;
-        color: #fff;
-    }
-
-    .back {
-        float: left;
-        padding: 0 5px;
-        height: 28px;
-        margin: 10px 10px;
-        line-height: 28px;
-        font-size: 16px;
-        background-color: #65bbec;
-        border-radius: 4px;
-    }
-    .back a , .reg a{
-        color: #fff;
-    }
-
-    .reg {
-        float: right;
-        padding: 0 5px;
-        height: 28px;
-        margin: 10px 10px;
-        line-height: 28px;
-        font-size: 16px;
-        background-color: #65bbec;
-        border-radius: 4px;
-    }
-    .login {
-        margin: 10px;
-        line-height: 35px;
-        font-weight: bold;
-    }
-
-    .login input.login_name {
-        border: 1px solid #ddd;
-        height: 40px;
-        line-height: 40px;
-        width: 100%;
-        border-radius: 4px;
-        font-size: 16px;
-        padding-left: 5px;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        -o-box-sizing: border-box;
-        -ms-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-    .c_login_button {
-        background-color: #208181;
-        display: block;
-    }
-    .login_btn {
-        width: 100%;
-        border: 0;
-        display: block;
-        margin: 10px 0;
-        text-align: center;
-        color: #fff;
-        font-weight: bold;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 2px;
-    }
-    .login_tips {
-        display: block;
-        margin: 20px 10px 20px 10px;
-        text-align: center;
-        color: red;
-        font-weight: bold;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 2px;
-    }
-    .errorput {
-        border-color: #f00;
-        box-shadow: 0 0 5px #aa0b0b;
-    }
-    </style>
-{% endblock %}
 <body>
 	<div class="header">
 		<div class="back"><a href="javascript:history.go(-1);">返回</a></div>
 		<h1>用户登录</h1>
 		<div class="reg"><a href="/">首页</a> </div>
 	</div>
-		<form method="post" action="{% url 'users:users_login' %}" onsubmit="return validate();">
-			<div class="login">
-				<p>帐号：<input maxlength="30" id="username" name="username" placeholder="请输入登录账号" onKeyPress="javascript: if (event.keyCode==32) return false;" type="text" class="login_name {% if login_form.errors.username %}errorput{% endif %}" value="{{ register_name|default_if_none:'' }}"></p>
-				<p>密码：<input maxlength="30" id="password" type="password" placeholder="请输入6-20位非中文字符密码" name="password" class="login_name {% if login_form.errors.password %}errorput{% endif %}"></p>
-	            <input type="hidden" name="next_to" value="{{ next_to }}">
-	            <input type="submit" class="login_btn c_login_button" name="submit" value="立即登陆" />
-	            <a class="login_btn c_login_button" href="{% url 'users:users_register' %}">没有账号？点击注册</a>
-			</div>
 
-		</form>
-		<div id="logintips" class="login_tips">{% for key,error in login_form.errors.items %}{{ error }}{% endfor %}{{ msg }}</div>
+        <div class="login">
+            <p>帐号：<input maxlength="30" id="username" name="username" placeholder="请输入登录账号" onKeyPress="javascript: if (event.keyCode==32) return false;" type="text" class="login_name {% if login_form.errors.username %}errorput{% endif %}" value="{{ register_name|default_if_none:'' }}"></p>
+            <p>密码：<input maxlength="30" id="password" type="password" placeholder="请输入6-20位非中文字符密码" name="password" class="login_name {% if login_form.errors.password %}errorput{% endif %}"></p>
+            <input type="hidden" id="next_to" name="next_to" value="{{ next_to }}">
+            <input type="button" class="login_btn c_login_button" id="bnt_submit" value="立即登陆" />
+            <a class="login_btn c_login_button" href="{% url 'users:users_register' %}">没有账号？点击注册</a>
+        </div>
+
+		<div class="login_tips">{% for key,error in login_form.errors.items %}{{ error }}{% endfor %}{{ msg }}</div>
 </body>
 {% endblock %}
 {% block custom_js %}
     <script>
-        function validate() {
+        $('#bnt_submit').on('click', function(){
+
             var username = $.trim($("#username").val());
 
             var password = $.trim($("#password").val());
@@ -163,8 +37,61 @@
                 return false;
             }
 
-        }
+            var data = {
+                  'username': username,
+                  'password': password,
+                  'next_to': $.trim(document.getElementById('next_to').value),
+              };
+            var _self = $(this);
 
+          $.ajax({
+                cache: false,
+                type: "post",
+                url:"{% url 'users:users_login' %}",
+                data:data,
+                async: true,
+                beforeSend:function(xhr, settings){
+                    layer.open({type: 2,shadeClose: true});
+                    _self.val("加载中");
+                    _self.attr('disabled',true);
+                },
+                success: function(result) {
+                    layer.closeAll();
+                    if(result.username){
+                        showmsg(result.username)
+                    }else if(result.password){
+                        showmsg(result.password)
+                    }else if(result.status == 'success'){
+                        window.location.href = result.data;
+
+                    }else if(result.status == 'fail'){
+                        $("#next_to").val(result.data);
+                        showmsg(result.msg)
+
+                    }else {
+                        showmsg("出现错误")
+                    }
+
+                },
+                complete: function(XMLHttpRequest){
+                    _self.val('提交');
+                    _self.removeAttr("disabled");
+
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    layer.closeAll();
+                    /*弹出jqXHR对象的信息*/
+                    console.log(jqXHR.responseText);
+                    console.log(jqXHR.status);
+                    console.log(jqXHR.readyState);
+                    console.log(jqXHR.statusText);
+                    /*弹出其他两个参数的信息*/
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                }
+            });
+
+        });
 
     </script>
 {% endblock %}
