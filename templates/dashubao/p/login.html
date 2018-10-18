@@ -1,83 +1,172 @@
-
-<!DOCTYPE HTML>
-<html>
+{% extends 'dashubao/p/base.html' %}
 {% load staticfiles %}
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>用户登录</title>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-<link rel="stylesheet" href="{% static 'm/login/css/jquery.mobile-1.4.5.min.css' %}">
-<script type="text/javascript"  src="{% static 'm/login/js/jquery.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'm/login/js/jquery.mobile-1.4.5.min.js' %}"></script>
-<!--
-    <link rel="stylesheet" href="{% static 'm/login/css/iconfont/iconfont.css' %}">
--->
-</head>
-<style>
-    .ui-bar-f {
-        color: #FFF;
-        background-color: #f36142;
-        border: none;
+{% block title %}用户登录{% endblock %}
+{% block content %}
+{% block custom_css %}
+    <style>
+    body {
+        font: 14px/28px helvetica,"&#24494; &#36719; &#38597; &#40657; ",arial;
+        color: #333
     }
-    .padding5 {
-        background-color: #FFF;
-        padding: 0em 0em;
+
+    body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,input,textarea,p,img,button {
+        padding: 0;
+        margin: 0
     }
-    a.tu1 {
-        border: none;
+
+    html {
+        -webkit-text-size-adjust: none
     }
-    a.tu1:after {
-        margin-top: -8px;
+
+    a {
+        text-decoration: none;
+        color: #333
     }
-    .button1 {
-        background-color: #f36142;
+
+    img {
+        border: 0
+    }
+
+    ul,ol,li {
+        list-style: none
+    }
+    input {
+        outline: 0;
+    }
+    .header {
+        background-color: #208181;
+        font-size: 20px;
+        color: #fff;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        overflow: hidden;
+        display: block;
+        position: relative;
+        z-index: 999;
+    }
+    .header h1 {
+        font-size: 20px;
+        display: inline-block;
+        text-align: center;
         color: #fff;
     }
-    a{
-      text-decoration: none;
+
+    .back {
+        float: left;
+        padding: 0 5px;
+        height: 28px;
+        margin: 10px 10px;
+        line-height: 28px;
+        font-size: 16px;
+        background-color: #65bbec;
+        border-radius: 4px;
     }
-    .text-algin1 a {
-        color: #f36142;
+    .back a , .reg a{
+        color: #fff;
     }
-    .text-algin2 {
-        text-align: right;
+
+    .reg {
+        float: right;
+        padding: 0 5px;
+        height: 28px;
+        margin: 10px 10px;
+        line-height: 28px;
+        font-size: 16px;
+        background-color: #65bbec;
+        border-radius: 4px;
     }
-    .errorput{
+    .login {
+        margin: 10px;
+        line-height: 35px;
+        font-weight: bold;
+    }
+
+    .login input.login_name {
+        border: 1px solid #ddd;
+        height: 40px;
+        line-height: 40px;
+        width: 100%;
+        border-radius: 4px;
+        font-size: 16px;
+        padding-left: 5px;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -o-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .c_login_button {
+        background-color: #208181;
+        display: block;
+    }
+    .login_btn {
+        width: 100%;
+        border: 0;
+        display: block;
+        margin: 10px 0;
+        text-align: center;
+        color: #fff;
+        font-weight: bold;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 2px;
+    }
+    .login_tips {
+        display: block;
+        margin: 20px 10px 20px 10px;
+        text-align: center;
+        color: red;
+        font-weight: bold;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 2px;
+    }
+    .errorput {
         border-color: #f00;
         box-shadow: 0 0 5px #aa0b0b;
     }
-    li {list-style-type:none;}
-</style>
+    </style>
+{% endblock %}
 <body>
-<div data-role="page" data-theme="f" class="padding5" >
-   <div data-role="header"  data-theme="f" >
-     <div class="ui-btn-left"> <a href="javascript:history.go(-1);" target="_top" class="ui-btn ui-corner-all ui-icon-carat-l ui-btn-icon-notext tu1">返回</a></div>
-     <h1>登录</h1>
-   </div>
+	<div class="header">
+		<div class="back"><a href="javascript:history.go(-1);">返回</a></div>
+		<h1>用户登录</h1>
+		<div class="reg"><a href="/">首页</a> </div>
+	</div>
+		<form method="post" action="{% url 'users:users_login' %}" onsubmit="return validate();">
+			<div class="login">
+				<p>帐号：<input maxlength="30" id="username" name="username" placeholder="请输入登录账号" onKeyPress="javascript: if (event.keyCode==32) return false;" type="text" class="login_name {% if login_form.errors.username %}errorput{% endif %}" value="{{ register_name|default_if_none:'' }}"></p>
+				<p>密码：<input maxlength="30" id="password" type="password" placeholder="请输入6-20位非中文字符密码" name="password" class="login_name {% if login_form.errors.password %}errorput{% endif %}"></p>
+	            <input type="hidden" name="next_to" value="{{ next_to }}">
+	            <input type="submit" class="login_btn c_login_button" name="submit" value="立即登陆" />
+	            <a class="login_btn c_login_button" href="{% url 'users:users_register' %}">没有账号？点击注册</a>
+			</div>
 
- <div data-role="main"  class="ui-content">
-    <form method="post" action="{% url 'users:users_login' %}" data-ajax="false" autocomplete="off">
-      <div class="ui-field-contain" >
-          <div class="{% if login_form.errors.username %}errorput{% endif %}">
-              <input type="text" data-theme="a" data-iconpos="left" data-icon="user" placeholder="请输入登录账号" data-clear-btn="true" name="username" autocomplete="off" value="{{ register_name|default_if_none:'' }}">
-          </div>
-          <div class="{% if login_form.errors.password %}errorput{% endif %}" style="margin-top: 15px">
-              <input type="password" data-theme="a" placeholder="请输入6-20位非中文字符密码" data-clear-btn="true" name="password" autocomplete="off">
-          </div>
-      </div>
-    <button class="button1">提交</button>
-    <input type="hidden" name="next_to" value="{{ next_to }}">
-     {% csrf_token %}
-    </form>
-   <div class="ui-grid-a">
-      <div class="ui-block-a text-algin1"><a href="{% url 'users:users_register' %}" target="_top">注册</a></div>
-       <div class="ui-block-b text-algin2"><span><a href="{% url 'users:users_forget' %}" target="_top" style="color: #999;">忘记密码</a></span></div>
-    </div>
-  </div>
-  <div data-role="footer" class="ui-content" style="color: red;">
-    <h3>{% for key,error in login_form.errors.items %}{{ error }}{% endfor %}{{ msg }}</h3>
-  </div>
-</div>
+		</form>
+		<div id="logintips" class="login_tips">{% for key,error in login_form.errors.items %}{{ error }}{% endfor %}{{ msg }}</div>
 </body>
-</html>
+{% endblock %}
+{% block custom_js %}
+    <script>
+        function validate() {
+            var username = $.trim($("#username").val());
+
+            var password = $.trim($("#password").val());
+
+            if(username==null||username==undefined||username==""){
+                showmsg('用户名不能为空')
+                return false;
+            }
+            if(password==null||password==undefined||password==""){
+                showmsg('密码不能为空')
+                return false;
+            }
+
+        }
+
+
+    </script>
+{% endblock %}
+
 
