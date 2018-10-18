@@ -134,25 +134,21 @@
 {% block custom_js %}
     <script src="{% static 'm/js/jquery.ias.min.js' %}"></script>
     <script>
-        //不是 uc浏览器
-        if (eval("na" + "vigator.userAgen" + "t.indexOf('U" + "CBr" + "owser') > -1")) {
-            var ias = $.ias({
-                container: "#newbooklist", //包含所有文章的元素
-                item: ".newbooklist", //文章元素
-                pagination: ".pagelink", //分页元素
-                next: ".pagelink a",
-            });
-            ias.extension(new IASTriggerExtension({
-                text: '<div class="loadMore"><i class="i iG iG_D7 iLoadingAnim"></i><a href="javascript:" class="more">点击加载更多</a><span>加载中...</span></div>', //此选项为需要点击时的文字
-                //  offset: 2, //设置此项后，到 offset-1 页之后需要手动点击才能加载，取消此项则一直为无限加载
-            }));
-            ias.extension(new IASSpinnerExtension());
-            ias.extension(new IASNoneLeftExtension({
-                text: '<div class="loadMore"><i class="i iG iG_D7 iLoadingAnim"></i><a href="javascript:" class="more">加载完成</a><span>加载中...</span></div>', // 加载完成时的提示
-            }));
-        }else {
-             $("#paging").show();
-        }
+        var ias = $.ias({
+            container: "#newbooklist", //包含所有文章的元素
+            item: ".newbooklist", //文章元素
+            pagination: ".pagelink", //分页元素
+            next: ".pagelink a",
+        });
+        ias.extension(new IASTriggerExtension({
+            text: '<div class="loadMore"><i class="i iG iG_D7 iLoadingAnim"></i><a href="javascript:" class="more">点击加载更多</a><span>加载中...</span></div>', //此选项为需要点击时的文字
+            //  offset: 2, //设置此项后，到 offset-1 页之后需要手动点击才能加载，取消此项则一直为无限加载
+        }));
+        ias.extension(new IASSpinnerExtension());
+        ias.extension(new IASNoneLeftExtension({
+            text: '<div class="loadMore"><i class="i iG iG_D7 iLoadingAnim"></i><a href="javascript:" class="more">加载完成</a><span>加载中...</span></div>', // 加载完成时的提示
+        }));
+
         var bookshelfs = $.fn.cookie("bookshelfs");
         if(bookshelfs){
             bookshelfs = JSON.parse(bookshelfs);
