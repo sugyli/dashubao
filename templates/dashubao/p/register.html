@@ -1,0 +1,49 @@
+{% extends 'dashubao/p/base.html' %}
+{% load staticfiles %}
+{% block title %}用户注册{% endblock %}
+{% block content %}
+<body>
+	<div class="header">
+		<div class="back"><a href="javascript:history.go(-1);">返回</a></div>
+		<h1>用户注册</h1>
+		<div class="reg"><a href="{% url 'users:users_login' %}">登录</a> </div>
+	</div>
+        <form method="post" action="{% url 'users:users_register' %}" autocomplete="off" onsubmit="return form_validate();">
+            <div class="login">
+                <p>邮箱：<input id="email" placeholder="请输入您的邮箱地址" onKeyPress="javascript: if (event.keyCode==32) return false;" type="text" class="login_name {% if register_form.errors.email %}errorput{% endif %}" name="email" value="{{ register_form.email.value|default_if_none:'' }}" autocomplete="off"></p>
+                <p>密码：<input id="password" type="password" placeholder="请输入6-20位非中文字符密码" name="password" class="login_name {% if register_form.errors.password %}errorput{% endif %}" value="{{ register_form.password.value }}" autocomplete="off"></p>
+                <input type="submit" class="login_btn c_login_button" id="bnt_submit" value="提交" />
+                <a class="login_btn c_login_button" href="{% url 'users:users_forget' %}">忘记密码？找回密码</a>
+            </div>
+        </form>
+		<div class="login_tips">{% for key,error in register_form.errors.items %}{{ error }}{% endfor %}{{ msg }}</div>
+        <br/>
+        <br/>
+        <h6 style="margin: 10px;color: blue">友情提示: 使用QQ邮箱注册找回密码可能接收不到邮件</h6>
+</body>
+{% endblock %}
+
+{% block custom_js %}
+    <script>
+
+        function form_validate(){
+            var email = $.trim($("#email").val());
+
+            var password = $.trim($("#password").val());
+
+            if(email==null||email==undefined||email==""){
+                showmsg('email不能为空')
+                return false;
+            }
+            if(password==null||password==undefined||password==""){
+                showmsg('密码不能为空')
+                return false;
+            }
+
+
+        }
+    </script>
+{% endblock %}
+
+
+
