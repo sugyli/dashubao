@@ -184,8 +184,14 @@ class M_SortListView(View):
 
         all_novelclassify = novels_models.NovelClassify.objects.all()
         status = request.GET.get('status', "2")
+        status = status.strip()
+        if not status:
+            status = 0
         status = int(status)
         other = request.GET.get('other', "all")
+        other = other.strip()
+        if not other:
+            other = 'all'
         kwargs = {}
         if sortid == 0:
             novelclassify = None

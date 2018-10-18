@@ -45,6 +45,7 @@
 
 {% block content %}
 <body>
+<script type="text/javascript" src="{% static 'js/p.js' %}"></script>
 {% include 'dashubao/p/navigation-w.html' %}
 <div class="place oneline">
   当前位置：<a href="/">{{ WEB1_NAME }}</a> &gt; <a href="{{ noveldetail.novelclassify.get_sortlist_path }}">{{ noveldetail.novelclassify.caption }}</a> &gt; {{ noveldetail.novel_name }}
@@ -178,6 +179,7 @@
 
     });
 </script>
+<script type="text/javascript" src="{% static 'w/js/index.js' %}"></script>
 </body>
 {% endblock %}
 

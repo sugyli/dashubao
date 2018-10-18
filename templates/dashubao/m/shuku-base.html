@@ -24,7 +24,9 @@
     <link rel="stylesheet" type="text/css" href="{% static 'm/h5/css/read/v4/tags/0.0.30/c/g.css' %}" media="all"/>
     <script src="{% static 'm/js/jquery.min.js' %}"></script>
     <script src="{% static 'layer_mobile/layer.js' %}"></script>
-    <script src="{% static 'js/p.js' %}"></script>
+    {% if request.path|slice:'12' != '/novels_info' %}
+    <script type="text/javascript" src="{% static 'js/p.js' %}"></script>
+    {% endif %}
     {% block custom_css %}
     {% endblock %}
 </head>

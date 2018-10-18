@@ -4,6 +4,8 @@ dashubao/config.py
 logs/*
 middleware
 utils/bookshelf_sql.py
+utils/bookshelf_sql2.py
+utils/bookshelf_sql3.py
 utils/oldbook_sql.py
 utils/oldbook_sql_1.py
 utils/oldbook_sql_2.py

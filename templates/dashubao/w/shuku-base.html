@@ -15,7 +15,9 @@
     {% endblock %}
     <script src="{% static 'w/js/jquery.min.js' %}"></script>
     <script src="{% static 'layer_mobile/layer.js' %}"></script>
+    {% if request.path|slice:'12' != '/novels_info' %}
     <script type="text/javascript" src="{% static 'js/p.js' %}"></script>
+    {% endif %}
     <script>
       if(navigator.userAgent.match(/(iPhone|iPod|Android)/i)){
         location.href = "{{ WAP1_URL }}{{ request.path }}";
@@ -37,7 +39,9 @@
     }
     webtj();
 </script>
+{% if request.path|slice:'12' != '/novels_info' %}
 <script type="text/javascript" src="{% static 'w/js/index.js' %}"></script>
+{% endif %}
 {% block custom_js %}
 {% endblock %}
 </html>
