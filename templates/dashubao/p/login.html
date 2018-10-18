@@ -18,6 +18,9 @@
         </div>
 
 		<div class="login_tips">{% for key,error in login_form.errors.items %}{{ error }}{% endfor %}{{ msg }}</div>
+        <br/>
+        <br/>
+        <h6 style="margin: 10px;color: blue">使用UC浏览器无法登录,请更换浏览器,或者关掉uc的智能云加速</h6>
 </body>
 {% endblock %}
 {% block custom_js %}
