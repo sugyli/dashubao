@@ -41,6 +41,24 @@ class NovelClassify(models.Model):
     def __str__(self):
         return self.caption
 
+class NovelTag(models.Model):
+    caption = models.CharField(max_length=20, verbose_name=u"tag", unique=True)
+    tagid = models.PositiveSmallIntegerField(
+        default=0, verbose_name=u"tagid")
+    create_time = models.DateTimeField(
+        default=datetime.now, verbose_name=u"添加时间")
+
+    class Meta:
+        verbose_name = u"小说Tag"
+        verbose_name_plural = verbose_name
+
+    # def get_sortlist_path(self):
+    #
+    #     return reverse('novels:novels_sortlist', args=[self.tagid])
+
+    def __str__(self):
+        return self.caption
+
 
 class NovelDetail(models.Model):
     url_md5 = models.CharField(
@@ -109,6 +127,14 @@ class NovelDetail(models.Model):
         blank=True)
 
     caiji_status = models.CharField(default='ys',verbose_name=u"采集状态", choices=(("ys", "原始"), ("th", "替换"), ("tj", "添加")), max_length=2)
+
+    tag = models.ManyToManyField(NovelTag)
+
+    chapter_nums = models.IntegerField(
+        default=0,
+        verbose_name=u"章节数",
+        null=True,
+        blank=True)
 
     all_chapter = None
 
@@ -321,7 +347,12 @@ class ChapterContent(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelContent,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False,verbose_name=u"是否删除",null=True,blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]
@@ -370,10 +401,16 @@ class ChapterNewContent(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelNewContent,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False, verbose_name=u"是否删除", null=True, blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]
+
 
 class NovelNewContentOne(models.Model):
     comefrom = models.ForeignKey(
@@ -418,10 +455,16 @@ class ChapterNewContentOne(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelNewContentOne,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False, verbose_name=u"是否删除", null=True, blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]
+
 
 class NovelNewContentTwo(models.Model):
     comefrom = models.ForeignKey(
@@ -466,10 +509,16 @@ class ChapterNewContentTwo(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelNewContentTwo,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False, verbose_name=u"是否删除", null=True, blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]
+
 
 class NovelNewContentThree(models.Model):
     comefrom = models.ForeignKey(
@@ -514,7 +563,12 @@ class ChapterNewContentThree(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelNewContentThree,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False, verbose_name=u"是否删除", null=True, blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]
@@ -563,10 +617,16 @@ class ChapterNewContentFour(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelNewContentFour,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False, verbose_name=u"是否删除", null=True, blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]
+
 
 class NovelNewContentFive(models.Model):
     comefrom = models.ForeignKey(
@@ -611,10 +671,16 @@ class ChapterNewContentFive(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelNewContentFive,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False, verbose_name=u"是否删除", null=True, blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]
+
 
 class NovelNewContentSix(models.Model):
     comefrom = models.ForeignKey(
@@ -659,10 +725,16 @@ class ChapterNewContentSix(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelNewContentSix,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False, verbose_name=u"是否删除", null=True, blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]
+
 
 class NovelNewContentSeven(models.Model):
     comefrom = models.ForeignKey(
@@ -707,7 +779,12 @@ class ChapterNewContentSeven(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelNewContentSeven,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False, verbose_name=u"是否删除", null=True, blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]
@@ -756,7 +833,12 @@ class ChapterNewContentEight(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelNewContentEight,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False, verbose_name=u"是否删除", null=True, blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]
@@ -805,7 +887,12 @@ class ChapterNewContentNine(models.Model):
     novelchapter = models.ForeignKey(NovelChapter,on_delete=models.CASCADE, to_field='chapter_url_md5',verbose_name=u"章节内")
     novelcontent = models.ForeignKey(NovelNewContentNine,on_delete=models.CASCADE, to_field='content_url_md5',verbose_name=u"章节内容")
     create_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
+    isdel = models.BooleanField(default=False, verbose_name=u"是否删除", null=True, blank=True)
+
     class Meta:
+        index_together = [
+            ["isdel"],
+        ]
         unique_together = [
             ('novelchapter', 'novelcontent')
         ]

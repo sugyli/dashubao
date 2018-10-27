@@ -11,21 +11,22 @@ logger = logging.getLogger(__name__)
 def get_previous_chapter(subsection=False,kwargs={}):
     if not subsection and not 'chapter_type' in kwargs:
         kwargs.update(chapter_type=0)
-    kwargs.update(ishide=0)
+    kwargs.update(noveldetail__ishide=0)
     return novels_models.NovelChapter.objects.filter(
         **kwargs).order_by("-chapter_order").first()
 
 def get_next_chapter(subsection=False,kwargs={}):
     if not subsection and not 'chapter_type' in kwargs:
         kwargs.update(chapter_type=0)
-    kwargs.update(ishide=0)
+    kwargs.update(noveldetail__ishide=0)
     return novels_models.NovelChapter.objects.filter(
         **kwargs).order_by("chapter_order").first()
 
 def get_one_chapter(subsection=False,kwargs={}):
     if not subsection and not 'chapter_type' in kwargs:
         kwargs.update(chapter_type=0)
-    kwargs.update(ishide=0)
+    #kwargs.update(ishide=0)
+    kwargs.update(noveldetail__ishide=0)
     return novels_models.NovelChapter.objects.filter(
         **kwargs).first()
 
