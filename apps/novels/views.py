@@ -157,7 +157,7 @@ class M_ContentView(View):
         else:
 
             return render(request, get_temp("error.html",temp_dir_p), {
-                'message': '正在生成章节'
+                'message': '章节不存在'
             })
 
     def post(self, request , chapterid):
@@ -367,7 +367,7 @@ class ContentView(View):
         else:
 
             return render(request, get_temp("error.html", temp_dir_p), {
-                'message': '正在生成章节'
+                'message': '章节不存在'
             })
 
     def post(self, request , chapterid):
