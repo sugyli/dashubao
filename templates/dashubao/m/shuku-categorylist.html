@@ -29,7 +29,7 @@
             <div class="tag-list">
                 {% for row in all_novelclassify %}
                     {% if row.sortid > 0 %}
-                        <a href="{{ row.get_sortlist_path }}?status={{ status }}&other={{ other }}" class="tag {% ifequal row.sortid novelclassify.sortid %}active{% endifequal %}">{{ row.caption }}</a>
+                        <a href="{{ row.get_sortlist_path }}?status={{ status }}&other={{ other }}" class="tag {% ifequal row.id novelclassify.id %}active{% endifequal %}">{{ row.caption }}</a>
                     {% endif %}
                 {% endfor %}
 
@@ -46,8 +46,6 @@
                 <a href="{% ifequal novelclassify None %}{% url 'novels:novels_sortlist' 0 %}?status={{ status }}&other=fav{% else %}{{ novelclassify.get_sortlist_path }}?status={{ status }}&other=fav{% endifequal %}" class="type {% ifequal other 'fav' %}active{% endifequal %}">收藏榜</a>
                 <a href="{% ifequal novelclassify None %}{% url 'novels:novels_sortlist' 0 %}?status={{ status }}&other=zan{% else %}{{ novelclassify.get_sortlist_path }}?status={{ status }}&other=zan{% endifequal %}" class="type {% ifequal other 'zan' %}active{% endifequal %}">推荐榜</a>
             </div>
-
-
 
         </div>
 

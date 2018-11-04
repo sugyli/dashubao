@@ -31,7 +31,7 @@
     <div class="main">
       <ul class="nav_l">
         <li><a href="/">首页</a></li>
-      {% if row %}
+      {% if FENLEI %}
         {% for row in FENLEI %}
             {% if forloop.counter == 9 %}
                 <li><a href="{% url 'novels:novels_sortlist' 0 %}">更多类型</a></li>

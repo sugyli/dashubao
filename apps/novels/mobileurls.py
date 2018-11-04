@@ -7,7 +7,7 @@ urlpatterns = [
     path('_content/<slug:chapterid>/', views.M_ContentView.as_view(), name="novels_content"),
 
     # path('_wapsort/', views.M_WapSortView.as_view(), name="novels_wapsort_index"),
-    path('_sortlist/<int:sortid>/', views.M_SortListView.as_view(), name="novels_sortlist"),
+    path('_sortlist/<int:id>/', views.M_SortListView.as_view(), name="novels_sortlist"),
 
 
     path('_historybookshelf/', views.M_HstoryBookshelfView.as_view(), name="novels_historybookshelf"),

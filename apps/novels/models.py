@@ -36,7 +36,7 @@ class NovelClassify(models.Model):
 
     def get_sortlist_path(self):
 
-        return reverse('novels:novels_sortlist', args=[self.sortid])
+        return reverse('novels:novels_sortlist', args=[self.id])
 
     def __str__(self):
         return self.caption

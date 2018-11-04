@@ -180,7 +180,7 @@ class M_ContentView(View):
 
 class M_SortListView(View):
 
-    def get(self, request, sortid):
+    def get(self, request, id):
 
         all_novelclassify = novels_models.NovelClassify.objects.all()
         status = request.GET.get('status', "2")
@@ -193,13 +193,13 @@ class M_SortListView(View):
         if not other:
             other = 'all'
         kwargs = {}
-        if sortid == 0:
+        if id == 0:
             novelclassify = None
 
         else:
-            novelclassify = all_novelclassify.filter(sortid=sortid).first()
+            novelclassify = all_novelclassify.filter(id=id).first()
 
-            kwargs.update(novelclassify=sortid)
+            kwargs.update(novelclassify=id)
 
         # 连载
         if status == 0:
