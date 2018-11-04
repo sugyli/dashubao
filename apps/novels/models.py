@@ -246,9 +246,9 @@ class NovelChapter(models.Model):
             ["create_time"],
             ["update_time"]
         ]
-        unique_together = [
-            ('noveldetail', 'chapter_order')
-        ]
+        # unique_together = [
+        #     ('noveldetail', 'chapter_order')
+        # ]
         verbose_name = u"小说章节"
         verbose_name_plural = verbose_name
 
