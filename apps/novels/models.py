@@ -135,6 +135,9 @@ class NovelDetail(models.Model):
         verbose_name=u"章节数",
         null=True,
         blank=True)
+    must_update = models.BooleanField(
+        default=False,
+        verbose_name=u"必须更新", null=True, blank=True)
 
     all_chapter = None
 
