@@ -18,6 +18,11 @@ model_icon 控制菜单的图标
 
 
 """
+class NovelChapterInline(object):
+    model = models.NovelChapter
+    extra = 0
+
+
 
 class NovelClassifyAdmin(object):
     list_display = ['caption','sortid','create_time']
@@ -35,7 +40,7 @@ class NovelContentComefromAdmin(object):
 
 class NovelDetailAdmin(object):
     # 在后台展示的字段
-    list_display = ['id','novel_name', 'novel_author', 'create_time', 'update_time','novel_old_id','caiji_status','ishide','must_update','stop_update']
+    list_display = ['novel_name', 'novel_author', 'create_time', 'update_time','novel_old_id','caiji_status','ishide','must_update','stop_update','id','go_to']
     # 可用来做搜索条件的字段（不用时间格式的字段
     search_fields = ['novel_name']
     # 用时间格式的字段做过滤器筛选字段
@@ -44,16 +49,19 @@ class NovelDetailAdmin(object):
     list_editable = ['stop_update','must_update','ishide']
 
     ordering = ['-update_time']
+    #inlines = [NovelChapterInline]
     # 设置自动刷新
     #refresh_times = [5, 7]
     # 配置插件效果
     #style_fields = {'content': 'ueditor'}
 
 class NovelChapterAdmin(object):
-    list_display = ['id','noveldetail','chapter_name','create_time', 'update_time','chapter_order','fenbiao','ishide']
-    search_fields = ['noveldetail__novel_name']
+    list_display = ['chapter_name']
+    search_fields = ['noveldetail']
     list_filter = ['update_time','ishide']
+    search_fields = ['noveldetail__url_md5']
 
+    #hidden_menu = True
 
 
 

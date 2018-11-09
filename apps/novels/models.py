@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db import models
 from django.shortcuts import reverse
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 #from utils import help
 from utils import modelhelp
@@ -200,6 +201,12 @@ class NovelDetail(models.Model):
         return self.get_book_chapter().order_by('chapter_order').last()
 
 
+    def go_to(self):
+
+        return mark_safe("<a href='http://www.projectsedu.com'>跳转</>")
+    go_to.short_description = "跳转"
+
+
     def __str__(self):
         return self.novel_name
 
@@ -254,19 +261,6 @@ class NovelChapter(models.Model):
         # ]
         verbose_name = u"小说章节"
         verbose_name_plural = verbose_name
-
-    def get_caiji_status(self):
-        status = self.noveldetail.caiji_status
-        if status == 'ys':
-            return '原始'
-        elif status == 'th':
-            return '替换'
-        elif status == 'tj':
-            return '添加'
-        else:
-            return '未知'
-
-    get_caiji_status.short_description = "采集状态"
 
 
     def get_content_path(self):
