@@ -88,7 +88,7 @@ class NovelDetail(models.Model):
     update_time = models.DateTimeField(
         default=datetime.now, verbose_name=u"更新时间")
     novel_old_id = models.IntegerField(
-        default=0, verbose_name=u"对于老站编号", null=True, blank=True)
+        default=0, verbose_name=u"老书", null=True, blank=True)
     novel_fav_nums = models.IntegerField(
         default=0,
         verbose_name=u'收藏人数',
@@ -106,14 +106,14 @@ class NovelDetail(models.Model):
         default=False,
         verbose_name=u"是否隐藏",null=True, blank=True)
 
-    iswenziname = models.BooleanField(default=True,verbose_name=u"是否文字标题",null=True, blank=True)
+    iswenziname = models.BooleanField(default=True,verbose_name=u"标题文字",null=True, blank=True)
 
     have_chapter = models.BooleanField(
         default=False,
         verbose_name=u"是否有章节", null=True, blank=True)
     stop_update = models.BooleanField(
         default=False,
-        verbose_name=u"采集更新",null=True, blank=True)
+        verbose_name=u"停止更新",null=True, blank=True)
     image = models.ImageField(
         upload_to="courses/%Y/%m/%d",
         default="",
@@ -137,7 +137,7 @@ class NovelDetail(models.Model):
         blank=True)
     must_update = models.BooleanField(
         default=False,
-        verbose_name=u"必须更新", null=True, blank=True)
+        verbose_name=u"强制更新", null=True, blank=True)
 
     all_chapter = None
 
@@ -233,7 +233,7 @@ class NovelChapter(models.Model):
 
     fenbiao = models.BooleanField(
         default=False,
-        verbose_name=u"使用分表的内容", null=True, blank=True)
+        verbose_name=u"内容分表", null=True, blank=True)
 
     chapter_order = models.SmallIntegerField(default=0, verbose_name=u"排序")
     chapter_old_id = models.IntegerField(
@@ -254,6 +254,20 @@ class NovelChapter(models.Model):
         # ]
         verbose_name = u"小说章节"
         verbose_name_plural = verbose_name
+
+    def get_caiji_status(self):
+        status = self.noveldetail.caiji_status
+        if status == 'ys':
+            return '原始'
+        elif status == 'th':
+            return '替换'
+        elif status == 'tj':
+            return '添加'
+        else:
+            return '未知'
+
+    get_caiji_status.short_description = "采集状态"
+
 
     def get_content_path(self):
 

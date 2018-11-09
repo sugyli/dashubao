@@ -3,6 +3,54 @@
 {% block keywords %}{{ novelclassify.caption|default:"分类"}}{% endblock %}
 {% block description %}{{ novelclassify.caption|default:"分类"}}{% endblock %}
 {% load staticfiles %}
+{% block custom_css %}
+    <style>
+    .tag-list .categorinfo{
+        position: relative;
+        display: block;
+        max-height: 81px;
+        overflow: hidden;
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+    .tag-list .categorinfo.expand{
+        height: auto;
+        max-height: 100000px;
+    }
+    .tag-list .categorinfo .categorlist{
+        position: absolute;
+        bottom: 1px;
+        right: 0;
+        top: 61px;
+        z-index: 98;
+        display: block;
+        padding-left: 15px;
+        background: linear-gradient(90deg,rgba(250,250,246,.9)20%,#fff 100%);
+        background: -webkit-linear-gradient(0deg,rgba(250,250,246,.9)20%,#fff 100%);
+        font-size: 14px;
+
+    }
+
+    .tag-list .categorinfo.expand .categorlist{
+        top: unset;
+
+    }
+    .categorlist i {
+        color: #a3a3a1;
+    }
+
+    .tag-list .categorinfo .categorlist>:last-child {
+        display: none;
+    }
+
+    .tag-list .categorinfo.expand .categorlist>:last-child {
+        display: inline;
+    }
+    .tag-list .categorinfo.expand .categorlist>:first-child {
+        display: none;
+    }
+    </style>
+{% endblock %}
 {% block content %}
     <body>
         <header class="header pageHead">
@@ -27,12 +75,14 @@
                 <a href="{% url 'novels:novels_sortlist' 0 %}?status={{ status }}&other={{ other }}" class="tag {% ifequal novelclassify None %}active{% endifequal %}">全部书籍</a>
             </div>
             <div class="tag-list">
+                <span class="categorinfo">
                 {% for row in all_novelclassify %}
                     {% if row.sortid > 0 %}
                         <a href="{{ row.get_sortlist_path }}?status={{ status }}&other={{ other }}" class="tag {% ifequal row.id novelclassify.id %}active{% endifequal %}">{{ row.caption }}</a>
                     {% endif %}
                 {% endfor %}
-
+                <span class="categorlist"><em>全部<i>↓</i></em><em>收起<i>↑</i></em></span>
+                </span>
 
             </div>
             <div class="tag-list">
@@ -110,6 +160,10 @@
             }); //这里是你调用Lazyload的代码
         })
         */
+
+        $('.categorlist').on('click', function(){
+            $(".categorinfo").toggleClass("expand");
+        });
 
     </script>
 {% endblock %}
