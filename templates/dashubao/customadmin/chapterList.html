@@ -1,0 +1,180 @@
+{% extends 'dashubao/customadmin/base.html' %}
+{% block title %}章节列表{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<nav class="navbar navbar-default navbar-fixed-top">
+
+    <div class="row">
+      <div class="col-md-1"><a class="btn btn-link" href="#bottom" role="button">↓直达底部</a></div>
+      <div class="col-md-1"><a class="btn btn-link" href="{{ noveldetail_data.get_admin_chapterList_url }}" role="button">全部章节</a></div>
+      <div class="col-md-1"><a class="btn btn-link" {% if ishide == '1'  %}style="color: red"{% endif %} href="{{ noveldetail_data.get_admin_chapterList_url }}?ishide=1" role="button">隐藏章节</a></div>
+      <div class="col-md-1"><a class="btn btn-link" {% if ishide == '0'  %}style="color: red"{% endif %} href="{{ noveldetail_data.get_admin_chapterList_url }}?ishide=0" role="button">正常章节</a></div>
+      <div class="col-md-1"><a class="btn btn-link" {% if weipipei == '1'  %}style="color: red"{% endif %} href="{{ noveldetail_data.get_admin_chapterList_url }}?weipipei=1" role="button">未匹配</a></div>
+      <div class="col-md-1"><a class="btn btn-link" href="{{ noveldetail_data.url }}" role="button" target="_blank">采集来源</a></div>
+    </div>
+</nav>
+
+
+
+
+<table class="table table-bordered" style="margin-top: 50px;margin-bottom: 50px">
+<tr>
+  <td class="info" style="width: 30px"><input type="checkbox" value="" disabled></td>
+  <td class="info">ID</td>
+  <td class="info">书名</td>
+  <td class="info">章节名(数量:{{ chapter_datas|length }})</td>
+  <td class="info">md5</td>
+  <td class="info">排序</td>
+  <td class="info">老ID</td>
+  <td class="info">状态</td>
+  <td class="info">老内容匹配</td>
+  <td class="info">更新时间</td>
+  <td class="info">采集来路</td>
+</tr>
+{% for chapter in chapter_datas %}
+<tr>
+  <td class="success"><input type="checkbox" name="id" value="{{ chapter.id }}"></td>
+  <td class="success">{{ chapter.id }}</td>
+  <td class="success"><a href="{{ noveldetail_data.get_info_path }}" target="_blank">{{ noveldetail_data.novel_name }}</a></td>
+  <td class="success">
+      {% if chapter.ishide == 1 %}
+       <a href="jacascript::void(0)" onclick="showneirong('{{ chapter.chapter_url_md5 }}')">{{ chapter.chapter_name }}</a>
+      {% else %}
+      <a href="{{ chapter.get_content_path }}" target="_blank">{{ chapter.chapter_name }}</a>
+
+      {% endif %}
+  </td>
+  <td class="success">{{ chapter.chapter_url_md5 }}</td>
+  <td class="success">{{ chapter.chapter_order }}</td>
+  <td class="success">{{ chapter.chapter_old_id }}</td>
+  <td class="success">{{ chapter.get_ishide }}</td>
+  <td class="success">{{ chapter.get_laoshuneirongzhuangtai }}</td>
+  <td class="success">{{ chapter.update_time }}</td>
+  <td class="success"><a href="{{ chapter.chapter_url }}" target="_blank">采集来路</a></td>
+</tr>
+{% endfor %}
+</table>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+<input class="btn btn-default" type="button" value="老章节匹配" data-toggle="modal" data-target="#laozhangjiepipei">
+<input class="btn btn-default" type="button" value="获取选中ID" id="getchapterid">
+</nav>
+<div id="bottom"></div>
+<!-- Modal -->
+<div class="modal fade" id="laozhangjiepipei" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">新老内容转换</h4>
+      </div>
+      <form id="pipeiid" autocomplete="off">
+
+      <div class="modal-body">
+        <label>未匹配上ID</label>
+        <textarea class="form-control" rows="3" placeholder="未匹配章节ID" name="chapter_id" id="chapter_id"></textarea>
+      </div>
+      <div class="modal-body">
+        <label>隐藏章节ID</label>
+        <textarea class="form-control" rows="3" placeholder="隐藏章节ID" name="old_chapter_id" id="old_chapter_id"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="pipeiid_sb">提交</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+    <script>
+
+      $('#getchapterid').zclip({
+        path:"{% static 'js/ZeroClipboard.swf' %}",
+        copy: function () {
+            obj = document.getElementsByName("id");
+            check_val = '';
+            for(k in obj){
+                if(obj[k].checked)
+                    check_val +=obj[k].value + ','
+            }
+
+            if (check_val){
+                var t = check_val.substring(0,check_val.length-1)
+
+                return t
+
+            }else {
+                alert('还没有勾选');
+            }
+
+        },
+      });
+
+       $("#pipeiid_sb").on('click', function () {
+        var $btn = $(this).button('loading')
+        $.ajax({
+            cache: false,
+            type: 'post',
+            dataType:'json',
+            url:"{{ request.path }}",
+            data:$('#pipeiid').serialize() + '&custom=pipeiid',
+            async: true,
+            beforeSend:function(XMLHttpRequest){
+
+            },
+            success: function(data) {
+                showmsg(data.msg)
+            },
+            complete: function(XMLHttpRequest){
+                $btn.button('reset')
+                $('#laozhangjiepipei').modal('hide')
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                $btn.button('reset')
+                console.log(jqXHR.responseText);
+                console.log(jqXHR.status);
+                console.log(jqXHR.readyState);
+                console.log(jqXHR.statusText);
+
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+        });
+
+
+      })
+
+    function showneirong(chapterid) {
+        $.ajax({
+            cache: false,
+            type: 'post',
+            dataType:'json',
+            url:"{{ request.path }}",
+            data:$('#pipeiid').serialize() + '&custom=showneirong&chapterid=' + chapterid,
+            async: true,
+            beforeSend:function(XMLHttpRequest){
+
+            },
+            success: function(result) {
+               alert(result.data)
+            },
+            complete: function(XMLHttpRequest){
+
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+
+                console.log(jqXHR.responseText);
+                console.log(jqXHR.status);
+                console.log(jqXHR.readyState);
+                console.log(jqXHR.statusText);
+
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+        });
+    }
+
+    </script>
+{% endblock %}

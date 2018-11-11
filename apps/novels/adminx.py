@@ -40,13 +40,13 @@ class NovelContentComefromAdmin(object):
 
 class NovelDetailAdmin(object):
     # 在后台展示的字段
-    list_display = ['novel_name', 'novel_author', 'create_time', 'update_time','novel_old_id','caiji_status','ishide','must_update','stop_update','id','go_to']
+    list_display = ['novel_name', 'novel_author', 'create_time', 'update_time','novel_old_id','caiji_status','ishide','must_update','stop_update','laoshutongbu','id','get_admin_chapterList']
     # 可用来做搜索条件的字段（不用时间格式的字段
     search_fields = ['novel_name']
     # 用时间格式的字段做过滤器筛选字段
-    list_filter = ['update_time','iswenziname','have_chapter','stop_update','caiji_status','ishide']
+    list_filter = ['update_time','iswenziname','have_chapter','stop_update','caiji_status','ishide','laoshutongbu']
     # 设置可以在列表中直接修改的字段
-    list_editable = ['stop_update','must_update','ishide']
+    list_editable = ['stop_update','must_update','ishide','laoshutongbu']
 
     ordering = ['-update_time']
     #inlines = [NovelChapterInline]
@@ -54,12 +54,12 @@ class NovelDetailAdmin(object):
     #refresh_times = [5, 7]
     # 配置插件效果
     #style_fields = {'content': 'ueditor'}
-
-class NovelChapterAdmin(object):
-    list_display = ['chapter_name']
-    search_fields = ['noveldetail']
-    list_filter = ['update_time','ishide']
-    search_fields = ['noveldetail__url_md5']
+#
+# class NovelChapterAdmin(object):
+#     list_display = ['chapter_name']
+#     search_fields = ['noveldetail__url_md5']
+#     list_filter = ['update_time','ishide']
+#     list_per_page = 10
 
     #hidden_menu = True
 
@@ -69,4 +69,4 @@ class NovelChapterAdmin(object):
 xadmin.site.register(models.NovelDetail, NovelDetailAdmin)
 #xadmin.site.register(models.NovelClassify, NovelClassifyAdmin)
 #xadmin.site.register(models.NovelContentComefrom, NovelContentComefromAdmin)
-xadmin.site.register(models.NovelChapter, NovelChapterAdmin)
+#xadmin.site.register(models.NovelChapter, NovelChapterAdmin)

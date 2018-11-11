@@ -46,7 +46,7 @@ def get_all_chapter(isdaoxu=None,subsection=False,kwargs={}):
     kwargs.update(noveldetail__ishide=0)
     if isdaoxu:
         return novels_models.NovelChapter.objects.filter(
-            **kwargs)
+            **kwargs).order_by('chapter_order')
     else:
         return novels_models.NovelChapter.objects.filter(
             **kwargs).order_by('-chapter_order')

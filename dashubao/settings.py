@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'users',
     'operation',
     'search',
+    'customadmin',
     'crispy_forms',
     'django_hosts',
     'pure_pagination'

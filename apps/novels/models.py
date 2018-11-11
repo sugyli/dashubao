@@ -139,6 +139,9 @@ class NovelDetail(models.Model):
     must_update = models.BooleanField(
         default=False,
         verbose_name=u"强制更新", null=True, blank=True)
+    laoshutongbu = models.BooleanField(
+        default=False,
+        verbose_name=u"老书同步", null=True, blank=True)
 
     all_chapter = None
 
@@ -152,6 +155,8 @@ class NovelDetail(models.Model):
             ["create_time"],
             ["update_time"],
             ["caiji_status"],
+            ["must_update"],
+            ["laoshutongbu"]
         ]
         unique_together = [
             ('novel_name', 'novel_author', 'novel_comefrom')
@@ -200,11 +205,13 @@ class NovelDetail(models.Model):
 
         return self.get_book_chapter().order_by('chapter_order').last()
 
+    def get_admin_chapterList_url(self):
+        return reverse('customadmin:customadmin_chapterList', args=[self.url_md5])
 
-    def go_to(self):
-
-        return mark_safe("<a href='http://www.projectsedu.com'>跳转</>")
-    go_to.short_description = "跳转"
+    def get_admin_chapterList(self):
+        url = self.get_admin_chapterList_url()
+        return mark_safe("<a href='%s' target='_blank'>跳转</>"%url)
+    get_admin_chapterList.short_description = "章节"
 
 
     def __str__(self):
@@ -262,6 +269,22 @@ class NovelChapter(models.Model):
         verbose_name = u"小说章节"
         verbose_name_plural = verbose_name
 
+    def get_ishide(self):
+        if self.ishide == 1:
+            return '隐藏'
+        else:
+            return '显示'
+
+    def get_laoshuneirongzhuangtai(self):
+        if self.fenbiao == 1 and self.chapter_old_id > 0:
+            return '老章节以匹配'
+        elif self.fenbiao == 1 and self.chapter_old_id == 0:
+            return '新章节'
+        elif self.fenbiao == 0 and self.chapter_old_id > 0:
+            return '老章节没匹配'
+        else:
+            return '未知情况'
+
 
     def get_content_path(self):
 
@@ -282,33 +305,79 @@ class NovelChapter(models.Model):
         #             self.noveldetail.url_md5,
         #             self.chapter_url_md5])
 
-    def get_book_content(self):
+    def get_book_content(self,kwargs={}):
+        kwargs.update(ishide=0)
         if self.fenbiao:
             id = str(self.id)
             last_nb = id[-1]
             if last_nb == '1':
-                return self.novelnewcontentone_set.filter(ishide=0).order_by("-comefrom")
+                return self.novelnewcontentone_set.filter(**kwargs).order_by("-comefrom")
             elif last_nb == '2':
-                return self.novelnewcontenttwo_set.filter(ishide=0).order_by("-comefrom")
+                return self.novelnewcontenttwo_set.filter(**kwargs).order_by("-comefrom")
             elif last_nb == '3':
-                return self.novelnewcontentthree_set.filter(ishide=0).order_by("-comefrom")
+                return self.novelnewcontentthree_set.filter(**kwargs).order_by("-comefrom")
             elif last_nb == '4':
-                return self.novelnewcontentfour_set.filter(ishide=0).order_by("-comefrom")
+                return self.novelnewcontentfour_set.filter(**kwargs).order_by("-comefrom")
             elif last_nb == '5':
-                return self.novelnewcontentfive_set.filter(ishide=0).order_by("-comefrom")
+                return self.novelnewcontentfive_set.filter(**kwargs).order_by("-comefrom")
             elif last_nb == '6':
-                return self.novelnewcontentsix_set.filter(ishide=0).order_by("-comefrom")
+                return self.novelnewcontentsix_set.filter(**kwargs).order_by("-comefrom")
             elif last_nb == '7':
-                return self.novelnewcontentseven_set.filter(ishide=0).order_by("-comefrom")
+                return self.novelnewcontentseven_set.filter(**kwargs).order_by("-comefrom")
             elif last_nb == '8':
-                return self.novelnewcontenteight_set.filter(ishide=0).order_by("-comefrom")
+                return self.novelnewcontenteight_set.filter(**kwargs).order_by("-comefrom")
             elif last_nb == '9':
-                return self.novelnewcontentnine_set.filter(ishide=0).order_by("-comefrom")
+                return self.novelnewcontentnine_set.filter(**kwargs).order_by("-comefrom")
             else:
-                return self.novelnewcontent_set.filter(ishide=0).order_by("-comefrom")
+                return self.novelnewcontent_set.filter(**kwargs).order_by("-comefrom")
 
-        return self.novelcontent_set.filter(ishide=0).order_by("-comefrom")
+        return self.novelcontent_set.filter(**kwargs).order_by("-comefrom")
 
+    def add_book_content(self,kwargs={}):
+        id = str(self.id)
+        last_nb = id[-1]
+        if last_nb == '1':
+
+            content = NovelNewContentOne.objects.create(**kwargs)
+            return ChapterNewContentOne.objects.create(novelchapter=self,novelcontent=content)
+
+        elif last_nb == '2':
+            content = NovelNewContentTwo.objects.create(**kwargs)
+            return ChapterNewContentTwo.objects.create(novelchapter=self,novelcontent=content)
+
+        elif last_nb == '3':
+            content = NovelNewContentThree.objects.create(**kwargs)
+            return ChapterNewContentThree.objects.create(novelchapter=self,novelcontent=content)
+
+        elif last_nb == '4':
+            content = NovelNewContentFour.objects.create(**kwargs)
+            return ChapterNewContentFour.objects.create(novelchapter=self,novelcontent=content)
+
+        elif last_nb == '5':
+            content = NovelNewContentFive.objects.create(**kwargs)
+            return ChapterNewContentFive.objects.create(novelchapter=self,novelcontent=content)
+
+        elif last_nb == '6':
+            content = NovelNewContentSix.objects.create(**kwargs)
+            return ChapterNewContentSix.objects.create(novelchapter=self,novelcontent=content)
+
+        elif last_nb == '7':
+            content = NovelNewContentSeven.objects.create(**kwargs)
+            return ChapterNewContentSeven.objects.create(novelchapter=self,novelcontent=content)
+
+
+        elif last_nb == '8':
+            content = NovelNewContentEight.objects.create(**kwargs)
+            return ChapterNewContentEight.objects.create(novelchapter=self,novelcontent=content)
+
+
+        elif last_nb == '9':
+            content = NovelNewContentNine.objects.create(**kwargs)
+            return ChapterNewContentNine.objects.create(novelchapter=self,novelcontent=content)
+
+        else:
+            content = NovelNewContent.objects.create(**kwargs)
+            return ChapterNewContent.objects.create(novelchapter=self,novelcontent=content)
 
     def __str__(self):
         return self.chapter_name
