@@ -163,14 +163,14 @@ class ChapterList(View):
                             contents = chapter.get_book_content(ishide=False)
                             if contents:
                                 contents.delete()
-                                msg += "章节编号%s大书包的内容已经删除 " % chapterid
+                                msg += "章节编号%s大书包的内容已经删除," % chapterid
                             else:
-                                msg += "编号%s内容不存在 " % chapterid
+                                msg += "编号%s内容不存在," % chapterid
                             chapter.delete()
-                            msg += "编号%s章节已经删除 "%chapterid
+                            msg += "编号%s章节已经删除,"%chapterid
 
                         else:
-                            msg += "编号%s章节不存在 "%chapterid
+                            msg += "编号%s章节不存在,"%chapterid
 
 
                     return HttpResponse('{"status":"success","msg":"%s"}' % msg,content_type='application/json')

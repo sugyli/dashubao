@@ -30,6 +30,7 @@
   <td class="info">老内容匹配</td>
   <td class="info">更新时间</td>
   <td class="info">采集来路</td>
+  <td class="info">清理缓存</td>
 </tr>
 {% for chapter in chapter_datas %}
 <tr>
@@ -51,6 +52,7 @@
   <td class="success">{{ chapter.get_laoshuneirongzhuangtai }}</td>
   <td class="success">{{ chapter.update_time }}</td>
   <td class="success"><a href="{{ chapter.chapter_url }}" target="_blank">采集来路</a></td>
+  <td class="success"><a href="/purge{{ chapter.get_content_path }}" target="_blank">清理缓存</a></td>
 </tr>
 {% endfor %}
 </table>
