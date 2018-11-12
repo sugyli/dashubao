@@ -57,6 +57,7 @@
 <nav class="navbar navbar-default navbar-fixed-bottom">
 <input class="btn btn-default" type="button" value="老章节匹配" data-toggle="modal" data-target="#laozhangjiepipei">
 <input class="btn btn-default" type="button" value="获取选中ID" id="getchapterid">
+<input class="btn btn-default" type="button" value="删除章节" id="delchapter">
 </nav>
 <div id="bottom"></div>
 <!-- Modal -->
@@ -89,30 +90,33 @@
 
 {% block custom_js %}
     <script>
-
-      $('#getchapterid').zclip({
-        path:"{% static 'js/ZeroClipboard.swf' %}",
-        copy: function () {
+      function getcheckeddoc(){
             obj = document.getElementsByName("id");
             check_val = '';
             for(k in obj){
                 if(obj[k].checked)
                     check_val +=obj[k].value + ','
             }
-
             if (check_val){
                 var t = check_val.substring(0,check_val.length-1)
 
                 return t
 
             }else {
-                alert('还没有勾选');
+                showmsg('还没有勾选');
             }
+
+      }
+
+      $('#getchapterid').zclip({
+        path:"{% static 'js/ZeroClipboard.swf' %}",
+        copy: function () {
+            return getcheckeddoc()
 
         },
       });
 
-       $("#pipeiid_sb").on('click', function () {
+    $("#pipeiid_sb").on('click', function () {
         var $btn = $(this).button('loading')
         $.ajax({
             cache: false,
@@ -175,6 +179,56 @@
             }
         });
     }
+    $("#delchapter").on('click', function () {
 
+        chapterids = getcheckeddoc()
+        if (chapterids){
+              layer.open({
+                content: '确定删除吗'
+                ,btn: ['是的', '不是']
+                ,yes: function(index){
+
+                        $.ajax({
+                            cache: false,
+                            type: 'post',
+                            dataType:'json',
+                            url:"{{ request.path }}",
+                            data:'&custom=delchapter&chapterids=' + chapterids,
+                            async: true,
+                            beforeSend:function(XMLHttpRequest){
+
+                            },
+                            success: function(result) {
+                               showmsg(result.msg)
+                            },
+                            complete: function(XMLHttpRequest){
+
+                            },
+                            error: function(jqXHR, textStatus, errorThrown){
+
+                                console.log(jqXHR.responseText);
+                                console.log(jqXHR.status);
+                                console.log(jqXHR.readyState);
+                                console.log(jqXHR.statusText);
+
+                                console.log(textStatus);
+                                console.log(errorThrown);
+                            }
+                        });
+
+                  layer.close(index);
+                }
+              });
+
+
+
+
+
+        }
+
+
+
+
+    })
     </script>
 {% endblock %}

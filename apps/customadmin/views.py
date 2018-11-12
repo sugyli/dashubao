@@ -89,9 +89,9 @@ class ChapterList(View):
                                     chapter.chapter_old_id = old_chapter.chapter_old_id
                                     #chapter.chapter_url_md5 = old_chapter.chapter_url_md5
 
-                                    old_content = old_chapter.get_book_content({'comefrom__id':1})
+                                    old_content = old_chapter.get_book_content(kwargs = {'comefrom__id':1}, ishide = False)
                                     if old_content:
-                                        content = chapter.get_book_content({'comefrom__id': 1})
+                                        content = chapter.get_book_content(kwargs = {'comefrom__id': 1}, ishide = False)
 
                                         if content:
                                             content[0].content = old_content[0].content
@@ -108,9 +108,8 @@ class ChapterList(View):
                                             }
                                             chapter.add_book_content(kwargs)
 
-
-                                        old_chapter.delete()
                                         old_content[0].delete()
+                                        old_chapter.delete()
                                         mes += '老ID %s 处理成功 ' % _[0]
 
                                     else:
@@ -127,7 +126,7 @@ class ChapterList(View):
                                 mes += '老ID %s 和新ID重复了 ' % _[0]
 
 
-                        return HttpResponse('{"status":"fail","msg":"%s"}'%mes, content_type='application/json')
+                        return HttpResponse('{"status":"success","msg":"%s"}'%mes, content_type='application/json')
 
 
                     else:
@@ -152,9 +151,37 @@ class ChapterList(View):
                 else:
                     return HttpResponse('{"status":"fail","msg":"章节不存在"}', content_type='application/json')
 
+            elif custom == 'delchapter':
+                chapterids = request.POST.get('chapterids', '')
+                chapterids = chapterids.strip()
+                if chapterids:
+                    chapterids = chapterids.split(',')
+                    msg = ''
+                    for chapterid in chapterids:
+                        chapter = novels_models.NovelChapter.objects.filter(id=chapterid).first()
+                        if chapter:
+                            contents = chapter.get_book_content(ishide=False)
+                            if contents:
+                                contents.delete()
+                                msg += "章节编号%s大书包的内容已经删除 " % chapterid
+                            else:
+                                msg += "编号%s内容不存在 " % chapterid
+                            chapter.delete()
+                            msg += "编号%s章节已经删除 "%chapterid
+
+                        else:
+                            msg += "编号%s章节不存在 "%chapterid
 
 
-            return HttpResponse('{"status":"fail","msg":"custom参数出错了"}', content_type='application/json')
+                    return HttpResponse('{"status":"success","msg":"%s"}' % msg,content_type='application/json')
+
+                else:
+                    return HttpResponse('{"status":"fail","msg":"chapterids 不能为空"}', content_type='application/json')
+
+            else:
+
+                return HttpResponse('{"status":"fail","msg":"custom 非法"}', content_type='application/json')
+
         else:
             return HttpResponse('{"status":"fail","msg":"还没有登录"}', content_type='application/json')
 

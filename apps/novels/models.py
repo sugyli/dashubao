@@ -305,8 +305,9 @@ class NovelChapter(models.Model):
         #             self.noveldetail.url_md5,
         #             self.chapter_url_md5])
 
-    def get_book_content(self,kwargs={}):
-        kwargs.update(ishide=0)
+    def get_book_content(self,kwargs={},ishide =True):
+        if ishide:
+            kwargs.update(ishide=0)
         if self.fenbiao:
             id = str(self.id)
             last_nb = id[-1]
