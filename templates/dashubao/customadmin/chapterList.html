@@ -19,7 +19,7 @@
 
 <table class="table table-bordered" style="margin-top: 50px;margin-bottom: 50px">
 <tr>
-  <td class="info" style="width: 30px"><input type="checkbox" value="" disabled></td>
+  <td class="info" style="width: 30px"><input type="checkbox" id="selectall"></td>
   <td class="info">ID</td>
   <td class="info">书名</td>
   <td class="info">章节名(数量:{{ chapter_datas|length }})</td>
@@ -33,7 +33,7 @@
   <td class="info">清理缓存</td>
 </tr>
 {% for chapter in chapter_datas %}
-<tr>
+<tr id="{{ chapter.id }}">
   <td class="success"><input type="checkbox" name="id" value="{{ chapter.id }}"></td>
   <td class="success">{{ chapter.id }}</td>
   <td class="success"><a href="{{ noveldetail_data.get_info_path }}" target="_blank">{{ noveldetail_data.novel_name }}</a></td>
@@ -60,6 +60,7 @@
 <input class="btn btn-default" type="button" value="老章节匹配" data-toggle="modal" data-target="#laozhangjiepipei">
 <input class="btn btn-default" type="button" value="获取选中ID" id="getchapterid">
 <input class="btn btn-default" type="button" value="删除章节" id="delchapter">
+<input class="btn btn-default" type="button" value="删除元素" id="deldoc">
 </nav>
 <div id="bottom"></div>
 <!-- Modal -->
@@ -222,15 +223,53 @@
                 }
               });
 
-
-
-
-
         }
 
-
-
-
     })
+
+    $("#selectall").click(function(){
+        $("input[type='checkbox']").each( function() {
+           if($(this).prop("checked")==true) {
+                   $("input[type='checkbox']").prop('checked', true);
+                   return;
+               } else {
+                   $("input[type='checkbox']").prop('checked', false);
+                   return;
+               }
+           });
+    })
+
+
+
+    $("#deldoc").click(function () {
+        var id_array=new Array();
+        var idstr="";
+        $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
+            var pidSel=$(this).val();
+            id_array.push(pidSel);
+            idstr=id_array.join(',');
+        });
+        var deletelength=id_array.length;
+        if(deletelength<=0){
+            showmsg('还未选择要删除的数据！');
+            return;
+        }
+        //询问框
+        layer.open({
+            content: '确定删除吗'
+            ,btn: ['是的', '不是']
+            ,yes: function(index){
+                for (var i=0;i<deletelength;i++)
+                {
+
+                    $("#"+id_array[i]).remove();
+                }
+                layer.close(index);
+            }
+          });
+
+
+     })
+
     </script>
 {% endblock %}
