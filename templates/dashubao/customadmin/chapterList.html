@@ -187,7 +187,7 @@
         chapterids = getcheckeddoc()
         if (chapterids){
               layer.open({
-                content: '确定删除吗'
+                content: '确定要删除章节吗？？？'
                 ,btn: ['是的', '不是']
                 ,yes: function(index){
 
@@ -203,6 +203,14 @@
                             },
                             success: function(result) {
                                showmsg(result.msg)
+                                chapterid_array = chapterids.split(',')
+                                for (var i=0;i<chapterid_array.length;i++)
+                                {
+
+                                    $("#"+chapterid_array[i]).remove();
+                                }
+
+
                             },
                             complete: function(XMLHttpRequest){
 
@@ -256,7 +264,7 @@
         }
         //询问框
         layer.open({
-            content: '确定删除吗'
+            content: '只删除元素不是真实删除数据'
             ,btn: ['是的', '不是']
             ,yes: function(index){
                 for (var i=0;i<deletelength;i++)
