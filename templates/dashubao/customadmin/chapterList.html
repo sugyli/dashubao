@@ -11,6 +11,7 @@
       <div class="col-md-1"><a class="btn btn-link" {% if ishide == '0'  %}style="color: red"{% endif %} href="{{ noveldetail_data.get_admin_chapterList_url }}?ishide=0" role="button">正常章节</a></div>
       <div class="col-md-1"><a class="btn btn-link" {% if weipipei == '1'  %}style="color: red"{% endif %} href="{{ noveldetail_data.get_admin_chapterList_url }}?weipipei=1" role="button">未匹配</a></div>
       <div class="col-md-1"><a class="btn btn-link" href="{{ noveldetail_data.url }}" role="button" target="_blank">采集来源</a></div>
+       <div class="col-md-1"><a class="btn btn-link" href="/purge{{ noveldetail_data.get_info_path }}" role="button" target="_blank">清理缓存</a></div>
     </div>
 </nav>
 
