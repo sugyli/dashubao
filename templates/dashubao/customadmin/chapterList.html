@@ -1,6 +1,16 @@
 {% extends 'dashubao/customadmin/base.html' %}
 {% block title %}{{ noveldetail_data.novel_name }}{% endblock %}
 {% load staticfiles %}
+{% block custom_css %}
+    <style>
+        .checkboxstyle{
+            width:20px;
+            height:20px;
+        }
+
+
+    </style>
+{% endblock %}
 {% block content %}
 <nav class="navbar navbar-default navbar-fixed-top">
 
@@ -20,7 +30,7 @@
 
 <table class="table table-bordered" style="margin-top: 50px;margin-bottom: 50px">
 <tr>
-  <td class="info" style="width: 30px"><input type="checkbox" id="selectall"></td>
+  <td class="info" style="width: 30px"><input class="checkboxstyle" type="checkbox" id="selectall"></td>
   <td class="info">ID</td>
   <td class="info">书名</td>
   <td class="info">章节名(数量:{{ chapter_datas|length }})</td>
@@ -36,7 +46,7 @@
 </tr>
 {% for chapter in chapter_datas %}
 <tr id="{{ chapter.id }}">
-  <td class="success"><input type="checkbox" name="id" value="{{ chapter.id }}"></td>
+  <td class="success"><input class="checkboxstyle" type="checkbox" name="id" value="{{ chapter.id }}"></td>
   <td class="success">{{ chapter.id }}</td>
   <td class="success"><a href="{{ noveldetail_data.get_info_path }}" target="_blank">{{ noveldetail_data.novel_name }}</a></td>
   <td class="success">
